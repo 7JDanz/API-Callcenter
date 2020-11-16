@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="e802b6a2-108d-4042-9024-9d2fb0a100ea" name="Azure-apiclienteskfc" url="https://api-callcenter-kfc-dev.azurewebsites.net/">
+        <fileTransfer accessType="FTPS" host="waws-prod-bn1-061.ftp.azurewebsites.windows.net" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
