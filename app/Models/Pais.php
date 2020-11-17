@@ -9,6 +9,7 @@ class Pais extends Model
 {
     use HasFactory;
     protected $table = 'callcenter.pais';
+    protected $connection = 'sqlsrv_mxp_ecu';
     /*
     protected $fillable = [
         'Data'
