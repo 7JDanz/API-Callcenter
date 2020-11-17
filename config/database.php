@@ -103,7 +103,18 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
         ],
-
+        'sqlsrv_mxp_ecu' => [
+            'driver' => 'sqlsrv',
+            'url' => env('DB_MAXPOINTECU_URL'),
+            'host' => env('DB_MAXPOINTECU_HOST', 'localhost'),
+            'port' => env('DB_MAXPOINTECU_PORT', '1433'),
+            'database' => env('DB_MAXPOINTECU_DATABASE', 'forge'),
+            'username' => env('DB_MAXPOINTECU_USERNAME', 'forge'),
+            'password' => env('DB_MAXPOINTECU_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+        ],
     ],
 
     /*
