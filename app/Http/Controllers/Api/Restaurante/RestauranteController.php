@@ -7,10 +7,6 @@ use App\Models\Geolocalizacion;
 use App\Models\Restaurante;
 use Illuminate\Http\Request;
 
-/**
- *
- * @OA\Server(url="/clienteskfc/public/api/")
- */
 
 class RestauranteController extends Controller
 {

@@ -10,7 +10,7 @@ class PaisController extends Controller
 {
     /**
      * @OA\Get(
-     *      path="/pais",
+     *      path="/api/pais",
      *      operationId="getPaisList",
      *      tags={"Pais"},
      *      summary="Lista todos los Paises",

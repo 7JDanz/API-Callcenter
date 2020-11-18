@@ -4,11 +4,6 @@
         "title": "API Callcenter",
         "version": "1.0"
     },
-    "servers": [
-        {
-            "url": "/clienteskfc/public/api/"
-        }
-    ],
     "paths": {
         "/api/cliente/{cedula}": {
             "get": {
@@ -256,7 +251,7 @@
                 ]
             }
         },
-        "/pais": {
+        "/api/pais": {
             "get": {
                 "tags": [
                     "Pais"
@@ -426,6 +421,79 @@
                     },
                     "403": {
                         "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/oauth/token": {
+            "post": {
+                "tags": [
+                    "Seguridad"
+                ],
+                "summary": "Obtener Token",
+                "parameters": [
+                    {
+                        "name": "grant_type",
+                        "in": "header",
+                        "example": "password"
+                    },
+                    {
+                        "name": "client_id",
+                        "in": "header",
+                        "example": "3"
+                    },
+                    {
+                        "name": "client_secret",
+                        "in": "header",
+                        "example": "cDxhCy3XOYpMjYJkYAkOQmExQF0doezve4AZtV69"
+                    },
+                    {
+                        "name": "username",
+                        "in": "header",
+                        "example": "fsierra"
+                    },
+                    {
+                        "name": "password",
+                        "in": "header",
+                        "example": "SVucd2fYX5KVaiL"
+                    },
+                    {
+                        "name": "scope",
+                        "in": "header",
+                        "example": "*"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Token de seguridad",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token_type": {
+                                            "description": "Tipo de Token",
+                                            "type": "string"
+                                        },
+                                        "expires_in": {
+                                            "description": "Tiempo en milisegundos",
+                                            "type": "integer"
+                                        },
+                                        "access_token": {
+                                            "description": "token de seguridad",
+                                            "type": "string"
+                                        },
+                                        "refresh_token": {
+                                            "description": "token",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
                     }
                 }
             }
