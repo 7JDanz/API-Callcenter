@@ -4,6 +4,7 @@ namespace App\Models\MdmClientes;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Config;
 
 class ClienteTelefono extends Model
 {
@@ -29,4 +30,8 @@ class ClienteTelefono extends Model
 
     }
 
+    public function getConnectionName()
+    {
+        return Config::get("NOMBRE_CONEXION_CLIENTES");
+    }
 }

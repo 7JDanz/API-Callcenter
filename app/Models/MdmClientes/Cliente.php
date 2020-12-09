@@ -4,12 +4,13 @@ namespace App\Models\MdmClientes;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Config;
 
 class Cliente extends Model
 {
     use HasFactory;
 
-    protected $connection = 'sqlsrv_clientes';
+    //protected $connection = 'sqlsrv_clientes';
     protected $table = 'mdm_ecu.Cliente';
     protected $primaryKey = 'CodigoCliente';
     protected $keyType = 'string';
@@ -27,4 +28,8 @@ class Cliente extends Model
         return $this->hasMany(TelefonoDireccion::class,"CodigoCliente","CodigoCliente");
     }
 
+    public function getConnectionName()
+    {
+        return Config::get("NOMBRE_CONEXION_CLIENTES");
+    }
 }

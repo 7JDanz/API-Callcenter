@@ -16,3 +16,15 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::middleware(['multipais'])
+    ->prefix("/{pais}")
+    ->where(['pais' => 'ecu|chi|col|arg'])
+    ->group(function() {
+        Route::get('/prueba', function () {
+            return \App\Models\Maxpoint\Cadena::all();
+        });
+    });
+
+

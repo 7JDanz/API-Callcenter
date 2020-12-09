@@ -103,6 +103,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
         ],
+        /*
         'sqlsrv_mxp_ecu' => [
             'driver' => 'sqlsrv',
             'url' => env('DB_MAXPOINTECU_URL'),
@@ -115,6 +116,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
         ],
+        */
     ],
 
     /*

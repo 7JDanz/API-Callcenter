@@ -29,9 +29,15 @@ Route::middleware('auth:api')->get('/usuario', function (Request $request) {
 });
 
 Route::name("v1.")->middleware('auth:api')->group(function(){
-    Route::get('/cliente/{documento}',[ClienteController::class, 'cliente'] )->name('clientepordocumento');
-    Route::get('/cliente-email/{email}',[ClienteController::class, 'clientePorEmail'] )->name('clienteporemail');
-    Route::get('/cliente-telefono/{telefono}',[ClienteController::class, 'clientePorTelefono'] )->name('clienteportelefono');
+
+    Route::middleware(['multipais'])
+        ->prefix("/{pais}")
+        ->where(['pais' => 'ecu|chi|col|arg'])
+        ->group(function() {
+            Route::get('/cliente/{documento}',[ClienteController::class, 'cliente'] )->name('clientepordocumento');
+            Route::get('/cliente-email/{email}',[ClienteController::class, 'clientePorEmail'] )->name('clienteporemail');
+            Route::get('/cliente-telefono/{telefono}',[ClienteController::class, 'clientePorTelefono'] )->name('clienteportelefono');
+        });
 
     Route::get( '/v1/ecu/geolocalizacion' , [GeolocalizacionController::class,'index'] );
     Route::post( '/v1/ecu/geolocalizacion' , [GeolocalizacionController::class,'store'] );
