@@ -1,7 +1,7 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "API Clientes",
+        "title": "API Callcenter",
         "version": "1.0"
     },
     "paths": {
@@ -47,7 +47,7 @@
                                                         "type": "string"
                                                     },
                                                     "direcciones": {
-                                                        "description": "Direcciones aosciadas al número de teléfono",
+                                                        "description": "Direcciones asociadas al número de teléfono",
                                                         "type": "array",
                                                         "items": {
                                                             "properties": {
@@ -129,7 +129,7 @@
                                                         "type": "string"
                                                     },
                                                     "direcciones": {
-                                                        "description": "Direcciones aosciadas al número de teléfono",
+                                                        "description": "Direcciones asociadas al número de teléfono",
                                                         "type": "array",
                                                         "items": {
                                                             "properties": {
@@ -211,7 +211,7 @@
                                                         "type": "string"
                                                     },
                                                     "direcciones": {
-                                                        "description": "Direcciones aosciadas al número de teléfono",
+                                                        "description": "Direcciones asociadas al número de teléfono",
                                                         "type": "array",
                                                         "items": {
                                                             "properties": {
@@ -251,7 +251,7 @@
                 ]
             }
         },
-        "/pais": {
+        "/api/pais": {
             "get": {
                 "tags": [
                     "Pais"
@@ -261,7 +261,96 @@
                 "operationId": "getPaisList",
                 "responses": {
                     "200": {
-                        "description": "Successful operation"
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Pais": {
+                                            "description": "Listado de países",
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "IDPais": {
+                                                        "description": "ID de País",
+                                                        "type": "integer"
+                                                    },
+                                                    "Pais": {
+                                                        "description": "Nombre de País",
+                                                        "type": "string"
+                                                    },
+                                                    "BaseFactura": {
+                                                        "description": "Monto para consumidor final",
+                                                        "type": "integer"
+                                                    },
+                                                    "Cadenas": {
+                                                        "description": "Cadenas pertenecientes al País",
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "IDCadena": {
+                                                                    "description": "ID de la Cadena",
+                                                                    "type": "integer"
+                                                                },
+                                                                "Cadena": {
+                                                                    "description": "Nombre de la Cadena",
+                                                                    "type": "string"
+                                                                },
+                                                                "ServicioDomicilio": {
+                                                                    "description": "Valor Servicio a Domicilio",
+                                                                    "type": "integer"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "Impuestos": {
+                                                        "description": "Impuestos aplicados al País",
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "IDImpuesto": {
+                                                                    "description": "ID del Impuesto",
+                                                                    "type": "string"
+                                                                },
+                                                                "Descripcion": {
+                                                                    "description": "Descripción del Impuesto",
+                                                                    "type": "string"
+                                                                },
+                                                                "Porcentaje": {
+                                                                    "description": "Porcentaje del Impuesto",
+                                                                    "type": "integer"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "Ciudades": {
+                                                        "description": "Ciudades del País",
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "IDCiudad": {
+                                                                    "description": "ID de la Ciudad",
+                                                                    "type": "integer"
+                                                                },
+                                                                "Ciudad": {
+                                                                    "description": "Nombre de la Ciudad",
+                                                                    "type": "string"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "Unauthenticated"
@@ -336,103 +425,75 @@
                 }
             }
         },
-        "/sanctum/csrf-cookie": {
-            "get": {
+        "/oauth/token": {
+            "post": {
                 "tags": [
-                    "Usuario"
+                    "Seguridad"
                 ],
                 "summary": "Obtener Token",
+                "parameters": [
+                    {
+                        "name": "grant_type",
+                        "in": "header",
+                        "example": "password"
+                    },
+                    {
+                        "name": "client_id",
+                        "in": "header",
+                        "example": "3"
+                    },
+                    {
+                        "name": "client_secret",
+                        "in": "header",
+                        "example": "cDxhCy3XOYpMjYJkYAkOQmExQF0doezve4AZtV69"
+                    },
+                    {
+                        "name": "username",
+                        "in": "header",
+                        "example": "fsierra"
+                    },
+                    {
+                        "name": "password",
+                        "in": "header",
+                        "example": "SVucd2fYX5KVaiL"
+                    },
+                    {
+                        "name": "scope",
+                        "in": "header",
+                        "example": "*"
+                    }
+                ],
                 "responses": {
-                    "204": {
-                        "description": "No Content"
+                    "200": {
+                        "description": "Token de seguridad",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token_type": {
+                                            "description": "Tipo de Token",
+                                            "type": "string"
+                                        },
+                                        "expires_in": {
+                                            "description": "Tiempo en milisegundos",
+                                            "type": "integer"
+                                        },
+                                        "access_token": {
+                                            "description": "token de seguridad",
+                                            "type": "string"
+                                        },
+                                        "refresh_token": {
+                                            "description": "token",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "Not Found"
-                    }
-                }
-            }
-        },
-        "/login": {
-            "post": {
-                "tags": [
-                    "Usuario"
-                ],
-                "summary": "Login de usuarios, referirse a la siguiente documentación:https://laravel.com/docs/8.x/sanctum#spa-authentication",
-                "parameters": [
-                    {
-                        "name": "X-XSRF-TOKEN",
-                        "in": "header"
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "usuario": {
-                                        "type": "string",
-                                        "example": "fsierra"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "example": "SVucd2fYX5KVaiL"
-                                    },
-                                    "pais": {
-                                        "type": "int",
-                                        "example": 1
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Respuesta correcta",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "two_factor": {
-                                            "description": "Si retorna OK ya se encuentra logueado",
-                                            "type": "boolean",
-                                            "example": "false"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The given data was invalid."
-                                        },
-                                        "errors": {
-                                            "description": "Lista de errores ",
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "error": {
-                                                        "type": "string",
-                                                        "example": "These credentials do not match our records."
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
                     }
                 }
             }
