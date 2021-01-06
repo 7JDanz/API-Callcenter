@@ -67,28 +67,26 @@ class MenuController extends Controller
     {
         $restaurante = 40;
         $menuPayload = null;
+        $plus_filter = '';
         if(!\Cache::has($menu))
         {
             $menuPayload = MenuPayload::where("IDMenu", $menu)
                                     ->where('status', '=', '1')
                                     ->get();
             \Cache::put($menu, $menuPayload, 3600);
-        } else {
-            $menuPayload = \Cache::get($menu);
-        }
 
-        $toReturn = [];
-        $plus = [];
-        foreach ($menuPayload as $payload) {
-            foreach($payload->MenuAgrupacion as $menu_agrupacion) {
-                if (is_array($menu_agrupacion['productos'])) {
-                    foreach($menu_agrupacion['productos'] as $producto) {
-                        array_push($plus, $producto['IDProducto']);
-                        if (is_array($producto['Preguntas'])) {
-                            foreach($producto['Preguntas'] as $pregunta) {
-                                if (is_array($pregunta['Respuestas'])) {
-                                    foreach($pregunta['Respuestas'] as $respuesta) {
-                                        array_push($plus, $respuesta['IDProducto']);
+            $plus = [];
+            foreach ($menuPayload as $payload) {
+                foreach($payload->MenuAgrupacion as $menu_agrupacion) {
+                    if (is_array($menu_agrupacion['productos'])) {
+                        foreach($menu_agrupacion['productos'] as $producto) {
+                            array_push($plus, $producto['IDProducto']);
+                            if (is_array($producto['Preguntas'])) {
+                                foreach($producto['Preguntas'] as $pregunta) {
+                                    if (is_array($pregunta['Respuestas'])) {
+                                        foreach($pregunta['Respuestas'] as $respuesta) {
+                                            array_push($plus, $respuesta['IDProducto']);
+                                        }
                                     }
                                 }
                             }
@@ -96,8 +94,15 @@ class MenuController extends Controller
                     }
                 }
             }
+            $plus_filter = implode(',',$plus);
+
+            \Cache::put($plus_filter, $plus_filter, 3600);
+        } else {
+            $menuPayload = \Cache::get($menu);
+            $plus_filter = \Cache::get($plus_filter);
         }
-        $plus_filter = implode(',',$plus);
+
+        $toReturn = [];
         $sql_query = "select * from config.fn_buscaPreciosxPlu ($restaurante,'$plus_filter')";
         $precios = DB::connection($this->connection)->select($sql_query);
         foreach ($menuPayload as $payload) {
