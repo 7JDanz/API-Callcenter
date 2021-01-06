@@ -40,12 +40,15 @@ Route::name("v1.")->middleware('auth:api')->group(function(){
             Route::get('/cliente-telefono/{telefono}',[ClienteController::class, 'clientePorTelefono'] )->name('clienteportelefono');
         });
 
-    Route::get( '/v1/ecu/geolocalizacion' , [GeolocalizacionController::class,'index'] );
-    Route::post( '/v1/ecu/geolocalizacion' , [GeolocalizacionController::class,'store'] );
-    Route::get( '/v1/ecu/geolocalizacion/{id}' , [GeolocalizacionController::class,'show'] );
-    Route::put( '/v1/ecu/geolocalizacion/{id}' , [GeolocalizacionController::class,'update'] );
-    Route::delete( '/v1/ecu/geolocalizacion/{id}' , [GeolocalizacionController::class,'destroy'] );
+
 });
+
+Route::get( '/v1/ecu/geolocalizacion' , [GeolocalizacionController::class,'index'] );
+Route::post( '/v1/ecu/geolocalizacion' , [GeolocalizacionController::class,'store'] );
+Route::get( '/v1/ecu/geolocalizacion/{id}' , [GeolocalizacionController::class,'show'] );
+Route::put( '/v1/ecu/geolocalizacion/{id}' , [GeolocalizacionController::class,'update'] );
+Route::delete( '/v1/ecu/geolocalizacion/{id}' , [GeolocalizacionController::class,'destroy'] );
+
 
 // Route::resource( '/v1/ecu/geolocalizacion' , GeolocalizacionController::class);
 Route::get('/pais',[PaisController::class,'index']);
