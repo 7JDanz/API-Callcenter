@@ -77,6 +77,7 @@ class MenuController extends Controller
             $menuPayload = \Cache::get($menu);
         }
 
+        $toReturn = [];
         $plus = [];
         foreach ($menuPayload as $payload) {
             foreach($payload->MenuAgrupacion as $menu_agrupacion) {
