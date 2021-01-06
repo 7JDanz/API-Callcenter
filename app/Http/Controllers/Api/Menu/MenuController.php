@@ -66,23 +66,28 @@ class MenuController extends Controller
     public function menuPayload($menu)
     {
         $restaurante = 40;
+        $menuPayload = null;
         if(!\Cache::has($menu))
         {
             $menuPayload = MenuPayload::where("IDMenu", $menu)
                                     ->where('status', '=', '1')
                                     ->get();
-            $plus = [];
-            foreach ($menuPayload as $payload) {
-                foreach($payload->MenuAgrupacion as $menu_agrupacion) {
-                    if (is_array($menu_agrupacion['productos'])) {
-                        foreach($menu_agrupacion['productos'] as $producto) {
-                            array_push($plus, $producto['IDProducto']);
-                            if (is_array($producto['Preguntas'])) {
-                                foreach($producto['Preguntas'] as $pregunta) {
-                                    if (is_array($pregunta['Respuestas'])) {
-                                        foreach($pregunta['Respuestas'] as $respuesta) {
-                                            array_push($plus, $respuesta['IDProducto']);
-                                        }
+            \Cache::put($menu, $menuPayload, 3600);
+        } else {
+            $menuPayload = \Cache::get($menu);
+        }
+
+        $plus = [];
+        foreach ($menuPayload as $payload) {
+            foreach($payload->MenuAgrupacion as $menu_agrupacion) {
+                if (is_array($menu_agrupacion['productos'])) {
+                    foreach($menu_agrupacion['productos'] as $producto) {
+                        array_push($plus, $producto['IDProducto']);
+                        if (is_array($producto['Preguntas'])) {
+                            foreach($producto['Preguntas'] as $pregunta) {
+                                if (is_array($pregunta['Respuestas'])) {
+                                    foreach($pregunta['Respuestas'] as $respuesta) {
+                                        array_push($plus, $respuesta['IDProducto']);
                                     }
                                 }
                             }
@@ -90,28 +95,30 @@ class MenuController extends Controller
                     }
                 }
             }
-            $plus_filter = implode(',',$plus);
-            $sql_query = "select * from config.fn_buscaPreciosxPlu ($restaurante,'$plus_filter')";
-            $precios = DB::connection($this->connection)->select($sql_query);
-            $toReturn = [];
-            foreach ($menuPayload as $payload) {
-                $new_item_to_return = null;
-                $new_payload = json_decode(json_encode($payload),true);
-                foreach($new_payload as $key=>$value) {
-                    if ($key ==  "MenuAgrupacion") {
-                        $new_item_to_return[$key] = $this->process_menu_agrupacion($value,$precios);
-                    } elseif ($key ==  "MenuCategorias") {
-                        $new_item_to_return[$key] = $this->process_menu_categorias($value,$precios);
-                    } else {
-                        $new_item_to_return[$key] = $value;
-                    }
-                }
-                array_push($toReturn, $new_item_to_return);
-            }
-            \Cache::put($menu, json_encode($toReturn), 3600);
-
         }
-        return \Cache::get($menu);
+        $plus_filter = implode(',',$plus);
+        $sql_query = "select * from config.fn_buscaPreciosxPlu ($restaurante,'$plus_filter')";
+        $precios = DB::connection($this->connection)->select($sql_query);
+        foreach ($menuPayload as $payload) {
+            $new_item_to_return = null;
+            $new_payload = json_decode(json_encode($payload),true);
+            foreach($new_payload as $key=>$value) {
+                if ($key ==  "MenuAgrupacion") {
+                    $new_item_to_return[$key] = $this->process_menu_agrupacion($value,$precios);
+                } elseif ($key ==  "MenuCategorias") {
+                    $new_item_to_return[$key] = $this->process_menu_categorias($value,$precios);
+                } else {
+                    $new_item_to_return[$key] = $value;
+                }
+            }
+            array_push($toReturn, $new_item_to_return);
+        }
+        return response()->json(
+            $toReturn
+            , 200
+            , ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8']
+            ,JSON_PRETTY_PRINT
+        );
     }
 
     function process_menu_agrupacion($menu_agrupacion, $precios) {
