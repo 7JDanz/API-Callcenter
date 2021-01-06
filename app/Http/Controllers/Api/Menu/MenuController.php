@@ -96,10 +96,10 @@ class MenuController extends Controller
             }
             $plus_filter = implode(',',$plus);
 
-            \Cache::put($plus_filter, $plus_filter, 3600);
+            \Cache::put('plus_'.$menu, $plus_filter, 3600);
         } else {
             $menuPayload = \Cache::get($menu);
-            $plus_filter = \Cache::get($plus_filter);
+            $plus_filter = \Cache::get('plus_'.$menu);
         }
 
         $toReturn = [];
