@@ -37,10 +37,10 @@ class GeolocalizacionController extends Controller
     public function getCercania(Request $request)
     {
 
-        $polygonResults = null;
+        $polygonResults = [];
         $pointFind = new Coordinate($request->lat,  $request->lng);
         $polygonos = Geolocalizacion::all();
-
+        $encontro  = false;
         foreach ($polygonos as $poligon) {
             $geofence = new Polygon();
 
@@ -51,14 +51,20 @@ class GeolocalizacionController extends Controller
             $existe = $geofence->contains($pointFind);
 
             if ($existe) {
+                $encontro = true;
                 $polygonResults = $poligon;
                 break;
             }
         }
 
-        $restaurante = Restaurante::with(['geolocalizacion'])
-                                    ->where("IDRestaurante", $polygonResults->id_restaurante)
-                                    ->first();
+        if ($encontro){
+            $restaurante = Restaurante::with(['geolocalizacion'])
+            ->where("IDRestaurante", $polygonResults->id_restaurante)
+            ->first();
+        }else {
+            $restaurante  = ["estado" => "201" ,  "mensaje" => "No encontrado"];
+        }
+
 
         return $restaurante;
     }
