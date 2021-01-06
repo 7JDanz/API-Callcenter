@@ -10,7 +10,7 @@ class Menu extends Model
     use HasFactory;
     protected $table = 'trade.menu';
     //protected $primaryKey = 'IDMenu';
-
+    protected $connection='sqlsrv_mxp_ecu';
 
     protected $fillable = [
         'IDMenu',
