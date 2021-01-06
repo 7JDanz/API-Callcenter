@@ -24,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        /*
         $configuracionesDB = Conexion::select()
             ->get()
             ->transform(function ($conexion) {
@@ -46,5 +47,6 @@ class AppServiceProvider extends ServiceProvider
             ->toArray() ;
         $conexiones = config('database.connections')+$configuracionesDB;
         config(['database.connections' =>$conexiones]);
+        */
     }
 }
