@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Clientes\ClienteController;
 use App\Http\Controllers\GeolocalizacionController;
 use App\Http\Controllers\Api\Pais\PaisController;
 use App\Http\Controllers\Api\Restaurante\RestauranteController;
+use App\Http\Controllers\Api\Menu\MenuController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +53,16 @@ Route::get('/restaurante/IDRestaurante/{id}',[RestauranteController::class,'rest
 Route::get('/restaurante/IDCadena/{id}',[RestauranteController::class,'restaurantePorCadena'])->name('restaurante');
 Route::get('/restaurante/poligono-cobertura',[RestauranteController::class,'poligonoCobertura'])->name('poligonoCobertura');
 
+Route::get('/menu/IDCadena/{id}',[MenuController::class,'menuPorCadena'])->name('id');
+//Busqueda por ID
+Route::get('/menu/IDMenu/{id}',[MenuController::class,'menuAgrupadoPorid'])->name('id');
+
+//Menu categorias
+Route::get('/menu/menu-categoria/IDMenu/{id}',[MenuController::class,'menuCategorias'])->name('id');;
+
+Route::get('/menu/menu-agrupacion/IDMenu/{id}',[MenuController::class,'menuPayload'])->name('id');
+
+Route::get('/menu/menu-buscar/IDMenu/{id}',[MenuController::class,'buscarProducto'])->name('id');
 Route::get( '/v1/ecu/buscar-restaurante-cercano' , [GeolocalizacionController::class,'getCercania']);
 Route::get( '/v1/ecu/datos-restaurante' , [GeolocalizacionController::class,'getDatosRestaurante']);
 

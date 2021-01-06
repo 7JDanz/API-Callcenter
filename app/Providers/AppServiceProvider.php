@@ -44,7 +44,7 @@ class AppServiceProvider extends ServiceProvider
             })
             ->keyBy("nombre")
             ->toArray() ;
-        $conexiones=config('database.connections')+$configuracionesDB;
+        $conexiones = config('database.connections')+$configuracionesDB;
         config(['database.connections' =>$conexiones]);
     }
 }
