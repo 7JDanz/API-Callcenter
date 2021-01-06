@@ -9,6 +9,7 @@ class MenuCategorias extends Model
 {
     use HasFactory;
     protected $table = 'callcenter.menu_productos_subcategoria';
+    protected $connection='sqlsrv_mxp_ecu';
     
     protected $fillable = [        
         'IDCategoria',
