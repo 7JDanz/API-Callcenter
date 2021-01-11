@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\Pais\PaisController;
 use App\Http\Controllers\Api\Restaurante\RestauranteController;
 use App\Http\Controllers\Api\Menu\MenuController;
 use App\Http\Controllers\Api\Menu\SubcategoriaController;
+use App\Http\Controllers\Api\Usuarios\UsuariosPosController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -25,6 +27,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 */
+
+Route::post('/login' , [UsuariosPosController::class,'validarDatosAcceso'] );
+Route::post('/actualizar_usuarios' , [UsuariosPosController::class,'actualizar_usuarios'] );
+
 Route::middleware('auth:api')->get('/usuario', function (Request $request) {
     return $request->user();
 });
