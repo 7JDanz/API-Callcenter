@@ -57,7 +57,7 @@ class ClienteController extends Controller
     *     )
     * )
     */
-    public function cliente($documento){
+    public function cliente($pais,$documento){
         return Cliente::where("Ruc_Cedula",$documento)
             ->with(["telefonos","telefonos.direcciones"])
             ->get();
@@ -98,7 +98,7 @@ class ClienteController extends Controller
     *     )
     * )
     */
-    public function clientePorEmail($email){
+    public function clientePorEmail($pais,$email){
         return Cliente::where("Correo",$email)
             ->with(["telefonos","telefonos.direcciones"])
             ->get();
@@ -140,7 +140,7 @@ class ClienteController extends Controller
     * )
     * @return JsonResponse
     */
-    public function clientePorTelefono($telefono){
+    public function clientePorTelefono($pais,$telefono){
         return Cliente::whereHas('telefonos', function($q) use($telefono)
         {
             $q->where('Telefono',$telefono);
