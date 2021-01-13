@@ -5,11 +5,21 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\Pais;
+use Illuminate\Support\Facades\Config;
 
 class UsersPosService
 {
-    public function validarLogin($usuario, $clave, $pais_id) {
+    public function validarLogin($usuario, $clave) {
+        $pais_prefix = Config::get("PAIS_RUTA_PETICION");
+        $pais = DB::table("paises")->select([
+            "id"
+        ])
+        ->where("prefijo_pais",$pais_prefix)
+        ->first();
+        $pais_id = $pais->id;
         $status = "Activo";
+
         $user = User::select([
             "id", "IDUsersPos", "name", "prf_descripcion", "pais_id"
         ])
@@ -53,7 +63,7 @@ class UsersPosService
             if (!$user_to_add) {
                 return ["user_name"=>"", "prf_descripcion"=>"", "user_id"=>"", "IDUsersPos"=>"", "token"=>"", "grant"=>false];
             } else {
-                $email = ""; //TODO: validar que se coloca en email
+                $email = "";
                 $new_user_added = $this->insert_user($user_to_add->name, $email, $clave, $status, $user_to_add->profile, $pais_id, $usuario, $user_to_add->IDUsersPos);
                 if ($new_user_added) {
                     $token = $new_user_added->createToken('token')->accessToken;
@@ -73,8 +83,6 @@ class UsersPosService
         }
 
         return ["user_name"=>"", "prf_descripcion"=>"", "user_id"=>"", "IDUsersPos"=>"", "token"=>"", "grant"=>false];
-
-        //TODO: Llamar con curl al update_users_batch;
     }
 
     protected function insert_user($name, $email, $password, $std_descripcion, $prf_descripcion, $pais_id, $usuario, $IDUsersPos) {

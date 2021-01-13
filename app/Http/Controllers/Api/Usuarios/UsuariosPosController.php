@@ -9,11 +9,10 @@ use App\Services\UsersPosService;
 
 class UsuariosPosController extends Controller
 {
-    //TODO: traer el pais_id a partir del middleware
     public function validarDatosAcceso(Request $request) {
         $result = $request->json()->all();
         $usersPosService = new UsersPosService();
-        return json_encode($usersPosService->validarLogin($result['usuario'],$result['clave'],$result['pais_id']));
+        return json_encode($usersPosService->validarLogin($result['usuario'],$result['clave']));
     }
 
     public function actualizar_usuarios(Request $request) {

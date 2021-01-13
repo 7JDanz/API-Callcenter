@@ -28,7 +28,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 */
 
-Route::post('/login' , [UsuariosPosController::class,'validarDatosAcceso'] );
+Route::middleware(['multipais'])
+        ->prefix("/{pais}")
+        ->where(['pais' => 'ecu|chi|col|arg'])
+        ->group(function() {
+            Route::post('/login' , [UsuariosPosController::class,'validarDatosAcceso'] );
+});
+
 Route::post('/actualizar_usuarios' , [UsuariosPosController::class,'actualizar_usuarios'] );
 
 Route::middleware('auth:api')->get('/usuario', function (Request $request) {
