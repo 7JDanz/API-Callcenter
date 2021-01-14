@@ -33,13 +33,22 @@ Route::middleware(['multipais'])
         ->where(['pais' => 'ecu|chi|col|arg'])
         ->group(function() {
             Route::post('/login' , [UsuariosPosController::class,'validarDatosAcceso'] );
+            Route::post('/insert_user' , [UsuariosPosController::class,'insert_user'] );
 });
 
 Route::post('/actualizar_usuarios' , [UsuariosPosController::class,'actualizar_usuarios'] );
 
-Route::middleware('auth:api')->get('/usuario', function (Request $request) {
-    return $request->user();
+Route::middleware(['multipais'])->prefix("/{pais}")
+        ->where(['pais' => 'ecu|chi|col|arg'])
+        ->group(function(){
+                Route::middleware('auth:api')->group(function(){
+                    Route::get('/prueba', function (Request $request) {
+                         return $request->user();
+                    });
+                });
 });
+
+
 
 Route::name("v1.")->middleware('auth:api')->group(function(){
 

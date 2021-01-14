@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Pais;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Crypt;
 
 class UsersPosService
 {
@@ -19,17 +20,14 @@ class UsersPosService
         ->first();
         $pais_id = $pais->id;
         $status = "Activo";
-
         $user = User::select([
-            "id", "IDUsersPos", "name", "prf_descripcion", "pais_id"
+            "id", "IDUsersPos", "name", "prf_descripcion", "pais_id", "password"
         ])
         ->where("usuario", $usuario)
         ->where("std_descripcion",$status)
-        ->whereRaw("PWDCOMPARE(?,password)=1",[$clave])
         ->first();
-
         if ($user) {
-            if ($user->pais_id !== $pais_id) {
+            if ($user->pais_id !== $pais_id || Crypt::decryptString($user->password) !== $clave) {
                 return ["user_name"=>"", "prf_descripcion"=>"", "user_id"=>"", "IDUsersPos"=>"", "token"=>"", "grant"=>false];
             }
             $token = $user->createToken('token')->accessToken;
@@ -85,17 +83,18 @@ class UsersPosService
         return ["user_name"=>"", "prf_descripcion"=>"", "user_id"=>"", "IDUsersPos"=>"", "token"=>"", "grant"=>false];
     }
 
-    protected function insert_user($name, $email, $password, $std_descripcion, $prf_descripcion, $pais_id, $usuario, $IDUsersPos) {
-        $sql_query = "EXECUTE New_User '$name', '$email', '$password', '$std_descripcion', '$prf_descripcion', $pais_id, '$usuario', '$IDUsersPos';";
-        DB::raw($sql_query);
-        $new_user = User::select([
-            "id", "IDUsersPos", "name", "prf_descripcion", "pais_id"
-        ])
-        ->where("usuario", $usuario)
-        ->where("std_descripcion", $std_descripcion)
-        ->whereRaw("PWDCOMPARE(?,password)=1",[$password])
-        ->first();
-        return $new_user;
+    public function insert_user($name, $email, $password, $std_descripcion, $prf_descripcion, $pais_id, $usuario, $IDUsersPos) {
+        $new_user_to_add = new User();
+        $new_user_to_add->password = Crypt::encryptString($password);
+        $new_user_to_add->name = $name;
+        $new_user_to_add->email = $email;
+        $new_user_to_add->std_descripcion = $std_descripcion;
+        $new_user_to_add->prf_descripcion = $prf_descripcion;
+        $new_user_to_add->pais_id = $pais_id;
+        $new_user_to_add->usuario = $usuario;
+        $new_user_to_add->IDUsersPos = $IDUsersPos;
+        $new_user_to_add->save();
+        return $new_user_to_add;
     }
 
     public function get_connection_name($pais_id) {

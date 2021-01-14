@@ -19,4 +19,10 @@ class UsuariosPosController extends Controller
         $usersPosService = new UsersPosService();
         return $usersPosService->update_users_batch();
     }
+
+    public function insert_user(Request $request) {
+        $result = $request->json()->all();
+        $usersPosService = new UsersPosService();
+        return $usersPosService->insert_user($result['name'], $result['email'], $result['password'], $result['std_descripcion'], $result['prf_descripcion'], $result['pais_id'], $result['usuario'], $result['IDUsersPos']);
+    }
 }
