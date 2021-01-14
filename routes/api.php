@@ -37,12 +37,16 @@ Route::middleware(['multipais'])
 
 Route::post('/actualizar_usuarios' , [UsuariosPosController::class,'actualizar_usuarios'] );
 
+Route::post('/update_users_batch' , [UsuariosPosController::class,'update_users_batch'] );
+
+
 Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
         ->where(['pais' => 'ecu|chi|col|arg'])
         ->group(function(){
             Route::get('/prueba', function (Request $request) {
                     return $request->user();
             });
+            // aqui rutas
 });
 
 
