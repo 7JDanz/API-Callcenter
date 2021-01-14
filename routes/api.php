@@ -33,7 +33,6 @@ Route::middleware(['multipais'])
         ->where(['pais' => 'ecu|chi|col|arg'])
         ->group(function() {
             Route::post('/login' , [UsuariosPosController::class,'validarDatosAcceso'] );
-            Route::post('/insert_user' , [UsuariosPosController::class,'insert_user'] );
 });
 
 Route::post('/actualizar_usuarios' , [UsuariosPosController::class,'actualizar_usuarios'] );

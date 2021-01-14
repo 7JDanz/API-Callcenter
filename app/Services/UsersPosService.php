@@ -83,7 +83,7 @@ class UsersPosService
         return ["user_name"=>"", "prf_descripcion"=>"", "user_id"=>"", "IDUsersPos"=>"", "token"=>"", "grant"=>false];
     }
 
-    public function insert_user($name, $email, $password, $std_descripcion, $prf_descripcion, $pais_id, $usuario, $IDUsersPos) {
+    protected function insert_user($name, $email, $password, $std_descripcion, $prf_descripcion, $pais_id, $usuario, $IDUsersPos) {
         $new_user_to_add = new User();
         $new_user_to_add->password = Crypt::encryptString($password);
         $new_user_to_add->name = $name;
