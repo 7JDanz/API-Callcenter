@@ -72,4 +72,5 @@ Route::get('/menu/subcategoria/IDMenu/{id}',[SubcategoriaController::class,'inde
 Route::get( '/v1/ecu/buscar-restaurante-cercano' , [GeolocalizacionController::class,'getCercania']);
 Route::get( '/v1/ecu/datos-restaurante' , [GeolocalizacionController::class,'getDatosRestaurante']);
 
-
+Route::get( '/v1/ecu/restaurantes-cercanos' , [GeolocalizacionController::class,'getRestaurantesCercanos']);
+Route::get( '/v1/ecu/obtener-puntos-geo' , [GeolocalizacionController::class,'obtenerPuntos']);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Geolocalizacion;
+use App\Models\Locales;
 use App\Models\Restaurante;
 use Illuminate\Http\Request;
 
@@ -27,6 +28,51 @@ class GeolocalizacionController extends Controller
                                     ->first();
         return $restaurante;
     }
+
+    public function getRestaurantesCercanos(Request $request)
+    {
+
+        $c = Locales::with("restaurante:IDRestaurante,IDTienda,Nombre");
+        $c->where('location.point', 'near', [
+            '$geometry' => [
+                'type' => 'Point',
+                'coordinates' => [
+                    $request->longitude,
+                    $request->latitude,
+                ],
+            ],
+            '$maxDistance' => 5 * 1000,
+        ]) ;
+        return  $c->get()  ;
+    }
+    public function obtenerPuntos(Request $request) {
+
+        $address = urlencode($request->direccion);
+        $googleMapUrl = "https://maps.googleapis.com/maps/api/geocode/json?address={$address}&key=AIzaSyAgo_FfLGAjc0uszGFn2Za_Dssold8k_HM";
+        $geocodeResponseData = file_get_contents($googleMapUrl);
+        $responseData = json_decode($geocodeResponseData, true);
+
+        if($responseData['status']=='OK') {
+            $latitude = isset($responseData['results'][0]['geometry']['location']['lat']) ? $responseData['results'][0]['geometry']['location']['lat'] : "";
+            $longitude = isset($responseData['results'][0]['geometry']['location']['lng']) ? $responseData['results'][0]['geometry']['location']['lng'] : "";
+            $formattedAddress = isset($responseData['results'][0]['formatted_address']) ? $responseData['results'][0]['formatted_address'] : "";
+
+            if($latitude && $longitude && $formattedAddress) {
+
+                return ["direccion"  =>  $formattedAddress  ,"latitude" => $latitude ,  "longitude" => $longitude];
+            }
+            else {
+                    return false;
+                 }
+            } else
+            {
+                echo "ERROR: {$responseData['status']}";
+                return false;
+            }
+
+
+    }
+
 
 
     /**
