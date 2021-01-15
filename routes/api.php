@@ -22,11 +22,6 @@ use App\Http\Controllers\Api\Usuarios\UsuariosPosController;
 |
 */
 
-/*
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-*/
 
 Route::middleware(['multipais'])
         ->prefix("/{pais}")
@@ -35,63 +30,56 @@ Route::middleware(['multipais'])
             Route::post('/login' , [UsuariosPosController::class,'validarDatosAcceso'] );
 });
 
-Route::post('/actualizar_usuarios' , [UsuariosPosController::class,'actualizar_usuarios'] );
+Route::middleware([])->group(function() {
+    Route::post('/actualizar_usuarios' , [UsuariosPosController::class,'actualizar_usuarios'] );
+    Route::post('/update_users_batch' , [UsuariosPosController::class,'update_users_batch'] );
+    Route::get('/pais',[PaisController::class,'index']);
+});
 
-Route::post('/update_users_batch' , [UsuariosPosController::class,'update_users_batch'] );
+Route::name("v1.")->middleware(['multipais', 'auth:api'])->prefix("/{pais}")
+//Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
+->where(['pais' => 'ecu|chi|col|arg'])
+->group(function(){
+    Route::get('/prueba' , function (Request $request) { return $request->user();});
 
+    //CLIENTES
+    Route::get('/cliente/{documento}' , [ClienteController::class, 'cliente'] )->name('clientepordocumento');
+    Route::get('/cliente-email/{email}' , [ClienteController::class, 'clientePorEmail'] )->name('clienteporemail');
+    Route::get('/cliente-telefono/{telefono}' , [ClienteController::class, 'clientePorTelefono'] )->name('clienteportelefono');
 
-Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
-        ->where(['pais' => 'ecu|chi|col|arg'])
-        ->group(function(){
-            Route::get('/prueba', function (Request $request) {
-                    return $request->user();
-            });
-            // aqui rutas
+    //GEOLOCALIZACION
+    Route::get('/geolocalizacion' , [GeolocalizacionController::class,'index'] );
+    Route::post('/geolocalizacion' , [GeolocalizacionController::class,'store'] );
+    Route::get('/geolocalizacion/{id}' , [GeolocalizacionController::class,'show'] );
+    Route::put('/geolocalizacion/{id}' , [GeolocalizacionController::class,'update'] );
+    Route::delete('/geolocalizacion/{id}' , [GeolocalizacionController::class,'destroy'] );
+
+    //RESTAURANTE
+    Route::get('/restaurante/IDRestaurante/{id}' , [RestauranteController::class,'restaurantePorId'])->name('id');
+    Route::get('/restaurante/IDCadena/{id}' , [RestauranteController::class,'restaurantePorCadena'])->name('restaurante');
+    Route::get('/restaurante/poligono-cobertura' , [RestauranteController::class,'poligonoCobertura'])->name('poligonoCobertura');
+    Route::get('/buscar-restaurante-cercano' , [GeolocalizacionController::class,'getCercania']);
+    Route::get('/datos-restaurante' , [GeolocalizacionController::class,'getDatosRestaurante']);
+
+    //Menu por Cadena
+    Route::get('/menu/IDCadena/{id}',[MenuController::class,'menuPorCadena'])->name('id');
+    //Busqueda por ID
+    Route::get('/menu/IDMenu/{id}',[MenuController::class,'menuAgrupadoPorid'])->name('id');
+    //Menu categorias
+    Route::get('/menu/menu-categoria/IDMenu/{id}',[MenuController::class,'menuCategorias'])->name('id');;
+    //Menu agrupacion
+    Route::get('/menu/menu-agrupacion/IDMenu/{id}',[MenuController::class,'menuPayload'])->name('id');
+    //Buscar producto
+    Route::get('/menu/menu-buscar/IDMenu/{id}',[MenuController::class,'buscarProducto'])->name('id');
+    //Buscar Subcategoria
+    Route::get('/menu/subcategoria/IDMenu/{id}',[SubcategoriaController::class,'index'])->name('id');
 });
 
 
 
-Route::name("v1.")->middleware('auth:api')->group(function(){
-
-    Route::middleware(['multipais'])
-        ->prefix("/{pais}")
-        ->where(['pais' => 'ecu|chi|col|arg'])
-        ->group(function() {
-            Route::get('/cliente/{documento}',[ClienteController::class, 'cliente'] )->name('clientepordocumento');
-            Route::get('/cliente-email/{email}',[ClienteController::class, 'clientePorEmail'] )->name('clienteporemail');
-            Route::get('/cliente-telefono/{telefono}',[ClienteController::class, 'clientePorTelefono'] )->name('clienteportelefono');
-        });
 
 
-});
-
-Route::get( '/v1/ecu/geolocalizacion' , [GeolocalizacionController::class,'index'] );
-Route::post( '/v1/ecu/geolocalizacion' , [GeolocalizacionController::class,'store'] );
-Route::get( '/v1/ecu/geolocalizacion/{id}' , [GeolocalizacionController::class,'show'] );
-Route::put( '/v1/ecu/geolocalizacion/{id}' , [GeolocalizacionController::class,'update'] );
-Route::delete( '/v1/ecu/geolocalizacion/{id}' , [GeolocalizacionController::class,'destroy'] );
 
 
-// Route::resource( '/v1/ecu/geolocalizacion' , GeolocalizacionController::class);
-Route::get('/pais',[PaisController::class,'index']);
-Route::get('/restaurante/IDRestaurante/{id}',[RestauranteController::class,'restaurantePorId'])->name('id');
-Route::get('/restaurante/IDCadena/{id}',[RestauranteController::class,'restaurantePorCadena'])->name('restaurante');
-Route::get('/restaurante/poligono-cobertura',[RestauranteController::class,'poligonoCobertura'])->name('poligonoCobertura');
-
-//Menu por Cadena
-Route::get('/menu/IDCadena/{id}',[MenuController::class,'menuPorCadena'])->name('id');
-//Busqueda por ID
-Route::get('/menu/IDMenu/{id}',[MenuController::class,'menuAgrupadoPorid'])->name('id');
-//Menu categorias
-Route::get('/menu/menu-categoria/IDMenu/{id}',[MenuController::class,'menuCategorias'])->name('id');;
-//Menu agrupacion
-Route::get('/menu/menu-agrupacion/IDMenu/{id}',[MenuController::class,'menuPayload'])->name('id');
-//Buscar producto
-Route::get('/menu/menu-buscar/IDMenu/{id}',[MenuController::class,'buscarProducto'])->name('id');
-//Buscar Subcategoria
-Route::get('/menu/subcategoria/IDMenu/{id}',[SubcategoriaController::class,'index'])->name('id');
-
-Route::get( '/v1/ecu/buscar-restaurante-cercano' , [GeolocalizacionController::class,'getCercania']);
-Route::get( '/v1/ecu/datos-restaurante' , [GeolocalizacionController::class,'getDatosRestaurante']);
 
 
