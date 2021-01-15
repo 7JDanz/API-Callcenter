@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', 'sqlsrv'),
 
     /*
     |--------------------------------------------------------------------------
@@ -81,11 +81,11 @@ return [
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', 'localhost'),
-            'port' => env('DB_PORT', '1433'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
+            'host' => env('DB_HOST', '192.168.101.30\maxpoint16'),
+            'port' => env('DB_PORT', '4135'),
+            'database' => env('DB_DATABASE', 'clienteskfc'),
+            'username' => env('DB_USERNAME', 'sis_maxpoint'),
+            'password' => env('DB_PASSWORD', 'maxpoint*88'),
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
