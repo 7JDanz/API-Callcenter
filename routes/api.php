@@ -82,4 +82,5 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
 
 
 
-
+Route::get( '/v1/ecu/restaurantes-cercanos' , [GeolocalizacionController::class,'getRestaurantesCercanos']);
+Route::get( '/v1/ecu/obtener-puntos-geo' , [GeolocalizacionController::class,'obtenerPuntos']);

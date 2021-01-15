@@ -90,7 +90,18 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
         ],
-
+        'sqlsrv_distribuidor' => [
+            'driver' => 'sqlsrv',
+            'url' => env('DATABASE_URL_DISTRIBUIDOR', ''),
+            'host' => env('DB_HOST_DISTRIBUIDOR'),
+            'port' => env('DB_PORT_DISTRIBUIDOR'),
+            'database' => env('DB_DATABASE_DISTRIBUIDOR'),
+            'username' => env('DB_USERNAME_DISTRIBUIDOR'),
+            'password' => env('DB_PASSWORD_DISTRIBUIDOR'),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+        ],
         'sqlsrv_clientes' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_CLIENTES_URL'),
@@ -103,7 +114,24 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
         ],
-        /*
+
+        'mongodb' => [
+            'driver' => 'mongodb',
+            'dsn' => 'mongodb+srv://pulpokfc:p2uiuNqypjbYrbss@cluster0.srwxy.mongodb.net/geolocalizacion?retryWrites=true&w=majority',
+            'database' => 'geolocalizacion'
+     // 'mongodb' => [
+        //     'driver' => 'mongodb',
+        //     'host' => env('MONGO_DB_HOST', '127.0.0.1'),
+        //     'port' => env('MONGO_DB_PORT', 27017),
+        //     'database' => env('MONGO_DB_DATABASE', ''),
+        //     'username' => env('MONGO_DB_USERNAME', ''),
+        //     'password' => env('MONGO_DB_PASSWORD', ''),
+        //     'options' => [
+        //     ],
+
+        ],
+
+
         'sqlsrv_mxp_ecu' => [
             'driver' => 'sqlsrv',
             'url' => env('DB_MAXPOINTECU_URL'),
@@ -116,7 +144,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
         ],
-        */
+
     ],
 
     /*
