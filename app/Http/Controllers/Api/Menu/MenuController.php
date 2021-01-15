@@ -10,11 +10,10 @@ use App\Models\MenuPayload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use App\Services\UsersPosService;
 
 class MenuController extends Controller
 {
-
-    protected $connection = 'sqlsrv_mxp_ecu';
 
     /**
      * @OA\Get(
@@ -103,6 +102,15 @@ class MenuController extends Controller
         }
 
         $toReturn = [];
+        $pais_prefix = Config::get("PAIS_RUTA_PETICION");
+        $pais = DB::table("paises")->select([
+            "id"
+        ])
+        ->where("prefijo_pais",$pais_prefix)
+        ->first();
+        $pais_id = $pais->id;
+        $user_pos_service = new UsersPosService();
+        $conexion = $user_pos_service->get_connection_name($pais_id);
         $sql_query = "select * from config.fn_buscaPreciosxPlu ($restaurante,'$plus_filter')";
         $precios = DB::connection($this->connection)->select($sql_query);
         foreach ($menuPayload as $payload) {
