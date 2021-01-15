@@ -113,7 +113,7 @@ class MenuController extends Controller
         $user_pos_service = new UsersPosService();
         $conexion = $user_pos_service->get_connection_name($pais_id);
         $sql_query = "select * from config.fn_buscaPreciosxPlu ($restaurante,'$plus_filter')";
-        $precios = DB::connection($this->connection)->select($sql_query);
+        $precios = DB::connection($conexion)->select($sql_query);
         foreach ($menuPayload as $payload) {
             $new_item_to_return = null;
             $new_payload = json_decode(json_encode($payload),true);
