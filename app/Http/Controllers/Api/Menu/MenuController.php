@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Services\UsersPosService;
+use Illuminate\Support\Facades\Config;
 
 class MenuController extends Controller
 {
