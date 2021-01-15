@@ -36,8 +36,8 @@ Route::middleware([])->group(function() {
     Route::get('/pais',[PaisController::class,'index']);
 });
 
-Route::name("v1.")->middleware(['multipais', 'auth:api'])->prefix("/{pais}")
-//Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
+//Route::name("v1.")->middleware(['multipais', 'auth:api'])->prefix("/{pais}")
+Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
 ->where(['pais' => 'ecu|chi|col|arg'])
 ->group(function(){
     Route::get('/prueba' , function (Request $request) { return $request->user();});
