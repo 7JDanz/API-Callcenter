@@ -51,7 +51,7 @@ class RestauranteController extends Controller
      *      )
      *     )
      */
-    public function restaurantePorId($id)
+    public function restaurantePorId($pais,$id)
     {
         $myArray = explode(',', $id);
         $restaurante = Restaurante::whereIn("IDRestaurante", $myArray)->get();
@@ -91,7 +91,7 @@ class RestauranteController extends Controller
      *      )
      *     )
      */
-    public function restaurantePorCadena($cadena)
+    public function restaurantePorCadena($pais,$cadena)
     {
         $restaurante = Restaurante::where("IDCadena", $cadena)->get();
         return response()->json([

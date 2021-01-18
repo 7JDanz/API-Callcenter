@@ -47,7 +47,7 @@ class MenuController extends Controller
      *      )
      *     )
      */
-    public function menuPorCadena($cadena)
+    public function menuPorCadena($pais,$cadena)
     {
         $myArray = explode(',', $cadena);
         $menu = Menu::whereIn("IDCadena", $myArray)->get();
@@ -56,14 +56,14 @@ class MenuController extends Controller
         ]);
     }
 
-    public function menuAgrupadoPorid($menu)
+    public function menuAgrupadoPorid($pais,$menu)
     {
         $menuAgrupado = MenuAgrupacion::where("IDMenu", $menu)->get();
         return $menuAgrupado;
 
     }
 
-    public function menuPayload($menu)
+    public function menuPayload($pais,$menu)
     {
         $restaurante = 40;
         $menuPayload = null;
@@ -176,7 +176,7 @@ class MenuController extends Controller
         return $toReturn;
     }
 
-    public function menuCategorias($menu)
+    public function menuCategorias($pais,$menu)
     {
         $menuCategoria = MenuCategorias::where("IDMenu", $menu)
                                         ->get();

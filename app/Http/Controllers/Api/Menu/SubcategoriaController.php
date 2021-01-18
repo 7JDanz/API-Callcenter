@@ -13,7 +13,7 @@ class SubcategoriaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($menu)
+    public function index($pais,$menu)
     {
         //
         $subcategoria = Subcategoria::where("IDMenu",$menu)->get();
