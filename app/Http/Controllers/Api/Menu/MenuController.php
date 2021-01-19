@@ -10,11 +10,11 @@ use App\Models\MenuPayload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
-use App\Services\UsersPosService;
 use Illuminate\Support\Facades\Config;
 
 class MenuController extends Controller
 {
+    protected $connection = Config::get("NOMBRE_CONEXION_AZURE");
 
     /**
      * @OA\Get(
@@ -47,7 +47,7 @@ class MenuController extends Controller
      *      )
      *     )
      */
-    public function menuPorCadena($pais,$cadena)
+    public function menuPorCadena($cadena)
     {
         $myArray = explode(',', $cadena);
         $menu = Menu::whereIn("IDCadena", $myArray)->get();
@@ -56,14 +56,14 @@ class MenuController extends Controller
         ]);
     }
 
-    public function menuAgrupadoPorid($pais,$menu)
+    public function menuAgrupadoPorid($menu)
     {
         $menuAgrupado = MenuAgrupacion::where("IDMenu", $menu)->get();
         return $menuAgrupado;
 
     }
 
-    public function menuPayload($pais,$menu)
+    public function menuPayload($menu)
     {
         $restaurante = 40;
         $menuPayload = null;
@@ -103,17 +103,8 @@ class MenuController extends Controller
         }
 
         $toReturn = [];
-        $pais_prefix = Config::get("PAIS_RUTA_PETICION");
-        $pais = DB::table("paises")->select([
-            "id"
-        ])
-        ->where("prefijo_pais",$pais_prefix)
-        ->first();
-        $pais_id = $pais->id;
-        $user_pos_service = new UsersPosService();
-        $conexion = $user_pos_service->get_connection_name($pais_id);
         $sql_query = "select * from config.fn_buscaPreciosxPlu ($restaurante,'$plus_filter')";
-        $precios = DB::connection($conexion)->select($sql_query);
+        $precios = DB::connection($this->connection)->select($sql_query);
         foreach ($menuPayload as $payload) {
             $new_item_to_return = null;
             $new_payload = json_decode(json_encode($payload),true);
@@ -176,7 +167,7 @@ class MenuController extends Controller
         return $toReturn;
     }
 
-    public function menuCategorias($pais,$menu)
+    public function menuCategorias($menu)
     {
         $menuCategoria = MenuCategorias::where("IDMenu", $menu)
                                         ->get();
@@ -309,4 +300,7 @@ class MenuController extends Controller
         }
     }
 
+    function prueba_menu(Request $request) {
+        return $this->connection;
+    }
 }
