@@ -14,13 +14,6 @@ use Illuminate\Support\Facades\Config;
 
 class MenuController extends Controller
 {
-    private $connection = '';
-
-    public function __construct()
-    {
-        $this->connection = Config::get("NOMBRE_CONEXION_AZURE");
-    }
-
     /**
      * @OA\Get(
      *      path="/menu/IDCadena/{IDCadena}",
@@ -109,7 +102,7 @@ class MenuController extends Controller
 
         $toReturn = [];
         $sql_query = "select * from config.fn_buscaPreciosxPlu ($restaurante,'$plus_filter')";
-        $precios = DB::connection($this->connection)->select($sql_query);
+        $precios = DB::connection($this->getConnectionName())->select($sql_query);
         foreach ($menuPayload as $payload) {
             $new_item_to_return = null;
             $new_payload = json_decode(json_encode($payload),true);
@@ -228,7 +221,7 @@ class MenuController extends Controller
         }
         $plus_filter = implode(',',$plus);
         $sql_query = "select * from config.fn_buscaPreciosxPlu ($restaurante,'$plus_filter')";
-        $precios = DB::connection($this->connection)->select($sql_query);
+        $precios = DB::connection($this->getConnectionName())->select($sql_query);
         $toReturn = $this->process_productos($productos_encontrados, $precios);
         return response()->json(
             $toReturn
@@ -305,7 +298,8 @@ class MenuController extends Controller
         }
     }
 
-    function prueba_menu(Request $request) {
-        return Config::get("NOMBRE_CONEXION_AZURE") . ' la conexion';
+    protected function getConnectionName()
+    {
+        return Config::get("NOMBRE_CONEXION_AZURE");
     }
 }
