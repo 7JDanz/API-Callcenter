@@ -10,13 +10,22 @@ class Menu extends Model
     use HasFactory;
     protected $table = 'trade.menu';
     //protected $primaryKey = 'IDMenu';
-    protected $connection='sqlsrv_mxp_ecu';
+
+    public function getConnectionName()
+    {
+        return Config::get("NOMBRE_CONEXION_AZURE");
+    }
+
+    public function __construct()
+    {
+        $this->connection = Config::get("NOMBRE_CONEXION_AZURE");
+    }
 
     protected $fillable = [
         'IDMenu',
         'menu',
         'estado',
-        'IDCadena',       
+        'IDCadena',
     ];
 
     protected $hidden = [
@@ -26,9 +35,9 @@ class Menu extends Model
 
     public function menu_agrupacion()
     {
-        return $this->hasMany('App\Models\MenuAgrupacion');       
+        return $this->hasMany('App\Models\MenuAgrupacion');
     }
-    
+
     public function menu_categorias(){
         return $this->hasMany('App\Models\MenuCategorias');
     }

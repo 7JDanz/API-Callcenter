@@ -14,7 +14,12 @@ use Illuminate\Support\Facades\Config;
 
 class MenuController extends Controller
 {
-    protected $connection = Config::get("NOMBRE_CONEXION_AZURE");
+    private $connection = '';
+
+    public function __construct()
+    {
+        $this->connection = Config::get("NOMBRE_CONEXION_AZURE");
+    }
 
     /**
      * @OA\Get(
