@@ -306,6 +306,6 @@ class MenuController extends Controller
     }
 
     function prueba_menu(Request $request) {
-        return Config::get("NOMBRE_CONEXION_AZURE");;
+        return Config::get("NOMBRE_CONEXION_AZURE") . ' la conexion';
     }
 }
