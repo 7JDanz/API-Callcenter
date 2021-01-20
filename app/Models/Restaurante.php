@@ -43,6 +43,12 @@ class Restaurante extends Model
     public function geolocalizacion()
     {
 		return $this->hasOne('App\Models\Geolocalizacion', 'id_restaurante' ,'IDRestaurante');
-	}
+    }
+
+    public function horariosAtencion()
+    {
+		return $this->hasMany(HorarioAtencionRestaurante::class, 'IDRestaurante' ,'IDRestaurante');
+    }
+
 
 }

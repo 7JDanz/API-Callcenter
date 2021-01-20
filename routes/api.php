@@ -78,9 +78,16 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
 
 
 
-
+Route::get('/v1/ecu/geolocalizacion' ,  [GeolocalizacionController::class,'todos']    );
+Route::post('/v1/ecu/geolocalizacion' , [GeolocalizacionController::class,'store'] );
+Route::get( '/v1/ecu/geolocalizacion/{id}' , [GeolocalizacionController::class,'show']);
+Route::put('/v1/ecu/geolocalizacion/{id}' , [GeolocalizacionController::class,'update'] );
+Route::delete('/v1/ecu/geolocalizacion/{id}' , [GeolocalizacionController::class,'destroy'] );
 
 
 
 Route::get( '/v1/ecu/restaurantes-cercanos' , [GeolocalizacionController::class,'getRestaurantesCercanos']);
 Route::get( '/v1/ecu/obtener-puntos-geo' , [GeolocalizacionController::class,'obtenerPuntos']);
+Route::get( '/v1/ecu/utest' , [GeolocalizacionController::class,'utest']);
+
+

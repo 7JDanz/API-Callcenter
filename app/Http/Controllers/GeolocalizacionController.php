@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Geolocalizacion;
+use App\Models\HorarioAtencionRestaurante;
 use App\Models\Locales;
 use App\Models\Restaurante;
 use Illuminate\Http\Request;
@@ -20,31 +21,71 @@ class GeolocalizacionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
+    public function obtenerREstaurante(Request $request)
+    {
+        return    Restaurante::where("IDRestaurante", $request->rstId)
+        ->first();;
+    }
+
     public function getDatosRestaurante(Request $request)
     {
 
-        $restaurante = Restaurante::with(['geolocalizacion'])
-                                    ->where("IDRestaurante", $request->rstId)
-                                    ->first();
+        $restaurante = Restaurante::where("IDRestaurante", $request->rstId)
+        ->first();
+        // $restaurante = Restaurante::with(['geolocalizacion'])
+        //                             ->where("IDRestaurante", $request->rstId)
+        //                             ->first();
         return $restaurante;
+    }
+
+    public function utest(Request $request)
+    {
+
+
+      return   Locales::with(array('restaurante.horariosAtencion'=>function($query){
+            $query->select( 'IDRestaurante' , 'Dia' , 'horaInicio' ,'horaFin');
+        }))->get();
+
+
+
+    return  Locales::find("5ffe00f90c6d5852a7604792")
+        ->with(['restaurante.horariosAtencion'])
+        //->with(['subscriptionInvoiceDetails.store.city'])
+        ->first() ;
+
+
+        $c = Locales::with("restaurante.horariosAtencion");
+        return  $c->pluck("nombre")  ;
+
+
+
+
     }
 
     public function getRestaurantesCercanos(Request $request)
     {
+        $c =  Locales::with(array('restaurante.horariosAtencion'=>function($query){
+             $query->select( 'IDRestaurante' , 'Dia' , 'horaInicio' ,'horaFin');
+       })) ;
 
-        $c = Locales::with("restaurante:IDRestaurante,IDTienda,Nombre");
+       // $c = Locales::with("restaurante.horariosAtencion:IDRestaurante,IDTienda,Nombre");
+        //->with(['restaurante.horariosAtencion']);
         $c->where('location.point', 'near', [
             '$geometry' => [
                 'type' => 'Point',
                 'coordinates' => [
-                    $request->longitude,
-                    $request->latitude,
+                    $request->lng,
+                    $request->lat,
                 ],
             ],
             '$maxDistance' => 5 * 1000,
         ]) ;
-        return  $c->get()  ;
+        return $c->get() ;
+      //  return     $c->get()->makeHidden(['nombre','restaurante.horarios_atencion']) ;
     }
+
     public function obtenerPuntos(Request $request) {
 
         $address = urlencode($request->direccion);
@@ -127,6 +168,12 @@ class GeolocalizacionController extends Controller
         return Geolocalizacion::all();
     }
 
+    public function todos()
+    {
+        return Geolocalizacion::all();
+    }
+
+
     /**
      * Show the form for creating a new resource.
      *
@@ -157,6 +204,13 @@ class GeolocalizacionController extends Controller
      */
     public function show($id)
     {
+        return Geolocalizacion::find($id);
+    }
+
+
+    public function mostrarGEo($id)
+    {
+
         return Geolocalizacion::find($id);
     }
 
