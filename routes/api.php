@@ -49,18 +49,21 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
     Route::get('/cliente-telefono/{telefono}' , [ClienteController::class, 'clientePorTelefono'] )->name('clienteportelefono');
 
     //GEOLOCALIZACION
-    Route::get('/geolocalizacion' , [GeolocalizacionController::class,'index'] );
+    Route::get('/geolocalizacion' ,  [GeolocalizacionController::class,'index']);
     Route::post('/geolocalizacion' , [GeolocalizacionController::class,'store'] );
-    Route::get('/geolocalizacion/{id}' , [GeolocalizacionController::class,'show'] );
+    Route::get( '/geolocalizacion/{id}' , [GeolocalizacionController::class,'show']);
     Route::put('/geolocalizacion/{id}' , [GeolocalizacionController::class,'update'] );
     Route::delete('/geolocalizacion/{id}' , [GeolocalizacionController::class,'destroy'] );
+
 
     //RESTAURANTE
     Route::get('/restaurante/IDRestaurante/{id}' , [RestauranteController::class,'restaurantePorId'])->name('id');
     Route::get('/restaurante/IDCadena/{id}' , [RestauranteController::class,'restaurantePorCadena'])->name('restaurante');
     Route::get('/restaurante/poligono-cobertura' , [RestauranteController::class,'poligonoCobertura'])->name('poligonoCobertura');
-    Route::get('/buscar-restaurante-cercano' , [GeolocalizacionController::class,'getCercania']);
-    Route::get('/datos-restaurante' , [GeolocalizacionController::class,'getDatosRestaurante']);
+   // Route::get('/buscar-restaurante-cercano' , [GeolocalizacionController::class,'getCercania']);
+    Route::get( '/restaurantes-cercanos' , [GeolocalizacionController::class,'getRestaurantesCercanos']);
+    Route::get( '/obtener-puntos-geo' ,    [GeolocalizacionController::class,'obtenerPuntos']);
+    Route::get('/datos-restaurante' ,      [GeolocalizacionController::class,'getDatosRestaurante']);
 
     //Menu por Cadena
     Route::get('/menu/IDCadena/{id}',[MenuController::class,'menuPorCadena'])->name('menuPorCadena');
@@ -78,10 +81,5 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
 
 
 
-
-
-
-
-
-Route::get( '/v1/ecu/restaurantes-cercanos' , [GeolocalizacionController::class,'getRestaurantesCercanos']);
-Route::get( '/v1/ecu/obtener-puntos-geo' , [GeolocalizacionController::class,'obtenerPuntos']);
+   Route::get( '/v1/ecu/prueba' , [GeolocalizacionController::class,'prueba']);
+ //Route::get('/datos-restaurante' , [GeolocalizacionController::class,'getDatosRestaurante']);

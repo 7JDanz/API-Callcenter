@@ -15,4 +15,6 @@ class Locales extends MongoModel
        {
            return $this->belongsTo(Restaurante::class, "rst_id", "IDRestaurante");
        }
+
+
 }
