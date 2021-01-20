@@ -41,6 +41,7 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
 ->where(['pais' => 'ecu|chi|col|arg'])
 ->group(function(){
     Route::get('/prueba' , function (Request $request) { return $request->user();});
+    Route::get('/pruebamenu' , [MenuController::class,'prueba_menu']);
 
     //CLIENTES
     Route::get('/cliente/{documento}' , [ClienteController::class, 'cliente'] )->name('clientepordocumento');
