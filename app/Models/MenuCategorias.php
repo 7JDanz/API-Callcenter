@@ -4,24 +4,35 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
+
 
 class MenuCategorias extends Model
 {
     use HasFactory;
     protected $table = 'callcenter.menu_productos_subcategoria';
-    protected $connection='sqlsrv_mxp_ecu';
-    
-    protected $fillable = [        
+
+    public function getConnectionName()
+    {
+        return Config::get("NOMBRE_CONEXION_AZURE");
+    }
+
+    public function __construct()
+    {
+        $this->connection = Config::get("NOMBRE_CONEXION_AZURE");
+    }
+
+    protected $fillable = [
         'IDCategoria',
         'categoria',
         'productos',
         'IDMenu',
         'IDSubcategoria',
-        
+
     ];
 
     protected $hidden = [
-        'IDMenu',            
+        'IDMenu',
     ];
 
     protected $casts = [
