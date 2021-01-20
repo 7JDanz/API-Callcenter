@@ -17,11 +17,6 @@ class MenuCategorias extends Model
         return Config::get("NOMBRE_CONEXION_AZURE");
     }
 
-    public function __construct()
-    {
-        $this->connection = Config::get("NOMBRE_CONEXION_AZURE");
-    }
-
     protected $fillable = [
         'IDCategoria',
         'categoria',
