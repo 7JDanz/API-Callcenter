@@ -181,13 +181,13 @@ class MenuController extends Controller
             return $this->busqueda($request,$menu);
 
         }else{
-            $this->menuPayload($menu);
-            return $this->buscarProducto($request,$menu);
+            $this->menuPayload($pais,$menu);
+            return $this->buscarProducto($request,$pais,$menu);
         }
     }
 
     public function busqueda(Request $request,$menu){
-        $restaurante = 40;
+        $restaurante = 40;//DEL request
         $menuPayload = json_decode(\Cache::get($menu),true);
         $menus = $menuPayload;
         $buscado = $request->descripcion;
@@ -230,6 +230,15 @@ class MenuController extends Controller
             ,JSON_PRETTY_PRINT
         );
 
+    }
+
+    function upselling(Request $request,$pais){
+
+        $plus_id = '';///del request
+        $menu = "38D97934-A4B4-E911-80E2-000D3A019254";
+        $request->request->add(['descripcion' => 'mini manicho']);        
+        //return $request;
+        return $this->buscarProducto($request,$pais,$menu);
     }
 
     function process_productos($productos, $precios) {
@@ -297,6 +306,8 @@ class MenuController extends Controller
             }
         }
     }
+
+
 
     protected function getConnectionName()
     {

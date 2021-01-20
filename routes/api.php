@@ -77,6 +77,11 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
     Route::get('/menu/menu-buscar/IDMenu/{id}',[MenuController::class,'buscarProducto'])->name('MenuBuscar');
     //Buscar Subcategoria
     Route::get('/menu/subcategoria/IDMenu/{id}',[SubcategoriaController::class,'index'])->name('MenuSubcategoria');
+    
+    //Producto Upselling
+    Route::get('/menu/upselling',[MenuController::class,'upselling'])->name('Upselling');
+   
+    
 });
 
 
