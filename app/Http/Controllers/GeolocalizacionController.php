@@ -2,66 +2,42 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Geolocalizacion;
 use App\Models\HorarioAtencionRestaurante;
 use App\Models\Locales;
 use App\Models\Restaurante;
-use Illuminate\Http\Request;
-
-
 use Location\Coordinate;
 use Location\Polygon;
 
 
-
 class GeolocalizacionController extends Controller
 {
-   /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-
-    public function obtenerREstaurante(Request $request)
+    public function index()
     {
-        return    Restaurante::where("IDRestaurante", $request->rstId)
-        ->first();;
+        return Geolocalizacion::all();
     }
 
-    public function getDatosRestaurante(Request $request)
+    public function store(Request $request)
     {
 
-        $restaurante = Restaurante::where("IDRestaurante", $request->rstId)
-        ->first();
-        // $restaurante = Restaurante::with(['geolocalizacion'])
-        //                             ->where("IDRestaurante", $request->rstId)
-        //                             ->first();
-        return $restaurante;
+        $geolocalizacion = Geolocalizacion::create($request->all());
+        return $geolocalizacion;
     }
 
-    public function utest(Request $request)
+    public function show($id)
     {
+        return Geolocalizacion::find($id);
+    }
 
+    public function update(Request $request, $id)
+    {
+        return   Geolocalizacion::find($id)->update($request->all());
+    }
 
-      return   Locales::with(array('restaurante.horariosAtencion'=>function($query){
-            $query->select( 'IDRestaurante' , 'Dia' , 'horaInicio' ,'horaFin');
-        }))->get();
-
-
-
-    return  Locales::find("5ffe00f90c6d5852a7604792")
-        ->with(['restaurante.horariosAtencion'])
-        //->with(['subscriptionInvoiceDetails.store.city'])
-        ->first() ;
-
-
-        $c = Locales::with("restaurante.horariosAtencion");
-        return  $c->pluck("nombre")  ;
-
-
-
-
+    public function destroy($id)
+    {
+        Geolocalizacion::findOrFail($id)->delete();
     }
 
     public function getRestaurantesCercanos(Request $request)
@@ -76,8 +52,8 @@ class GeolocalizacionController extends Controller
             '$geometry' => [
                 'type' => 'Point',
                 'coordinates' => [
-                    $request->lng,
-                    $request->lat,
+                    $request->longitud,
+                    $request->latitud,
                 ],
             ],
             '$maxDistance' => 5 * 1000,
@@ -85,6 +61,7 @@ class GeolocalizacionController extends Controller
         return $c->get() ;
       //  return     $c->get()->makeHidden(['nombre','restaurante.horarios_atencion']) ;
     }
+
 
     public function obtenerPuntos(Request $request) {
 
@@ -100,7 +77,7 @@ class GeolocalizacionController extends Controller
 
             if($latitude && $longitude && $formattedAddress) {
 
-                return ["direccion"  =>  $formattedAddress  ,"latitude" => $latitude ,  "longitude" => $longitude];
+                return ["direccion"  =>  $formattedAddress  ,"latitud" => $latitude ,  "longitud" => $longitude];
             }
             else {
                     return false;
@@ -110,140 +87,32 @@ class GeolocalizacionController extends Controller
                 echo "ERROR: {$responseData['status']}";
                 return false;
             }
+    }
 
+    public function utest(Request $request)
+    {
+      return   Locales::with(array('restaurante.horariosAtencion'=>function($query){
+            $query->select( 'IDRestaurante' , 'Dia' , 'horaInicio' ,'horaFin');
+        }))->get();
+
+        return  Locales::find("5ffe00f90c6d5852a7604792")
+        ->with(['restaurante.horariosAtencion'])
+        //->with(['subscriptionInvoiceDetails.store.city'])
+        ->first() ;
+        $c = Locales::with("restaurante.horariosAtencion");
+        return  $c->pluck("nombre")  ;
 
     }
 
-
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getCercania(Request $request)
+    public function getDatosRestaurante(Request $request)
     {
-
-        $polygonResults = [];
-        $pointFind = new Coordinate($request->lat,  $request->lng);
-        $polygonos = Geolocalizacion::all();
-        $encontro  = false;
-        foreach ($polygonos as $poligon) {
-            $geofence = new Polygon();
-
-            foreach ($poligon->coordinates as $coodinate) {
-                $geofence->addPoint(new Coordinate($coodinate["lat"], $coodinate["lng"]));
-            }
-
-            $existe = $geofence->contains($pointFind);
-
-            if ($existe) {
-                $encontro = true;
-                $polygonResults = $poligon;
-                break;
-            }
-        }
-
-        if ($encontro){
-            $restaurante = Restaurante::with(['geolocalizacion'])
-            ->where("IDRestaurante", $polygonResults->id_restaurante)
-            ->first();
-        }else {
-            $restaurante  = ["estado" => "201" ,  "mensaje" => "No encontrado"];
-        }
-
-
+        $restaurante = Restaurante::where("IDRestaurante", $request->IDRestaurante)
+        ->first();
+        // $restaurante = Restaurante::with(['geolocalizacion'])
+        //                             ->where("IDRestaurante", $request->rstId)
+        //                             ->first();
         return $restaurante;
     }
 
 
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        return Geolocalizacion::all();
-    }
-
-    public function todos()
-    {
-        return Geolocalizacion::all();
-    }
-
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-
-        $geolocalizacion = Geolocalizacion::create($request->all());
-        return $geolocalizacion;
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($pais,$id)
-    {
-        return Geolocalizacion::find($id);
-    }
-
-
-    public function mostrarGEo($id)
-    {
-
-        return Geolocalizacion::find($id);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        return   Geolocalizacion::find($id)->update($request->all());
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        Geolocalizacion::findOrFail($id)->delete();
-    }
 }
