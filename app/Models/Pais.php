@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Config;
 class Pais extends Model
 {
     use HasFactory;
-    protected $table = 'callcenter.pais';
+    protected $table = 'paises';
 
     public function getConnectionName()
     {
