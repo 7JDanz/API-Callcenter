@@ -49,6 +49,7 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
     Route::post('/facturapayload' , [FacturaPayloadController::class, 'post']);
     Route::post('/facturapayload_put' , [FacturaPayloadController::class, 'put']);
     Route::post('/facturapayload_delete' , [FacturaPayloadController::class, 'delete']);
+    Route::post('/facturapayload/inserta_producto' , [FacturaPayloadController::class, 'inserta_producto']);
 
     //CLIENTES
     Route::get('/cliente/{documento}' , [ClienteController::class, 'cliente'] )->name('clientepordocumento');

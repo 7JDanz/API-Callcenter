@@ -9,7 +9,7 @@ use App\Models\FacturaPayload;
 class FacturaPayloadController extends Controller
 {
     public function get(Request $request, $pais) {
-        $id = $request['id'];
+        $id = $request['IDCabeceraFactura'];
         if ($id == null) {
            return response()->json(FacturaPayload::get(),200);
         } else {
@@ -35,9 +35,8 @@ class FacturaPayloadController extends Controller
         try{
             DB::beginTransaction();
             $data = $request->json()->all();
-            $factura_payload = FacturaPayload::where('id', $data['id'])->update([
+            $factura_payload = FacturaPayload::where('IDCabeceraFactura', $data['IDCabeceraFactura'])->update([
                'orden'=>$data['orden'],
-               'IDCabeceraFactura'=>$data['IDCabeceraFactura'],
             ]);
             DB::commit();
             return response()->json($factura_payload,200);
@@ -49,5 +48,12 @@ class FacturaPayloadController extends Controller
     public function delete(Request $request, $pais) {
         $id = $request['id'];
         return FacturaPayload::destroy($id);
+    }
+
+    public function inserta_producto(Request $request, $pais) {
+        $data = $request->json()->all();
+        $factura_payload = FacturaPayload::where('IDCabeceraFactura', $data['IDCabeceraFactura'])->first();
+        $orden = json_decode($factura_payload->orden);
+        return $orden;
     }
 }
