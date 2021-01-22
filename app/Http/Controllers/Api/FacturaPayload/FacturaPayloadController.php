@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\FacturaPayload;
 Use Exception;
 use Illuminate\Support\Facades\DB;
+use stdClass;
 
 class FacturaPayloadController extends Controller
 {
@@ -55,10 +56,14 @@ class FacturaPayloadController extends Controller
     public function inserta_producto(Request $request, $pais) {
         $data = $request->json()->all();
         $factura_payload = FacturaPayload::where('IDCabeceraFactura', $data['IDCabeceraFactura'])->first();
-        $orden = json_decode($factura_payload->orden, true);
+        $orden = json_decode($factura_payload->orden);
         $new_producto = $data['producto'];
         $cantidad = $data['cantidad'];
-        array_push($orden,["id:"=>uniqid(), "producto"=>$new_producto, "cantidad"=>$cantidad]);
+        $item = new stdClass();
+        $item->id = uniqid();
+        $item->producto = $new_producto;
+        $item->cantidad = $cantidad;
+        array_push($orden, $item);
         try{
             DB::beginTransaction();
             $factura_payload->update([
@@ -79,7 +84,7 @@ class FacturaPayloadController extends Controller
         $new_orden = [];
         $eliminado = false;
         foreach($orden as $item) {
-            if ($item['id'] == $id_producto_borrar) {
+            if ($item->id == $id_producto_borrar) {
                 $eliminado = true;
             } else {
                 array_push($new_orden, $item);
