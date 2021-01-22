@@ -79,7 +79,7 @@ class FacturaPayloadController extends Controller
     public function borra_producto(Request $request, $pais) {
         $data = $request->json()->all();
         $factura_payload = FacturaPayload::where('IDCabeceraFactura', $data['IDCabeceraFactura'])->first();
-        $orden = json_decode($factura_payload->orden, true);
+        $orden = json_decode($factura_payload->orden);
         $id_producto_borrar = $data['id'];
         $new_orden = [];
         $eliminado = false;
