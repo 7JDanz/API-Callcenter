@@ -43,6 +43,12 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
     Route::get('/prueba' , function (Request $request) { return $request->user();});
     Route::get('/pruebamenu' , [MenuController::class,'prueba_menu']);
 
+    //ORDENPEDIDO
+    Route::get('/ordenpedido' , [OrdenPedidoController::class, 'get']);
+    Route::post('/ordenpedido' , [OrdenPedidoController::class, 'post']);
+    Route::put('/ordenpedido' , [OrdenPedidoController::class, 'put']);
+    Route::delete('/ordenpedido' , [OrdenPedidoController::class, 'delete']);
+
     //CLIENTES
     Route::get('/cliente/{documento}' , [ClienteController::class, 'cliente'] )->name('clientepordocumento');
     Route::get('/cliente-email/{email}' , [ClienteController::class, 'clientePorEmail'] )->name('clienteporemail');
@@ -77,11 +83,11 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
     Route::get('/menu/menu-buscar/IDMenu/{id}',[MenuController::class,'buscarProducto'])->name('MenuBuscar');
     //Buscar Subcategoria
     Route::get('/menu/subcategoria/IDMenu/{id}',[SubcategoriaController::class,'index'])->name('MenuSubcategoria');
-    
+
     //Producto Upselling
     Route::get('/menu/upselling',[MenuController::class,'upselling'])->name('Upselling');
-   
-    
+
+
 });
 
 
