@@ -79,7 +79,7 @@ class FacturaPayloadController extends Controller
         $new_orden = [];
         $eliminado = falsE;
         foreach($orden as $item) {
-            if ($item->id == $id_producto_borrar) {
+            if ($item['id'] == $id_producto_borrar) {
                 $eliminado = true;
             } else {
                 array_push($new_orden, $item);
