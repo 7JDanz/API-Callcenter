@@ -37,6 +37,6 @@ class FacturaPayload extends Model
 
     public function getDateFormat()
     {
-        return env("FORMATO_FECHAS","Y-d-m H:i:s.u");
+        return env("FORMATO_FECHAS","Y-d-m H:i:s.v");
     }
 }
