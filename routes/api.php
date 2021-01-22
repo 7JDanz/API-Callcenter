@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Restaurante\RestauranteController;
 use App\Http\Controllers\Api\Menu\MenuController;
 use App\Http\Controllers\Api\Menu\SubcategoriaController;
 use App\Http\Controllers\Api\Usuarios\UsuariosPosController;
+use App\Http\Controllers\Api\OrdenPedido\OrdenPedidoController;
 
 /*
 |--------------------------------------------------------------------------
