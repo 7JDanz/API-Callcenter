@@ -55,7 +55,7 @@ class FacturaPayloadController extends Controller
     public function inserta_producto(Request $request, $pais) {
         $data = $request->json()->all();
         $factura_payload = FacturaPayload::where('IDCabeceraFactura', $data['IDCabeceraFactura'])->first();
-        $orden = json_decode($factura_payload->orden);
+        $orden = json_decode($factura_payload->orden, true);
         $new_producto = $data['producto'];
         $cantidad = $data['cantidad'];
         array_push($orden,["id:"=>uniqid(), "producto"=>$new_producto, "cantidad"=>$cantidad]);
@@ -74,13 +74,12 @@ class FacturaPayloadController extends Controller
     public function borra_producto(Request $request, $pais) {
         $data = $request->json()->all();
         $factura_payload = FacturaPayload::where('IDCabeceraFactura', $data['IDCabeceraFactura'])->first();
-        $orden = json_decode($factura_payload->orden);
+        $orden = json_decode($factura_payload->orden, true);
         $id_producto_borrar = $data['id'];
         $new_orden = [];
         $eliminado = false;
         foreach($orden as $item) {
-            return json_encode($item->id);
-            if ($item->id == $id_producto_borrar) {
+            if ($item['id'] == $id_producto_borrar) {
                 $eliminado = true;
             } else {
                 array_push($new_orden, $item);
