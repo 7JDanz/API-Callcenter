@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOrdenPedidoTable extends Migration
+class CreateFacturaPayloadsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateOrdenPedidoTable extends Migration
      */
     public function up()
     {
-        Schema::create('orden_pedido', function (Blueprint $table) {
+        Schema::create('factura_payloads', function (Blueprint $table) {
             $table->id();
-            $table->string('oden');
+            $table->string('orden');
             $table->string('[IDCabeceraFactura]');
             $table->timestamps();
         });
@@ -28,6 +28,6 @@ class CreateOrdenPedidoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('orden_pedido');
+        Schema::dropIfExists('factura_payloads');
     }
 }

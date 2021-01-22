@@ -34,4 +34,9 @@ class FacturaPayload extends Model
     protected $hidden = [
 
     ];
+
+    public function getDateFormat()
+    {
+        return env("FORMATO_FECHAS","Y-d-m H:i:s.u");
+    }
 }
