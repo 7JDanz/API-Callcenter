@@ -28,10 +28,22 @@ class FacturaPayloadController extends Controller
     }
 
     public function put(Request $request, $pais) {
-        return $pais . ' put ';
+        try{
+            DB::beginTransaction();
+            $data = $request->json()->all();
+            $factura_payload = FacturaPayload::where('id', $data['id'])->update([
+               'orden'=>$data['orden'],
+               'IDCabeceraFactura'=>$data['IDCabeceraFactura'],
+            ]);
+            DB::commit();
+            return response()->json($factura_payload,200);
+         } catch (Exception $e) {
+            return response()->json($e,400);
+         }
     }
 
     public function delete(Request $request, $pais) {
-        return $pais . ' dalete ';
+        $id = $request['id'];
+        return FacturaPayload::destroy($id);
     }
 }
