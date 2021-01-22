@@ -58,16 +58,46 @@ class FacturaPayloadController extends Controller
         $orden = json_decode($factura_payload->orden);
         $new_producto = $data['producto'];
         $cantidad = $data['cantidad'];
-        array_push($orden,["item"=>$new_producto, "cantidad"=>$cantidad]);
+        array_push($orden,["id:"=>uniqid(), "producto"=>$new_producto, "cantidad"=>$cantidad]);
         try{
             DB::beginTransaction();
             $factura_payload->update([
                 'orden'=>json_encode($orden),
             ]);
             DB::commit();
-            return response()->json($factura_payload,200);
+            return response()->json($orden,200);
         } catch (Exception $e) {
             return response()->json($e,400);
+        }
+    }
+
+    public function borra_producto(Request $request, $pais) {
+        $data = $request->json()->all();
+        $factura_payload = FacturaPayload::where('IDCabeceraFactura', $data['IDCabeceraFactura'])->first();
+        $orden = json_decode($factura_payload->orden);
+        $id_producto_borrar = $data['id'];
+        $new_orden = [];
+        $eliminado = falsE;
+        foreach($orden as $item) {
+            if ($item->id == $id_producto_borrar) {
+                $eliminado = true;
+            } else {
+                array_push($new_orden, $item);
+            }
+        }
+        if ($eliminado) {
+            try{
+                DB::beginTransaction();
+                $factura_payload->update([
+                    'orden'=>json_encode($new_orden),
+                ]);
+                DB::commit();
+                return response()->json($new_orden,200);
+            } catch (Exception $e) {
+                return response()->json($e,400);
+            }
+        } else {
+            return response()->json("producto no encontrado", 400);
         }
     }
 }
