@@ -9,8 +9,13 @@ use App\Models\FacturaPayload;
 class FacturaPayloadController extends Controller
 {
     public function get(Request $request, $pais) {
-
-        return $pais . ' get ';
+        $id = $request['id'];
+        if ($id == null) {
+           return response()->json(FacturaPayload::get(),200);
+        } else {
+           $factura_payload = FacturaPayload::findOrFail($id);
+           return response()->json($factura_payload,200);
+        }
     }
 
     public function post(Request $request, $pais) {
@@ -19,7 +24,7 @@ class FacturaPayloadController extends Controller
         $new_factura_payload->orden = $data['orden'];
         $new_factura_payload->IDCabeceraFactura = $data['IDCabeceraFactura'];
         $new_factura_payload->save();
-        return $new_factura_payload;
+        return response()->json($new_factura_payload,200);
     }
 
     public function put(Request $request, $pais) {
