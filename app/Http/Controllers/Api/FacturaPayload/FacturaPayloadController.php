@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\FacturaPayload;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\FacturaPayload;
+Use Exception;
+use Illuminate\Support\Facades\DB;
 
 class FacturaPayloadController extends Controller
 {
@@ -54,6 +56,18 @@ class FacturaPayloadController extends Controller
         $data = $request->json()->all();
         $factura_payload = FacturaPayload::where('IDCabeceraFactura', $data['IDCabeceraFactura'])->first();
         $orden = json_decode($factura_payload->orden);
-        return $orden;
+        $new_producto = $data['producto'];
+        $cantidad = $data['cantidad'];
+        array_push($orden,["item"=>$new_producto, "cantidad"=>$cantidad]);
+        try{
+            DB::beginTransaction();
+            $factura_payload->update([
+                'orden'=>json_encode($orden),
+            ]);
+            DB::commit();
+            return response()->json($factura_payload,200);
+        } catch (Exception $e) {
+            return response()->json($e,400);
+        }
     }
 }
