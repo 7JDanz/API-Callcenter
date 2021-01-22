@@ -85,7 +85,6 @@ class FacturaPayloadController extends Controller
         $eliminado = false;
         foreach($orden as $item) {
             $detalle_item = (object) $item;
-            return $detalle_item->id;
             if ($detalle_item->id == $id_producto_borrar) {
                 $eliminado = true;
             } else {
