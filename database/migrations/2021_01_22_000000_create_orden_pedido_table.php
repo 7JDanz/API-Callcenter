@@ -15,8 +15,8 @@ class CreateOrdenPedidoTable extends Migration
     {
         Schema::create('orden_pedido', function (Blueprint $table) {
             $table->id();
-            $table->integer('pais_id');
             $table->string('oden');
+            $table->string('[IDCabeceraFactura]');
             $table->timestamps();
         });
     }

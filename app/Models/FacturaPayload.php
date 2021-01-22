@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 
-class OrdenPedido extends Model
+class FacturaPayload extends Model
 {
     use HasFactory;
 
@@ -16,8 +16,8 @@ class OrdenPedido extends Model
      * @var array
      */
     protected $fillable = [
-        'pais_id',
         'orden',
+        'IDCabeceraFactura',
     ];
 
     /**

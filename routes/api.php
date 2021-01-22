@@ -10,7 +10,7 @@ use App\Http\Controllers\Api\Restaurante\RestauranteController;
 use App\Http\Controllers\Api\Menu\MenuController;
 use App\Http\Controllers\Api\Menu\SubcategoriaController;
 use App\Http\Controllers\Api\Usuarios\UsuariosPosController;
-use App\Http\Controllers\Api\OrdenPedido\OrdenPedidoController;
+use App\Http\Controllers\Api\FacturaPayload\FacturaPayloadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,10 +45,10 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
     Route::get('/pruebamenu' , [MenuController::class,'prueba_menu']);
 
     //ORDENPEDIDO
-    Route::get('/ordenpedido' , [OrdenPedidoController::class, 'get']);
-    Route::post('/ordenpedido' , [OrdenPedidoController::class, 'post']);
-    Route::put('/ordenpedido' , [OrdenPedidoController::class, 'put']);
-    Route::delete('/ordenpedido' , [OrdenPedidoController::class, 'delete']);
+    Route::get('/facturapayload' , [FacturaPayloadController::class, 'get']);
+    Route::post('/facturapayload' , [FacturaPayloadController::class, 'post']);
+    Route::put('/facturapayload' , [FacturaPayloadController::class, 'put']);
+    Route::delete('/facturapayload' , [FacturaPayloadController::class, 'delete']);
 
     //CLIENTES
     Route::get('/cliente/{documento}' , [ClienteController::class, 'cliente'] )->name('clientepordocumento');
