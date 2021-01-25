@@ -15,7 +15,7 @@ class Cliente extends Model
     protected $primaryKey = 'CodigoCliente';
     protected $keyType = 'string';
     public $incrementing = false;
-    protected $hidden = ['FechaLimpieza','CodigoCliente'];
+    protected $hidden = ['FechaLimpieza','CodigoCliente','CorreoValido'];
 
 
     public function telefonos()
