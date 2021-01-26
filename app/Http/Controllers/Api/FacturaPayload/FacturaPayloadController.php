@@ -127,14 +127,15 @@ class FacturaPayloadController extends Controller
         $data = $request->json()->all();
         $factura_payload = FacturaPayload::where('IDFactura', $data['IDFactura'])->first();
         $orden = json_decode($factura_payload->orden);
-        $new_productos = $data['productos'];
-        foreach($new_productos as $new_producto) {
-            $cantidad = $data['cantidad'];
-            $item = new stdClass();
-            $item->id = uniqid();
-            $item->producto = $new_producto;
-            $item->cantidad = $cantidad;
-            array_push($orden, $item);
+        $items = $data['items'];
+        foreach($items as $item) {
+            $cantidad = $item['cantidad'];
+            $new_producto = $item['producto'];
+            $new_item = new stdClass();
+            $new_item->id = uniqid();
+            $new_item->producto = $new_producto;
+            $new_item->cantidad = $cantidad;
+            array_push($orden, $new_item);
         }
         try{
             DB::beginTransaction();
@@ -186,14 +187,17 @@ class FacturaPayloadController extends Controller
         $ids_producto_borrar = $data['ids'];
         $new_orden = [];
         $eliminados = false;
-        foreach($ids_producto_borrar as $id_producto_borrar) {
-            foreach($orden as $item) {
-                $detalle_item = (object) $item;
+        foreach($orden as $item) {
+            $eliminado = false;
+            $detalle_item = (object) $item;
+            foreach($ids_producto_borrar as $id_producto_borrar) {
                 if ($detalle_item->id == $id_producto_borrar) {
                     $eliminados = true;
-                } else {
-                    array_push($new_orden, $item);
+                    $eliminado = true;
                 }
+            }
+            if (!$eliminado) {
+                array_push($new_orden, $item);
             }
         }
         if (!$eliminados) {
