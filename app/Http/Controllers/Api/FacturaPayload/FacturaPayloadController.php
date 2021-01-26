@@ -14,9 +14,20 @@ class FacturaPayloadController extends Controller
     public function get(Request $request, $pais) {
         $id = $request['IDFactura'];
         if ($id == null) {
-           return response()->json(FacturaPayload::get(),200);
+           $factura_payloads = FacturaPayload::get();
+           $toReturn = [];
+           foreach($factura_payloads as $factura_payload) {
+               $factura_payload->orden = json_decode($factura_payload->orden);
+               $factura_payload->cabecera = json_decode($factura_payload->cabecera);
+               $factura_payload->valores = json_decode($factura_payload->valores);
+               array_push($toReturn, $factura_payload);
+           }
+           return response()->json($toReturn,200);
         } else {
            $factura_payload = FacturaPayload::where('IDFactura', $id)->first();
+           $factura_payload->orden = json_decode($factura_payload->orden);
+           $factura_payload->cabecera = json_decode($factura_payload->cabecera);
+           $factura_payload->valores = json_decode($factura_payload->valores);
            if ($factura_payload) {
             return response()->json($factura_payload,200);
            } else {
