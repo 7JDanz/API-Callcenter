@@ -232,23 +232,22 @@ class FacturaPayloadController extends Controller
         $data = $request->json()->all();
         $factura_payload = FacturaPayload::where('IDFactura', $data['IDFactura'])->first();
         $costo_subtotal = 19; //aqui calcular el costo total como la suma de todo lo que agregue costo.
-        $cabecera = [
-            "SUBTOTAL"=>$costo_subtotal,
-        ];
+        $cabecera = new stdClass();
+        $cabecera->SUBTOTAL = $costo_subtotal;
         $costos_insertar = $data['costos_insertar'];
         foreach($costos_insertar as $new_costo) {
-            if ($new_costo["tipo"]=="calculo") {
+            if ($new_costo["tipo"] == "calculo") {
                 $new_valor = $costo_subtotal * $new_costo["factor"];
-                array_push($cabecera, [$new_costo['etiqueta']=>$new_valor]);
+                $cabecera->$new_costo['etiqueta'] = $new_valor;
             } else {
-                array_push($cabecera, [$new_costo['etiqueta']=>$new_costo['valor']]);
+                $cabecera->$new_costo['etiqueta'] = $new_costo['valor'];
             }
         }
         $costo_total = 0;
         foreach($cabecera as $cabecera_key=>$cabecera_value) {
             $costo_total += $cabecera_value;
         }
-        array_push($cabecera, ["TOTAL"=>$costo_total]);
+        $cabecera->TOTAL = $costo_total;
         try{
             DB::beginTransaction();
             $data = $request->json()->all();
@@ -258,7 +257,7 @@ class FacturaPayloadController extends Controller
             DB::commit();
             return response()->json($cabecera,200);
          } catch (Exception $e) {
-            return response()->json($e,400);
+            return response()->json($e->getMessage(),400);
          }
     }
 }

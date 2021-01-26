@@ -53,9 +53,9 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
     Route::put('/facturapayload/put_cabecera' , [FacturaPayloadController::class, 'put_cabecera']);
     Route::delete('/facturapayload' , [FacturaPayloadController::class, 'delete']);
     Route::post('/facturapayload/inserta_producto' , [FacturaPayloadController::class, 'inserta_producto']);
-    Route::post('/facturapayload/inserta_varios_producto' , [FacturaPayloadController::class, 'inserta_varios_producto']);
+    Route::post('/facturapayload/inserta_varios_productos' , [FacturaPayloadController::class, 'inserta_varios_producto']);
     Route::post('/facturapayload/borra_producto' , [FacturaPayloadController::class, 'borra_producto']);
-    Route::post('/facturapayload/borra_varios_producto' , [FacturaPayloadController::class, 'borra_varios_producto']);
+    Route::post('/facturapayload/borra_varios_productos' , [FacturaPayloadController::class, 'borra_varios_producto']);
     Route::post('/facturapayload/calcula_valores' , [FacturaPayloadController::class, 'calcula_valores']);
 
     //CLIENTES
