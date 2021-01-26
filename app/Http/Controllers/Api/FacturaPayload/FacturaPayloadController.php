@@ -44,6 +44,9 @@ class FacturaPayloadController extends Controller
         $new_factura_payload->valores = $data['valores'];
         $new_factura_payload->IDFactura = uniqid();
         $new_factura_payload->save();
+        $new_factura_payload->orden = json_decode($new_factura_payload->orden);
+        $new_factura_payload->cabecera = json_decode($new_factura_payload->cabecera);
+        $new_factura_payload->valores = json_decode($new_factura_payload->valores);
         return response()->json($new_factura_payload,200);
     }
 
@@ -57,7 +60,7 @@ class FacturaPayloadController extends Controller
                'cabecera'=>$data['cabecera'],
             ]);
             DB::commit();
-            return response()->json($factura_payload,200);
+            return response()->json(true,200);
          } catch (Exception $e) {
             return response()->json($e,400);
          }
@@ -71,7 +74,7 @@ class FacturaPayloadController extends Controller
                'cabecera'=>$data['cabecera'],
             ]);
             DB::commit();
-            return response()->json($factura_payload,200);
+            return response()->json(true,200);
         } catch (Exception $e) {
             return response()->json($e,400);
         }
@@ -85,7 +88,7 @@ class FacturaPayloadController extends Controller
                'valores'=>$data['valores'],
             ]);
             DB::commit();
-            return response()->json($factura_payload,200);
+            return response()->json(true,200);
         } catch (Exception $e) {
             return response()->json($e,400);
         }
@@ -99,7 +102,7 @@ class FacturaPayloadController extends Controller
                 'orden'=>$data['orden'],
             ]);
             DB::commit();
-            return response()->json($factura_payload,200);
+            return response()->json(true,200);
         } catch (Exception $e) {
             return response()->json($e,400);
         }
@@ -255,7 +258,7 @@ class FacturaPayloadController extends Controller
                'cabecera'=>$cabecera,
             ]);
             DB::commit();
-            return response()->json($response,200);
+            return response()->json($cabecera,200);
          } catch (Exception $e) {
             return response()->json($e,400);
          }
