@@ -16,8 +16,12 @@ class FacturaPayloadController extends Controller
         if ($id == null) {
            return response()->json(FacturaPayload::get(),200);
         } else {
-           $factura_payload = FacturaPayload::findOrFail($id);
-           return response()->json($factura_payload,200);
+           $factura_payload = FacturaPayload::where('IDFactura', $id)->first();
+           if ($factura_payload) {
+            return response()->json($factura_payload,200);
+           } else {
+            return response()->json("factura no encontrada",400);
+           }
         }
     }
 
