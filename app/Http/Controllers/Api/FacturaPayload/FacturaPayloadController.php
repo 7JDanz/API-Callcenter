@@ -12,7 +12,7 @@ use stdClass;
 class FacturaPayloadController extends Controller
 {
     public function get(Request $request, $pais) {
-        $id = $request['IDCabeceraFactura'];
+        $id = $request['IDFactura'];
         if ($id == null) {
            return response()->json(FacturaPayload::get(),200);
         } else {
@@ -23,13 +23,15 @@ class FacturaPayloadController extends Controller
 
     public function post(Request $request, $pais) {
         $data = $request->json()->all();
-        $preview_factura_payload = FacturaPayload::where('IDCabeceraFactura', $data['IDCabeceraFactura'])->first();
+        $preview_factura_payload = FacturaPayload::where('IDFactura', $data['IDFactura'])->first();
         if ($preview_factura_payload) {
             return response()->json($preview_factura_payload,200);
         }
         $new_factura_payload = new FacturaPayload();
         $new_factura_payload->orden = $data['orden'];
-        $new_factura_payload->IDCabeceraFactura = $data['IDCabeceraFactura'];
+        $new_factura_payload->cabecera = $data['cabecera'];
+        $new_factura_payload->valores = $data['valores'];
+        $new_factura_payload->IDFactura = uniqid();
         $new_factura_payload->save();
         return response()->json($new_factura_payload,200);
     }
@@ -38,8 +40,10 @@ class FacturaPayloadController extends Controller
         try{
             DB::beginTransaction();
             $data = $request->json()->all();
-            $factura_payload = FacturaPayload::where('IDCabeceraFactura', $data['IDCabeceraFactura'])->update([
+            $factura_payload = FacturaPayload::where('IDFactura', $data['IDFactura'])->update([
                'orden'=>$data['orden'],
+               'valores'=>$data['valores'],
+               'cabecera'=>$data['cabecera'],
             ]);
             DB::commit();
             return response()->json($factura_payload,200);
@@ -55,7 +59,7 @@ class FacturaPayloadController extends Controller
 
     public function inserta_producto(Request $request, $pais) {
         $data = $request->json()->all();
-        $factura_payload = FacturaPayload::where('IDCabeceraFactura', $data['IDCabeceraFactura'])->first();
+        $factura_payload = FacturaPayload::where('IDFactura', $data['IDFactura'])->first();
         $orden = json_decode($factura_payload->orden);
         $new_producto = $data['producto'];
         $cantidad = $data['cantidad'];
@@ -78,7 +82,7 @@ class FacturaPayloadController extends Controller
 
     public function borra_producto(Request $request, $pais) {
         $data = $request->json()->all();
-        $factura_payload = FacturaPayload::where('IDCabeceraFactura', $data['IDCabeceraFactura'])->first();
+        $factura_payload = FacturaPayload::where('IDFactura', $data['IDFactura'])->first();
         $orden = json_decode($factura_payload->orden);
         $id_producto_borrar = $data['id'];
         $new_orden = [];

@@ -23,7 +23,9 @@ class FacturaPayload extends Model
 
     protected $fillable = [
         'orden',
-        'IDCabeceraFactura',
+        'cabecera',
+        'valores',
+        'IDFactura',
     ];
 
     /**
