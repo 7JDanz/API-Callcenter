@@ -38,16 +38,14 @@ class FacturaPayloadController extends Controller
 
     public function post(Request $request, $pais) {
         $data = $request->json()->all();
+        $new_id_factura = uniqid();
         $new_factura_payload = new FacturaPayload();
         $new_factura_payload->orden = $data['orden'];
         $new_factura_payload->cabecera = $data['cabecera'];
         $new_factura_payload->valores = $data['valores'];
-        $new_factura_payload->IDFactura = uniqid();
+        $new_factura_payload->IDFactura = $new_id_factura;
         $new_factura_payload->save();
-        $new_factura_payload->orden = json_decode($new_factura_payload->orden);
-        $new_factura_payload->cabecera = json_decode($new_factura_payload->cabecera);
-        $new_factura_payload->valores = json_decode($new_factura_payload->valores);
-        return response()->json($new_factura_payload,200);
+        return response()->json($new_id_factura,200);
     }
 
     public function put(Request $request, $pais) {
