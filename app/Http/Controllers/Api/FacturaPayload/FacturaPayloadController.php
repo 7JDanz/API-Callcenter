@@ -228,36 +228,37 @@ class FacturaPayloadController extends Controller
         }
     }
 
-    public function calcula_valores(Request $request, $pais) {
+    public function calcula_valores(Request $request) {
         $data = $request->json()->all();
         $factura_payload = FacturaPayload::where('IDFactura', $data['IDFactura'])->first();
         $costo_subtotal = 19; //aqui calcular el costo total como la suma de todo lo que agregue costo.
-        $cabecera = new stdClass();
-        $cabecera->SUBTOTAL = $costo_subtotal;
+        $costos = new stdClass();
+        $costos->SUBTOTAL = $costo_subtotal;
         $costos_insertar = $data['costos_insertar'];
         foreach($costos_insertar as $new_costo) {
-            if ($new_costo["tipo"] == "calculo") {
-                $new_valor = $costo_subtotal * $new_costo["factor"];
-                $cabecera->$new_costo['etiqueta'] = $new_valor;
-            } else {
-                $cabecera->$new_costo['etiqueta'] = $new_costo['valor'];
-            }
+          $etiqueta = $new_costo['etiqueta'];
+          if ($new_costo["tipo"] == "calculo") {
+            $new_valor = $costo_subtotal * $new_costo["factor"];
+            $costos->$etiqueta = $new_valor;
+          } else {
+            $costos->$etiqueta = $new_costo['valor'];
+          }
         }
         $costo_total = 0;
-        foreach($cabecera as $cabecera_key=>$cabecera_value) {
-            $costo_total += $cabecera_value;
+        foreach($costos as $costos_key=>$costos_value) {
+            $costo_total += $costos_value;
         }
-        $cabecera->TOTAL = $costo_total;
+        $costos->TOTAL = $costo_total;
         try{
-            DB::beginTransaction();
-            $data = $request->json()->all();
-            $response = $factura_payload->update([
-               'cabecera'=>$cabecera,
-            ]);
-            DB::commit();
-            return response()->json($cabecera,200);
-         } catch (Exception $e) {
-            return response()->json($e->getMessage(),400);
-         }
+          DB::beginTransaction();
+          $data = $request->json()->all();
+          $response = $factura_payload->update([
+            'valores'=>json_encode($costos),
+          ]);
+          DB::commit();
+          return response()->json($costos,200);
+        } catch (Exception $e) {
+          return response()->json($e->getMessage(),400);
+        }
     }
 }
