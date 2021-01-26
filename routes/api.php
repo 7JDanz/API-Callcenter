@@ -44,10 +44,13 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
     Route::get('/prueba' , function (Request $request) { return $request->user();});
     Route::get('/pruebamenu' , [MenuController::class,'prueba_menu']);
 
-    //ORDENPEDIDO
+    //FACTURA
     Route::get('/facturapayload' , [FacturaPayloadController::class, 'get']);
     Route::post('/facturapayload' , [FacturaPayloadController::class, 'post']);
     Route::put('/facturapayload' , [FacturaPayloadController::class, 'put']);
+    Route::put('/facturapayload/put_orden' , [FacturaPayloadController::class, 'put_orden']);
+    Route::put('/facturapayload/put_valores' , [FacturaPayloadController::class, 'put_valores']);
+    Route::put('/facturapayload/put_cabecera' , [FacturaPayloadController::class, 'put_cabecera']);
     Route::delete('/facturapayload' , [FacturaPayloadController::class, 'delete']);
     Route::post('/facturapayload/inserta_producto' , [FacturaPayloadController::class, 'inserta_producto']);
     Route::post('/facturapayload/borra_producto' , [FacturaPayloadController::class, 'borra_producto']);

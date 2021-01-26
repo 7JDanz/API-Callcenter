@@ -56,6 +56,48 @@ class FacturaPayloadController extends Controller
          }
     }
 
+    public function put_cabecera(Request $request, $pais) {
+        try{
+            DB::beginTransaction();
+            $data = $request->json()->all();
+            $factura_payload = FacturaPayload::where('IDFactura', $data['IDFactura'])->update([
+               'cabecera'=>$data['cabecera'],
+            ]);
+            DB::commit();
+            return response()->json($factura_payload,200);
+         } catch (Exception $e) {
+            return response()->json($e,400);
+         }
+    }
+
+    public function put_valores(Request $request, $pais) {
+        try{
+            DB::beginTransaction();
+            $data = $request->json()->all();
+            $factura_payload = FacturaPayload::where('IDFactura', $data['IDFactura'])->update([
+               'valores'=>$data['valores'],
+            ]);
+            DB::commit();
+            return response()->json($factura_payload,200);
+         } catch (Exception $e) {
+            return response()->json($e,400);
+         }
+    }
+
+    public function put_orden(Request $request, $pais) {
+        try{
+            DB::beginTransaction();
+            $data = $request->json()->all();
+            $factura_payload = FacturaPayload::where('IDFactura', $data['IDFactura'])->update([
+                'orden'=>$data['orden'],
+            ]);
+            DB::commit();
+            return response()->json($factura_payload,200);
+         } catch (Exception $e) {
+            return response()->json($e,400);
+         }
+    }
+
     public function delete(Request $request, $pais) {
         $id = $request['id'];
         return FacturaPayload::destroy($id);
