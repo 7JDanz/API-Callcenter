@@ -27,10 +27,6 @@ class FacturaPayloadController extends Controller
 
     public function post(Request $request, $pais) {
         $data = $request->json()->all();
-        $preview_factura_payload = FacturaPayload::where('IDFactura', $data['IDFactura'])->first();
-        if ($preview_factura_payload) {
-            return response()->json($preview_factura_payload,200);
-        }
         $new_factura_payload = new FacturaPayload();
         $new_factura_payload->orden = $data['orden'];
         $new_factura_payload->cabecera = $data['cabecera'];
