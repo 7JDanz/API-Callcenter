@@ -74,7 +74,7 @@ class FacturaPayloadController extends Controller
             DB::commit();
             return response()->json(true,200);
         } catch (Exception $e) {
-            return response()->json($e,400);
+            return response()->json($e->getMessage(),400);
         }
     }
 
