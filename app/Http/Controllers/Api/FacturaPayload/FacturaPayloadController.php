@@ -40,9 +40,9 @@ class FacturaPayloadController extends Controller
         $data = $request->json()->all();
         $new_id_factura = uniqid();
         $new_factura_payload = new FacturaPayload();
-        $new_factura_payload->orden = $data['orden'];
-        $new_factura_payload->cabecera = $data['cabecera'];
-        $new_factura_payload->valores = $data['valores'];
+        $new_factura_payload->orden = json_encode($data['orden']);
+        $new_factura_payload->cabecera = json_encode($data['cabecera']);
+        $new_factura_payload->valores = json_encode($data['valores']);
         $new_factura_payload->IDFactura = $new_id_factura;
         $new_factura_payload->save();
         return response()->json($new_id_factura,200);
@@ -53,9 +53,9 @@ class FacturaPayloadController extends Controller
             DB::beginTransaction();
             $data = $request->json()->all();
             $factura_payload = FacturaPayload::where('IDFactura', $data['IDFactura'])->update([
-               'orden'=>$data['orden'],
-               'valores'=>$data['valores'],
-               'cabecera'=>$data['cabecera'],
+               'orden'=>json_encode($data['orden']),
+               'valores'=>json_encode($data['valores']),
+               'cabecera'=>json_encode($data['cabecera']),
             ]);
             DB::commit();
             return response()->json(true,200);
@@ -69,7 +69,7 @@ class FacturaPayloadController extends Controller
             DB::beginTransaction();
             $data = $request->json()->all();
             $factura_payload = FacturaPayload::where('IDFactura', $data['IDFactura'])->update([
-               'cabecera'=>$data['cabecera'],
+               'cabecera'=>json_encode($data['cabecera']),
             ]);
             DB::commit();
             return response()->json(true,200);
@@ -83,7 +83,7 @@ class FacturaPayloadController extends Controller
             DB::beginTransaction();
             $data = $request->json()->all();
             $factura_payload = FacturaPayload::where('IDFactura', $data['IDFactura'])->update([
-               'valores'=>$data['valores'],
+               'valores'=>json_encode($data['valores']),
             ]);
             DB::commit();
             return response()->json(true,200);
@@ -97,7 +97,7 @@ class FacturaPayloadController extends Controller
             DB::beginTransaction();
             $data = $request->json()->all();
             $factura_payload = FacturaPayload::where('IDFactura', $data['IDFactura'])->update([
-                'orden'=>$data['orden'],
+                'orden'=>json_encode($data['orden']),
             ]);
             DB::commit();
             return response()->json(true,200);
