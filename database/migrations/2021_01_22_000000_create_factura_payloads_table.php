@@ -18,6 +18,7 @@ class CreateFacturaPayloadsTable extends Migration
             $table->string('orden');
             $table->string('cabecera');
             $table->string('valores');
+            $table->string('status');
             $table->string('IDFactura');
             $table->timestamps();
         });

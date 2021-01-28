@@ -20,6 +20,7 @@ class FacturaPayloadController extends Controller
                $factura_payload->orden = json_decode($factura_payload->orden);
                $factura_payload->cabecera = json_decode($factura_payload->cabecera);
                $factura_payload->valores = json_decode($factura_payload->valores);
+               $factura_payload->satus = $factura_payload->status;
                array_push($toReturn, $factura_payload);
            }
            return response()->json($toReturn,200);
@@ -28,6 +29,7 @@ class FacturaPayloadController extends Controller
            $factura_payload->orden = json_decode($factura_payload->orden);
            $factura_payload->cabecera = json_decode($factura_payload->cabecera);
            $factura_payload->valores = json_decode($factura_payload->valores);
+           $factura_payload->satus = $factura_payload->status;
            if ($factura_payload) {
             return response()->json($factura_payload,200);
            } else {
@@ -43,6 +45,7 @@ class FacturaPayloadController extends Controller
         $new_factura_payload->orden = json_encode($data['orden']);
         $new_factura_payload->cabecera = json_encode($data['cabecera']);
         $new_factura_payload->valores = json_encode($data['valores']);
+        $new_factura_payload->status = 'activo';
         $new_factura_payload->IDFactura = $new_id_factura;
         $new_factura_payload->save();
         return response()->json($new_id_factura,200);
@@ -56,6 +59,7 @@ class FacturaPayloadController extends Controller
                'orden'=>json_encode($data['orden']),
                'valores'=>json_encode($data['valores']),
                'cabecera'=>json_encode($data['cabecera']),
+               'status'=>$data['status'],
             ]);
             DB::commit();
             return response()->json(true,200);
@@ -107,8 +111,17 @@ class FacturaPayloadController extends Controller
     }
 
     public function delete(Request $request, $pais) {
-        $id = $request['id'];
-        return FacturaPayload::destroy($id);
+        $IDFactura = $request['IDFactura'];
+        try{
+            DB::beginTransaction();
+            $factura_payload = FacturaPayload::where('IDFactura', $IDFactura)->update([
+                'estado'=>'inactivo',
+            ]);
+            DB::commit();
+            return response()->json(true,200);
+        } catch (Exception $e) {
+            return response()->json($e,400);
+        }
     }
 
     public function inserta_producto(Request $request, $pais) {

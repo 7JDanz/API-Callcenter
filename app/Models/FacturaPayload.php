@@ -26,6 +26,7 @@ class FacturaPayload extends Model
         'cabecera',
         'valores',
         'IDFactura',
+        'status',
     ];
 
     /**
