@@ -20,7 +20,6 @@ class FacturaPayloadController extends Controller
                $factura_payload->orden = json_decode($factura_payload->orden);
                $factura_payload->cabecera = json_decode($factura_payload->cabecera);
                $factura_payload->valores = json_decode($factura_payload->valores);
-               $factura_payload->satus = $factura_payload->status;
                array_push($toReturn, $factura_payload);
            }
            return response()->json($toReturn,200);
@@ -30,7 +29,6 @@ class FacturaPayloadController extends Controller
             $factura_payload->orden = json_decode($factura_payload->orden);
             $factura_payload->cabecera = json_decode($factura_payload->cabecera);
             $factura_payload->valores = json_decode($factura_payload->valores);
-            $factura_payload->satus = $factura_payload->status;
            }
            if ($factura_payload) {
             return response()->json($factura_payload,200);
