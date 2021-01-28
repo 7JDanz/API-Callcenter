@@ -115,7 +115,7 @@ class FacturaPayloadController extends Controller
         try{
             DB::beginTransaction();
             $factura_payload = FacturaPayload::where('IDFactura', $IDFactura)->update([
-                'estado'=>'inactivo',
+                'status'=>'inactivo',
             ]);
             DB::commit();
             return response()->json(true,200);
