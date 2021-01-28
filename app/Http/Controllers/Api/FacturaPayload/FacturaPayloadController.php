@@ -26,10 +26,12 @@ class FacturaPayloadController extends Controller
            return response()->json($toReturn,200);
         } else {
            $factura_payload = FacturaPayload::where('IDFactura', $id)->first();
-           $factura_payload->orden = json_decode($factura_payload->orden);
-           $factura_payload->cabecera = json_decode($factura_payload->cabecera);
-           $factura_payload->valores = json_decode($factura_payload->valores);
-           $factura_payload->satus = $factura_payload->status;
+           if ($factura_payload) {
+            $factura_payload->orden = json_decode($factura_payload->orden);
+            $factura_payload->cabecera = json_decode($factura_payload->cabecera);
+            $factura_payload->valores = json_decode($factura_payload->valores);
+            $factura_payload->satus = $factura_payload->status;
+           }
            if ($factura_payload) {
             return response()->json($factura_payload,200);
            } else {
