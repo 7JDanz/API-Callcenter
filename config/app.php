@@ -229,4 +229,5 @@ return [
 
     ],
 
+    'bi'=>["codigo_aplicacion"=>env("BI_CODIGO_APLICACION")]
 ];

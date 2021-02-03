@@ -11,7 +11,7 @@ use App\Http\Controllers\Api\Menu\MenuController;
 use App\Http\Controllers\Api\Menu\SubcategoriaController;
 use App\Http\Controllers\Api\Usuarios\UsuariosPosController;
 use App\Http\Controllers\Api\FacturaPayload\FacturaPayloadController;
-
+use Illuminate\Support\Facades\Log;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -32,7 +32,16 @@ Route::middleware(['multipais'])
 });
 
 Route::middleware([])->group(function() {
-    Route::get('/get_codigo_app' , function (Request $request) { return json_encode(["codigoApp"=>env('APP_CODE')]); });
+    Route::get('/get_codigo_app' , function (Request $request) {
+        $codigoAplicacion=config("app.bi.codigo_aplicacion");
+        if(is_null($codigoAplicacion)) {
+            Log::error("Falta la configuracion BI_CODIGO_APLICACION en el archivo .env");
+            throw new \Exception("Revisar log de la aplicación");
+        }
+        return json_encode([
+            "codigoApp"=>$codigoAplicacion
+        ]);
+    });
     Route::post('/actualizar_usuarios' , [UsuariosPosController::class,'actualizar_usuarios'] );
     Route::post('/update_users_batch' , [UsuariosPosController::class,'update_users_batch'] );
     Route::get('/pais',[PaisController::class,'index']);
