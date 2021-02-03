@@ -257,24 +257,34 @@ class FacturaPayloadController extends Controller
         $new_detalle = [];
         $eliminados = false;
 
-        foreach($items as $item_borrar) {
-            foreach($detalle as $item) {
-                $detalle_item = (object) $item;
+        foreach($detalle as $item) {
+            $detalle_item = (object) $item;
+            $eliminar_de_detalle = false;
+            foreach($items as $item_borrar) {
                 if ($detalle_item->detalleApp == $item_borrar) {
+                    $eliminar_de_detalle = true;
                     $eliminados = true;
-                } else {
-                    array_push($new_detalle, $item);
                 }
             }
-            foreach($modificadores as $item) {
-                $modificador_item = (object) $item;
-                if ($modificador_item->detalleApp == $item_borrar) {
-                    $eliminados = true;
-                } else {
-                    array_push($new_modificadores, $item);
-                }
+            if (!$eliminar_de_detalle) {
+                array_push($new_detalle, $item);
             }
         }
+
+        foreach($modificadores as $item) {
+            $modificador_item = (object) $item;
+            $eliminar_de_modificadores = false;
+            foreach($items as $item_borrar) {
+                if ($modificador_item->detalleApp == $item_borrar) {
+                    $eliminar_de_modificadores = true;
+                    $eliminados = true;
+                }
+            }
+            if (!$eliminar_de_modificadores) {
+                array_push($new_modificadores, $item);
+            }
+        }
+
         if (!$eliminados) {
             return response()->json("no se eliminaron productos", 400);
         } else {
