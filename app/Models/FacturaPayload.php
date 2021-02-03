@@ -25,7 +25,7 @@ class FacturaPayload extends Model
         'detalle',
         'modificadores',
         'cabecera',
-        'valores',
+        'formasPago',
         'IDFactura',
         'IDCadena',
         'IDRestaurante',

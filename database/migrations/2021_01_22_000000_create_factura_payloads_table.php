@@ -18,7 +18,7 @@ class CreateFacturaPayloadsTable extends Migration
             $table->string('detalle');
             $table->string('modificadores');
             $table->string('cabecera');
-            $table->string('valores');
+            $table->string('formasPago');
             $table->string('status');
             $table->string('IDFactura');
             $table->string('IDRestaurante');

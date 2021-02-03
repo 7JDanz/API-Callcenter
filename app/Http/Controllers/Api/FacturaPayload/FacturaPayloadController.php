@@ -22,7 +22,7 @@ class FacturaPayloadController extends Controller
                $factura_payload->detalle = json_decode($factura_payload->detalle);
                $factura_payload->modificadores = json_decode($factura_payload->modificadores);
                $factura_payload->cabecera = json_decode($factura_payload->cabecera);
-               $factura_payload->valores = json_decode($factura_payload->valores);
+               $factura_payload->formasPago = json_decode($factura_payload->formasPago);
                array_push($toReturn, $factura_payload);
            }
            return response()->json($toReturn,200);
@@ -32,7 +32,7 @@ class FacturaPayloadController extends Controller
             $factura_payload->detalle = json_decode($factura_payload->detalle);
             $factura_payload->modificadores = json_decode($factura_payload->modificadores);
             $factura_payload->cabecera = json_decode($factura_payload->cabecera);
-            $factura_payload->valores = json_decode($factura_payload->valores);
+            $factura_payload->formasPago = json_decode($factura_payload->formasPago);
            }
            if ($factura_payload) {
             return response()->json($factura_payload,200);
@@ -51,7 +51,7 @@ class FacturaPayloadController extends Controller
         $new_factura_payload->detalle = json_encode($data['detalle']);
         $new_factura_payload->modificadores = json_encode($data['modificadores']);
         $new_factura_payload->cabecera = json_encode($data['cabecera']);
-        $new_factura_payload->valores = json_encode($data['valores']);
+        $new_factura_payload->formasPago = json_encode($data['formasPago']);
         $new_factura_payload->status = 'activo';
         $new_factura_payload->IDFactura = $new_id_factura;
         $new_factura_payload->IDRestaurante = $id_restaurante;
@@ -67,7 +67,7 @@ class FacturaPayloadController extends Controller
             $factura_payload = FacturaPayload::where('IDCadena', $data['IDCadena'])->where('IDRestaurante', $data['IDRestaurante'])->where('IDFactura', $data['IDFactura'])->update([
                'detalle'=>json_encode($data['detalle']),
                'modificadores'=>json_encode($data['modificadores']),
-               'valores'=>json_encode($data['valores']),
+               'formasPago'=>json_encode($data['formasPago']),
                'cabecera'=>json_encode($data['cabecera']),
                'status'=>$data['status'],
             ]);
@@ -92,12 +92,12 @@ class FacturaPayloadController extends Controller
         }
     }
 
-    public function put_valores(Request $request, $pais) {
+    public function put_formasPago(Request $request, $pais) {
         try{
             DB::beginTransaction();
             $data = $request->json()->all();
             $factura_payload = FacturaPayload::where('IDCadena', $data['IDCadena'])->where('IDRestaurante', $data['IDRestaurante'])->where('IDFactura', $data['IDFactura'])->update([
-                'valores'=>json_encode($data['valores']),
+                'formasPago'=>json_encode($data['formasPago']),
             ]);
             DB::commit();
             return response()->json(true,200);
@@ -299,40 +299,6 @@ class FacturaPayloadController extends Controller
             } catch (Exception $e) {
                 return response()->json($e,400);
             }
-        }
-    }
-
-    public function calcula_valores(Request $request) {
-        $data = $request->json()->all();
-        $factura_payload = FacturaPayload::where('IDCadena', $data['IDCadena'])->where('IDRestaurante', $data['IDRestaurante'])->where('IDFactura', $data['IDFactura'])->first();
-        $costo_subtotal = 19; //aqui calcular el costo total como la suma de todo lo que agregue costo.
-        $costos = new stdClass();
-        $costos->SUBTOTAL = $costo_subtotal;
-        $costos_insertar = $data['costos_insertar'];
-        foreach($costos_insertar as $new_costo) {
-          $etiqueta = $new_costo['etiqueta'];
-          if ($new_costo["tipo"] == "calculo") {
-            $new_valor = $costo_subtotal * $new_costo["factor"];
-            $costos->$etiqueta = $new_valor;
-          } else {
-            $costos->$etiqueta = $new_costo['valor'];
-          }
-        }
-        $costo_total = 0;
-        foreach($costos as $costos_key=>$costos_value) {
-            $costo_total += $costos_value;
-        }
-        $costos->TOTAL = $costo_total;
-        try{
-          DB::beginTransaction();
-          $data = $request->json()->all();
-          $response = $factura_payload->update([
-            'valores'=>json_encode($costos),
-          ]);
-          DB::commit();
-          return response()->json($costos,200);
-        } catch (Exception $e) {
-          return response()->json($e->getMessage(),400);
         }
     }
 }
