@@ -145,6 +145,7 @@ class FacturaPayloadController extends Controller
         $detalleApp =  uniqid();
         $item = new stdClass();
         $item->detalleApp = $detalleApp;
+        $item->codigoApp = env('APP_CODE');
         $item->codPlu = $new_producto['codPlu'];
         $item->precioBruto = $new_producto['precioBruto'];
         $item->cantidad = $cantidad;
@@ -182,6 +183,7 @@ class FacturaPayloadController extends Controller
             $detalleApp =  uniqid();
             $new_item_detalle = new stdClass();
             $new_item_detalle->detalleApp = $detalleApp;
+            $new_item_detalle->codigoApp = env('APP_CODE');
             $new_item_detalle->codPlu = $new_producto['codPlu'];
             $new_item_detalle->precioBruto = $new_producto['precioBruto'];
             $new_item_detalle->cantidad = $cantidad;
