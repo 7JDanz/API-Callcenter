@@ -82,7 +82,6 @@ class FacturaPayloadController extends Controller
         try{
             DB::beginTransaction();
             $data = $request->json()->all();
-            $cabecera->codigoApp = $codigoAplicacion;
             $factura_payload = FacturaPayload::where('IDCadena', $data['IDCadena'])->where('IDRestaurante', $data['IDRestaurante'])->where('IDFactura', $data['IDFactura'])->update([
                 'cabecera'=>json_encode($data['cabecera']),
             ]);
