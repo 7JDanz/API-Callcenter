@@ -32,6 +32,7 @@ Route::middleware(['multipais'])
 });
 
 Route::middleware([])->group(function() {
+    Route::get('/get_codigo_app' , function (Request $request) { return json_encode(["codigoApp"=>env('APP_CODE')]); });
     Route::post('/actualizar_usuarios' , [UsuariosPosController::class,'actualizar_usuarios'] );
     Route::post('/update_users_batch' , [UsuariosPosController::class,'update_users_batch'] );
     Route::get('/pais',[PaisController::class,'index']);
@@ -41,7 +42,6 @@ Route::middleware([])->group(function() {
 Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
 ->where(['pais' => 'ecu|chi|col|arg'])
 ->group(function(){
-    Route::get('/get_codigo_app' , function (Request $request) { return json_encode(["codigoApp"=>env('APP_CODE')]); });
     Route::get('/pruebamenu' , [MenuController::class,'prueba_menu']);
 
     //FACTURA
