@@ -152,7 +152,7 @@ class FacturaPayloadController extends Controller
 
         $item_modificador = new stdClass();
         $item_modificador->detalleApp = $detalleApp;
-        $item->codModificador = $codModificador;
+        $item_modificador->codModificador = $codModificador;
         array_push($modificadores, $item_modificador);
 
         try{
@@ -176,18 +176,21 @@ class FacturaPayloadController extends Controller
         $modificadores = json_decode($factura_payload->modificadores);
         $items = $data['items'];
         foreach($items as $item) {
-            $cantidad = $item['cantidad'];
             $new_producto = $item['producto'];
             $codModificador = $item['codModificador'];
-            $new_item = new stdClass();
-            $new_item->id = uniqid();
-            $new_item->producto = $new_producto;
-            $new_item->cantidad = $cantidad;
+            $cantidad = $item['cantidad'];
+            $detalleApp =  uniqid();
+            $new_item_detalle = new stdClass();
+            $new_item_detalle->detalleApp = $detalleApp;
+            $new_item_detalle->codPlu = $new_producto['codPlu'];
+            $new_item_detalle->precioBruto = $new_producto['precioBruto'];
+            $new_item_detalle->cantidad = $cantidad;
+            array_push($detalle, $new_item_detalle);
+
             $new_item_modificador = new stdClass();
-            $new_item_modificador->id = $new_item->id;
+            $new_item_modificador->detalleApp = $detalleApp;
             $new_item_modificador->codModificador = $codModificador;
             array_push($modificadores, $new_item_modificador);
-            array_push($detalle, $new_item);
         }
         try{
             DB::beginTransaction();
