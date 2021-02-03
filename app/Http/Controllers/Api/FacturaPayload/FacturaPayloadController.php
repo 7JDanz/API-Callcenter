@@ -19,7 +19,8 @@ class FacturaPayloadController extends Controller
            $factura_payloads = FacturaPayload::get();
            $toReturn = [];
            foreach($factura_payloads as $factura_payload) {
-               $factura_payload->orden = json_decode($factura_payload->orden);
+               $factura_payload->detalle = json_decode($factura_payload->detalle);
+               $factura_payload->modificadores = json_decode($factura_payload->modificadores);
                $factura_payload->cabecera = json_decode($factura_payload->cabecera);
                $factura_payload->valores = json_decode($factura_payload->valores);
                array_push($toReturn, $factura_payload);
@@ -28,7 +29,8 @@ class FacturaPayloadController extends Controller
         } else {
            $factura_payload = FacturaPayload::where('IDCadena', $id_cadena)->where('IDRestaurante', $id_restaurante)->where('IDFactura', $id)->first();
            if ($factura_payload) {
-            $factura_payload->orden = json_decode($factura_payload->orden);
+            $factura_payload->detalle = json_decode($factura_payload->detalle);
+            $factura_payload->modificadores = json_decode($factura_payload->modificadores);
             $factura_payload->cabecera = json_decode($factura_payload->cabecera);
             $factura_payload->valores = json_decode($factura_payload->valores);
            }
@@ -46,7 +48,8 @@ class FacturaPayloadController extends Controller
         $id_restaurante = $data['IDRestaurante'];
         $id_cadena = $data['IDCadena'];
         $new_factura_payload = new FacturaPayload();
-        $new_factura_payload->orden = json_encode($data['orden']);
+        $new_factura_payload->detalle = json_encode($data['detalle']);
+        $new_factura_payload->modificadores = json_encode($data['modificadores']);
         $new_factura_payload->cabecera = json_encode($data['cabecera']);
         $new_factura_payload->valores = json_encode($data['valores']);
         $new_factura_payload->status = 'activo';
@@ -62,7 +65,8 @@ class FacturaPayloadController extends Controller
             DB::beginTransaction();
             $data = $request->json()->all();
             $factura_payload = FacturaPayload::where('IDCadena', $data['IDCadena'])->where('IDRestaurante', $data['IDRestaurante'])->where('IDFactura', $data['IDFactura'])->update([
-               'orden'=>json_encode($data['orden']),
+               'detalle'=>json_encode($data['detalle']),
+               'modificadores'=>json_encode($data['modificadores']),
                'valores'=>json_encode($data['valores']),
                'cabecera'=>json_encode($data['cabecera']),
                'status'=>$data['status'],
@@ -102,12 +106,13 @@ class FacturaPayloadController extends Controller
         }
     }
 
-    public function put_orden(Request $request, $pais) {
+    public function put_detalle(Request $request, $pais) {
         try{
             DB::beginTransaction();
             $data = $request->json()->all();
             $factura_payload = FacturaPayload::where('IDCadena', $data['IDCadena'])->where('IDRestaurante', $data['IDRestaurante'])->where('IDFactura', $data['IDFactura'])->update([
-                'orden'=>json_encode($data['orden']),
+                'detalle'=>json_encode($data['detalle']),
+                'modificadores'=>json_encode($data['modificadores']),
             ]);
             DB::commit();
             return response()->json(true,200);
@@ -132,21 +137,25 @@ class FacturaPayloadController extends Controller
     public function inserta_producto(Request $request, $pais) {
         $data = $request->json()->all();
         $factura_payload = FacturaPayload::where('IDCadena', $data['IDCadena'])->where('IDRestaurante', $data['IDRestaurante'])->where('IDFactura', $data['IDFactura'])->first();
-        $orden = json_decode($factura_payload->orden);
+        $detalle = json_decode($factura_payload->detalle);
+        $modificadores = json_decode($factura_payload->modificadores);
         $new_producto = $data['producto'];
+        $new_modificador = $data['modificador'];
         $cantidad = $data['cantidad'];
         $item = new stdClass();
         $item->id = uniqid();
         $item->producto = $new_producto;
         $item->cantidad = $cantidad;
-        array_push($orden, $item);
+        array_push($detalle, $item);
+        array_push($modificadores, $new_modificador);
         try{
             DB::beginTransaction();
             $factura_payload->update([
-                'orden'=>json_encode($orden),
+                'detalle'=>json_encode($detalle),
+                'modificadores'=>json_encode($modificadores),
             ]);
             DB::commit();
-            return response()->json($orden,200);
+            return response()->json($detalle,200);
         } catch (Exception $e) {
             return response()->json($e,400);
         }
@@ -156,24 +165,27 @@ class FacturaPayloadController extends Controller
     public function inserta_varios_producto(Request $request, $pais) {
         $data = $request->json()->all();
         $factura_payload = FacturaPayload::where('IDCadena', $data['IDCadena'])->where('IDRestaurante', $data['IDRestaurante'])->where('IDFactura', $data['IDFactura'])->first();
-        $orden = json_decode($factura_payload->orden);
+        $detalle = json_decode($factura_payload->detalle);
+        $modificadores = json_decode($factura_payload->modificadores);
         $items = $data['items'];
         foreach($items as $item) {
             $cantidad = $item['cantidad'];
             $new_producto = $item['producto'];
+            $new_modificador = $item['modificador'];
             $new_item = new stdClass();
             $new_item->id = uniqid();
             $new_item->producto = $new_producto;
             $new_item->cantidad = $cantidad;
-            array_push($orden, $new_item);
+            array_push($detalle, $new_item);
+            array_push($modificadores, $new_modificador);
         }
         try{
             DB::beginTransaction();
             $factura_payload->update([
-                'orden'=>json_encode($orden),
+                'detalle'=>json_encode($detalle),
             ]);
             DB::commit();
-            return response()->json($orden,200);
+            return response()->json($detalle,200);
         } catch (Exception $e) {
             return response()->json($e,400);
         }
@@ -182,26 +194,26 @@ class FacturaPayloadController extends Controller
     public function borra_producto(Request $request, $pais) {
         $data = $request->json()->all();
         $factura_payload = FacturaPayload::where('IDCadena', $data['IDCadena'])->where('IDRestaurante', $data['IDRestaurante'])->where('IDFactura', $data['IDFactura'])->first();
-        $orden = json_decode($factura_payload->orden);
+        $detalle = json_decode($factura_payload->detalle);
         $id_producto_borrar = $data['id'];
-        $new_orden = [];
+        $new_detalle = [];
         $eliminado = false;
-        foreach($orden as $item) {
+        foreach($detalle as $item) {
             $detalle_item = (object) $item;
             if ($detalle_item->id == $id_producto_borrar) {
                 $eliminado = true;
             } else {
-                array_push($new_orden, $item);
+                array_push($new_detalle, $item);
             }
         }
         if ($eliminado) {
             try{
                 DB::beginTransaction();
                 $factura_payload->update([
-                    'orden'=>json_encode($new_orden),
+                    'detalle'=>json_encode($new_detalle),
                 ]);
                 DB::commit();
-                return response()->json($new_orden,200);
+                return response()->json($new_detalle,200);
             } catch (Exception $e) {
                 return response()->json($e,400);
             }
@@ -213,11 +225,11 @@ class FacturaPayloadController extends Controller
     public function borra_varios_producto(Request $request, $pais) {
         $data = $request->json()->all();
         $factura_payload = FacturaPayload::where('IDCadena', $data['IDCadena'])->where('IDRestaurante', $data['IDRestaurante'])->where('IDFactura', $data['IDFactura'])->first();
-        $orden = json_decode($factura_payload->orden);
+        $detalle = json_decode($factura_payload->detalle);
         $ids_producto_borrar = $data['ids'];
-        $new_orden = [];
+        $new_detalle = [];
         $eliminados = false;
-        foreach($orden as $item) {
+        foreach($detalle as $item) {
             $eliminado = false;
             $detalle_item = (object) $item;
             foreach($ids_producto_borrar as $id_producto_borrar) {
@@ -227,7 +239,7 @@ class FacturaPayloadController extends Controller
                 }
             }
             if (!$eliminado) {
-                array_push($new_orden, $item);
+                array_push($new_detalle, $item);
             }
         }
         if (!$eliminados) {
@@ -236,10 +248,10 @@ class FacturaPayloadController extends Controller
             try{
                 DB::beginTransaction();
                 $factura_payload->update([
-                    'orden'=>json_encode($new_orden),
+                    'detalle'=>json_encode($new_detalle),
                 ]);
                 DB::commit();
-                return response()->json($new_orden,200);
+                return response()->json($new_detalle,200);
             } catch (Exception $e) {
                 return response()->json($e,400);
             }

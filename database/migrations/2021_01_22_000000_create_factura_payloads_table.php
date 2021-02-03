@@ -15,7 +15,8 @@ class CreateFacturaPayloadsTable extends Migration
     {
         Schema::create('factura_payloads', function (Blueprint $table) {
             $table->id();
-            $table->string('orden');
+            $table->string('detalle');
+            $table->string('modificadores');
             $table->string('cabecera');
             $table->string('valores');
             $table->string('status');
