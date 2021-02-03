@@ -162,7 +162,7 @@ class FacturaPayloadController extends Controller
                 'modificadores'=>json_encode($modificadores),
             ]);
             DB::commit();
-            return response()->json($detalle,200);
+            return response()->json(["detalle"=>$detalle,"modificadores"=>$modificadores],200);
         } catch (Exception $e) {
             return response()->json($e,400);
         }
@@ -199,7 +199,7 @@ class FacturaPayloadController extends Controller
                 'modificadores'=>json_encode($modificadores),
             ]);
             DB::commit();
-            return response()->json($detalle,200);
+            return response()->json(["detalle"=>$detalle,"modificadores"=>$modificadores],200);
         } catch (Exception $e) {
             return response()->json($e,400);
         }
