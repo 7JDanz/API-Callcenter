@@ -235,7 +235,7 @@ class FacturaPayloadController extends Controller
                 DB::beginTransaction();
                 $factura_payload->update([
                     'detalle'=>json_encode($new_detalle),
-                    'modificadores'=>json_encode($modificadores),
+                    'modificadores'=>json_encode($new_modificadores),
                 ]);
                 DB::commit();
                 return response()->json(["detalle"=>$new_detalle,"modificadores"=>$new_modificadores],200);
@@ -251,20 +251,28 @@ class FacturaPayloadController extends Controller
         $data = $request->json()->all();
         $factura_payload = FacturaPayload::where('IDCadena', $data['IDCadena'])->where('IDRestaurante', $data['IDRestaurante'])->where('IDFactura', $data['IDFactura'])->first();
         $detalle = json_decode($factura_payload->detalle);
-        $ids_producto_borrar = $data['ids'];
+        $modificadores = json_decode($factura_payload->modificadores);
+        $items = $data['items'];
+        $new_modificadores = [];
         $new_detalle = [];
         $eliminados = false;
-        foreach($detalle as $item) {
-            $eliminado = false;
-            $detalle_item = (object) $item;
-            foreach($ids_producto_borrar as $id_producto_borrar) {
-                if ($detalle_item->id == $id_producto_borrar) {
-                    $eliminados = true;
+
+        foreach($items as $item_borrar) {
+            foreach($detalle as $item) {
+                $detalle_item = (object) $item;
+                if ($detalle_item->detalleApp == $item_borrar) {
                     $eliminado = true;
+                } else {
+                    array_push($new_detalle, $item);
                 }
             }
-            if (!$eliminado) {
-                array_push($new_detalle, $item);
+            foreach($modificadores as $item) {
+                $modificador_item = (object) $item;
+                if ($modificador_item->detalleApp == $item_borrar) {
+                    $eliminado = true;
+                } else {
+                    array_push($new_modificadores, $item);
+                }
             }
         }
         if (!$eliminados) {
@@ -274,9 +282,10 @@ class FacturaPayloadController extends Controller
                 DB::beginTransaction();
                 $factura_payload->update([
                     'detalle'=>json_encode($new_detalle),
+                    'modificadores'=>json_encode($new_modificadores),
                 ]);
                 DB::commit();
-                return response()->json($new_detalle,200);
+                return response()->json(["detalle"=>$new_detalle,"modificadores"=>$new_modificadores],200);
             } catch (Exception $e) {
                 return response()->json($e,400);
             }
