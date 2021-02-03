@@ -142,14 +142,16 @@ class FacturaPayloadController extends Controller
         $new_producto = $data['producto'];
         $codModificador = $data['codModificador'];
         $cantidad = $data['cantidad'];
+        $detalleApp =  uniqid();
         $item = new stdClass();
-        $item->id = uniqid();
-        $item->producto = $new_producto;
+        $item->detalleApp = $detalleApp;
+        $item->codPlu = $new_producto['codPlu'];
+        $item->precioBruto = $new_producto['precioBruto'];
         $item->cantidad = $cantidad;
         array_push($detalle, $item);
 
         $item_modificador = new stdClass();
-        $item_modificador->id = $item->id;
+        $item_modificador->detalleApp = $detalleApp;
         $item->codModificador = $codModificador;
         array_push($modificadores, $item_modificador);
 
