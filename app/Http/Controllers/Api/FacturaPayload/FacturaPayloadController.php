@@ -82,11 +82,9 @@ class FacturaPayloadController extends Controller
         try{
             DB::beginTransaction();
             $data = $request->json()->all();
-            $cabecera = (object) json_decode($data['cabecera']);
-            $codigoAplicacion = config("app.bi.codigo_aplicacion");
             $cabecera->codigoApp = $codigoAplicacion;
             $factura_payload = FacturaPayload::where('IDCadena', $data['IDCadena'])->where('IDRestaurante', $data['IDRestaurante'])->where('IDFactura', $data['IDFactura'])->update([
-                'cabecera'=>json_encode($cabecera),
+                'cabecera'=>json_encode($data['cabecera']),
             ]);
             DB::commit();
             return response()->json(true,200);
