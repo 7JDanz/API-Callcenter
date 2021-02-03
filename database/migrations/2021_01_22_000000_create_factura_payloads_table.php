@@ -20,6 +20,8 @@ class CreateFacturaPayloadsTable extends Migration
             $table->string('valores');
             $table->string('status');
             $table->string('IDFactura');
+            $table->string('IDRestaurante');
+            $table->string('IDCadena');
             $table->timestamps();
         });
     }
