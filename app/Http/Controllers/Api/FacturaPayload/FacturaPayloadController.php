@@ -140,14 +140,19 @@ class FacturaPayloadController extends Controller
         $detalle = json_decode($factura_payload->detalle);
         $modificadores = json_decode($factura_payload->modificadores);
         $new_producto = $data['producto'];
-        $new_modificador = $data['modificador'];
+        $codModificador = $data['codModificador'];
         $cantidad = $data['cantidad'];
         $item = new stdClass();
         $item->id = uniqid();
         $item->producto = $new_producto;
         $item->cantidad = $cantidad;
         array_push($detalle, $item);
-        array_push($modificadores, $new_modificador);
+
+        $item_modificador = new stdClass();
+        $item_modificador->id = $item->id;
+        $item->codModificador = $codModificador;
+        array_push($modificadores, $item_modificador);
+
         try{
             DB::beginTransaction();
             $factura_payload->update([
@@ -171,18 +176,22 @@ class FacturaPayloadController extends Controller
         foreach($items as $item) {
             $cantidad = $item['cantidad'];
             $new_producto = $item['producto'];
-            $new_modificador = $item['modificador'];
+            $codModificador = $item['codModificador'];
             $new_item = new stdClass();
             $new_item->id = uniqid();
             $new_item->producto = $new_producto;
             $new_item->cantidad = $cantidad;
+            $new_item_modificador = new stdClass();
+            $new_item_modificador->id = $new_item->id;
+            $new_item_modificador->codModificador = $codModificador;
+            array_push($modificadores, $new_item_modificador);
             array_push($detalle, $new_item);
-            array_push($modificadores, $new_modificador);
         }
         try{
             DB::beginTransaction();
             $factura_payload->update([
                 'detalle'=>json_encode($detalle),
+                'modificadores'=>json_encode($modificadores),
             ]);
             DB::commit();
             return response()->json($detalle,200);
