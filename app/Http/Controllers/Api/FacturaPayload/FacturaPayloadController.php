@@ -261,7 +261,7 @@ class FacturaPayloadController extends Controller
             foreach($detalle as $item) {
                 $detalle_item = (object) $item;
                 if ($detalle_item->detalleApp == $item_borrar) {
-                    $eliminado = true;
+                    $eliminados = true;
                 } else {
                     array_push($new_detalle, $item);
                 }
@@ -269,7 +269,7 @@ class FacturaPayloadController extends Controller
             foreach($modificadores as $item) {
                 $modificador_item = (object) $item;
                 if ($modificador_item->detalleApp == $item_borrar) {
-                    $eliminado = true;
+                    $eliminados = true;
                 } else {
                     array_push($new_modificadores, $item);
                 }
