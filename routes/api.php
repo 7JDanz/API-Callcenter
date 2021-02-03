@@ -41,7 +41,7 @@ Route::middleware([])->group(function() {
 Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
 ->where(['pais' => 'ecu|chi|col|arg'])
 ->group(function(){
-    Route::get('/prueba' , function (Request $request) { return $request->user();});
+    Route::get('/get_codigo_app' , function (Request $request) { return json_encode(["codigoApp"=>env('APP_CODE')]); });
     Route::get('/pruebamenu' , [MenuController::class,'prueba_menu']);
 
     //FACTURA
