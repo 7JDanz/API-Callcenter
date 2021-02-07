@@ -52,6 +52,7 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
 ->where(['pais' => 'ecu|chi|col|arg'])
 ->group(function(){
     Route::get('/pruebamenu' , [MenuController::class,'prueba_menu']);
+    Route::get('/menu/build_menu_cadena',[MenuController::class,'build_menu_cadena']);
 
     //FACTURA
     Route::get('/facturapayload' , [FacturaPayloadController::class, 'get']);
@@ -103,8 +104,6 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
 
     //Producto Upselling
     Route::get('/menu/upselling',[MenuController::class,'upselling'])->name('Upselling');
-
-    Route::get('/menu/build_menu_cadena',[MenuController::class,'build_menu_cadena']);
 });
 
 
