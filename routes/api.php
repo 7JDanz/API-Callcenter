@@ -104,7 +104,7 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
     //Producto Upselling
     Route::get('/menu/upselling',[MenuController::class,'upselling'])->name('Upselling');
 
-    Route::get('/menu/build_menu_cadena/',[MenuController::class,'build_menu_cadena']);
+    Route::get('/menu/build_menu_cadena',[MenuController::class,'build_menu_cadena']);
 });
 
 

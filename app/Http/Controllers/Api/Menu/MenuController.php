@@ -308,7 +308,28 @@ class MenuController extends Controller
     }
 
     function build_menu_cadena(Request $request, $pais) {
-        return $pais;
+        $id_cadena = $request['IDCadena'];
+        $menus_en_cadena = Menu::whereIn("IDCadena", $id_cadena)->get();
+        foreach($menus_en_cadena as $menu) {
+            $id_menu = $menu->IDMenu;
+            $menu_agrupacion = $menuAgrupado = MenuAgrupacion::where("IDMenu", $id_menu)->get();
+            $menu_categoria = MenuCategorias::where("IDMenu", $id_menu)->get();
+            try{
+                $preview_menu_payload = MenuPayload::where("IDMenu", $id_menu)->update([
+                    'status'=>2,
+                ]);
+            } catch (Exception $e) {
+                //ignored
+            }
+            $new_menu_payload = new MenuPayload();
+            $new_menu_payload->IDMenu = $id_menu;
+            $new_menu_payload->IDCadena = $id_cadena;
+            $new_menu_payload->MenuAgrupacion = $menu_agrupacion;
+            $new_menu_payload->MenuCategorias = $menu_categoria;
+            $new_menu_payload->status = 1;
+            $new_menu_payload->save();
+        }
+        return response()->json(["message"=>"builded"],200);
     }
 
 
