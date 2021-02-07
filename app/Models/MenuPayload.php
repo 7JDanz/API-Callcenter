@@ -22,6 +22,7 @@ class MenuPayload extends Model
         'IDMenu',
         'IDCadena',
         'MenuAgrupacion',
+        'MenuCategorias',
         'status',
 
     ];
