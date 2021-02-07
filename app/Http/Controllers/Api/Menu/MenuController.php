@@ -307,8 +307,7 @@ class MenuController extends Controller
         }
     }
 
-    function build_menu_cadena(Request $request, $pais) {
-        $id_cadena = $request['IDCadena'];
+    function build_menu_cadena(Request $request, $pais, $id_cadena) {
         $menus_en_cadena = Menu::whereIn("IDCadena", $id_cadena)->get();
         foreach($menus_en_cadena as $menu) {
             $id_menu = $menu->IDMenu;
