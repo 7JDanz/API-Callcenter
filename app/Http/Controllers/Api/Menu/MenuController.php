@@ -313,24 +313,30 @@ class MenuController extends Controller
             $id_menu = $menu->IDMenu;
             $menu_agrupacion = MenuAgrupacion::where("IDMenu", $id_menu)->get();
             $menu_categoria = MenuCategorias::where("IDMenu", $id_menu)->get();
+            $insertado = true;
             try{
-                $preview_menu_payload = MenuPayload::where("IDMenu", $id_menu)->update([
-                    'status'=>2,
-                ]);
+                $new_menu_payload = new MenuPayload();
+                $new_menu_payload->IDMenu = $id_menu;
+                $new_menu_payload->IDCadena = $id_cadena;
+                $new_menu_payload->MenuAgrupacion = $menu_agrupacion;
+                $new_menu_payload->MenuCategorias = $menu_categoria;
+                $new_menu_payload->status = 1;
+                $new_menu_payload->save();
             } catch (Exception $e) {
-                //ignored
+                $insertado = false;
             }
-            $new_menu_payload = new MenuPayload();
-            $new_menu_payload->IDMenu = $id_menu;
-            $new_menu_payload->IDCadena = $id_cadena;
-            $new_menu_payload->MenuAgrupacion = $menu_agrupacion;
-            $new_menu_payload->MenuCategorias = $menu_categoria;
-            $new_menu_payload->status = 1;
-            $new_menu_payload->save();
+            if ($insertado) {
+                try{
+                    $preview_menu_payload = MenuPayload::where("IDMenu", $id_menu)->update([
+                        'status'=>2,
+                    ]);
+                } catch (Exception $e) {
+                    //ignored
+                }
+            }
         }
         return response()->json(["message"=>"builded"],200);
     }
-
 
     protected function getConnectionName()
     {
