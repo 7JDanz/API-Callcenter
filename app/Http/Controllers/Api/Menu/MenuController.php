@@ -311,7 +311,7 @@ class MenuController extends Controller
         $menus_en_cadena = Menu::whereIn("IDCadena", $id_cadena)->get();
         foreach($menus_en_cadena as $menu) {
             $id_menu = $menu->IDMenu;
-            $menu_agrupacion = $menuAgrupado = MenuAgrupacion::where("IDMenu", $id_menu)->get();
+            $menu_agrupacion = MenuAgrupacion::where("IDMenu", $id_menu)->get();
             $menu_categoria = MenuCategorias::where("IDMenu", $id_menu)->get();
             try{
                 $preview_menu_payload = MenuPayload::where("IDMenu", $id_menu)->update([
