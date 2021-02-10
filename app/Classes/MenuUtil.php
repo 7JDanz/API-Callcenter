@@ -3,12 +3,17 @@ namespace App\Classes;
 
 class MenuUtil
 {
+    const PRODUCTOS     = "productos";
+    const IDPRODUCTO    = "IDProducto";
+    const PREGUNTAS     = "Preguntas";
+    const RESPUESTAS    = "Respuestas";
+
     public function process_menu_agrupacion($menu_agrupacion, $precios) {
         $toReturn = [];
         foreach ($menu_agrupacion as $item) {
             $new_item = null;
             foreach ($item as $key=>$value) {
-                if ($key == "productos") {
+                if ($key == self::PRODUCTOS) {
                     $new_productos = null;
                     if (is_array($value)) {
                         $new_productos = $this->process_productos($value, $precios);
@@ -28,7 +33,7 @@ class MenuUtil
         foreach ($menu_categorias as $item) {
             $new_item = null;
             foreach ($item as $key=>$value) {
-                if ($key == "productos") {
+                if ($key == self::PRODUCTOS) {
                     $new_productos = null;
                     if (is_array($value)) {
                         $new_productos = $this->process_productos($value, $precios);
@@ -48,7 +53,7 @@ class MenuUtil
         foreach ($productos as $producto) {
             $producto_to_insert = null;
             foreach ($producto as $key => $value) {
-                if ($key == "Preguntas") {
+                if ($key == self::PREGUNTAS) {
                     $new_preguntas = null;
                     if (is_array($value)) {
                         $new_preguntas = $this->process_Preguntas($value, $precios);
@@ -60,7 +65,7 @@ class MenuUtil
                     $producto_to_insert[$key] = $value;
                 }
             }
-            $producto_to_insert['precio'] = $this->get_precio_producto($producto['IDProducto'], $precios);
+            $producto_to_insert['precio'] = $this->get_precio_producto($producto[self::IDPRODUCTO], $precios);
             array_push($toReturn, $producto_to_insert);
         }
         return $toReturn;
@@ -71,7 +76,7 @@ class MenuUtil
         foreach($preguntas as $pregunta) {
             $new_pregunta = null;
             foreach($pregunta as $key_pregunta=>$value_pregunta) {
-                if ($key_pregunta == "Respuestas") {
+                if ($key_pregunta == self::RESPUESTAS) {
                     $new_respuestas = null;
                     if (is_array($value_pregunta)) {
                         $new_respuestas = [];
@@ -80,7 +85,7 @@ class MenuUtil
                             $new_respuesta = null;
                             foreach($respuesta as $key_respuesta=>$value_respuesta) {
                                 $new_respuesta[$key_respuesta] = $value_respuesta;
-                                if ($key_respuesta == "IDProducto") {
+                                if ($key_respuesta == self::IDPRODUCTO) {
                                     $new_respuesta['precio'] = $this->get_precio_producto($value_respuesta, $precios);
                                 }
                             }
@@ -112,14 +117,14 @@ class MenuUtil
 
         foreach ($menuPayload as $payload) {
             foreach($payload->MenuAgrupacion as $menu_agrupacion) {
-                if (is_array($menu_agrupacion['productos'])) {
-                    foreach($menu_agrupacion['productos'] as $producto) {
-                        array_push($plus, $producto['IDProducto']);
-                        if (is_array($producto['Preguntas'])) {
-                            foreach($producto['Preguntas'] as $pregunta) {
-                                if (is_array($pregunta['Respuestas'])) {
-                                    foreach($pregunta['Respuestas'] as $respuesta) {
-                                        array_push($plus, $respuesta['IDProducto']);
+                if (is_array($menu_agrupacion[self::PRODUCTOS])) {
+                    foreach($menu_agrupacion[self::PRODUCTOS] as $producto) {
+                        array_push($plus, $producto[self::IDPRODUCTO]);
+                        if (is_array($producto[self::PREGUNTAS])) {
+                            foreach($producto[self::PREGUNTAS] as $pregunta) {
+                                if (is_array($pregunta[self::RESPUESTAS])) {
+                                    foreach($pregunta[self::RESPUESTAS] as $respuesta) {
+                                        array_push($plus, $respuesta[self::IDPRODUCTO]);
                                     }
                                 }
                             }
@@ -156,12 +161,12 @@ class MenuUtil
         //Busqueda de Respuestas
         $plus = [];
         foreach ($productos_encontrados as $producto) {
-            array_push($plus, $producto['IDProducto']);
-            if (is_array($producto['Preguntas'])) {
-                foreach($producto['Preguntas'] as $pregunta) {
-                    if (is_array($pregunta['Respuestas'])) {
-                        foreach($pregunta['Respuestas'] as $respuesta) {
-                            array_push($plus, $respuesta['IDProducto']);
+            array_push($plus, $producto[self::IDPRODUCTO]);
+            if (is_array($producto[self::PREGUNTAS])) {
+                foreach($producto[self::PREGUNTAS] as $pregunta) {
+                    if (is_array($pregunta[self::RESPUESTAS])) {
+                        foreach($pregunta[self::RESPUESTAS] as $respuesta) {
+                            array_push($plus, $respuesta[self::IDPRODUCTO]);
                         }
                     }
                 }
@@ -170,16 +175,21 @@ class MenuUtil
         return implode(',',$plus);
 
     }
+
     public function get_busqueda_productos($menus,$buscado){
         //Busqueda de Menu Agrupacion
+
         $productos_encontrados = [];
         foreach ($menus as $item_menu) {
+
             foreach ($item_menu['MenuAgrupacion'] as $item_menu_agrupacion) {
-                if(is_array($item_menu_agrupacion['productos']) || is_object($item_menu_agrupacion['productos']))
+
+                if(is_array($item_menu_agrupacion[self::PRODUCTOS]) /*|| is_object($item_menu_agrupacion[self::PRODUCTOS])*/)
                 {
-                    foreach ($item_menu_agrupacion['productos'] as $producto) {
+                    foreach ($item_menu_agrupacion[self::PRODUCTOS] as $producto) {
                         $buscar_impresion = strpos( strtolower($producto['impresion']), strtolower($buscado));
                         $buscar_descripcion = strpos( strtolower($producto['DescripcionProducto']), strtolower($buscado));
+
                         if ($buscar_impresion !== false || $buscar_descripcion !== false) {
                             array_push($productos_encontrados, $producto);
                         }
@@ -188,7 +198,6 @@ class MenuUtil
             }
         }
         return $productos_encontrados;
-
     }
 
 }
