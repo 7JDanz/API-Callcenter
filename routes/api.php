@@ -54,6 +54,7 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
     Route::get('/pruebamenu' , [MenuController::class,'prueba_menu']);
 
     //FACTURA
+
     Route::get('/facturapayload' , [FacturaPayloadController::class, 'get']);
     Route::post('/facturapayload' , [FacturaPayloadController::class, 'post']);
     Route::put('/facturapayload' , [FacturaPayloadController::class, 'put']);
