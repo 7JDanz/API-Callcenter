@@ -117,7 +117,7 @@ class MenuController extends Controller
 
         $plus_id = '';///del request
         $menu = "38D97934-A4B4-E911-80E2-000D3A019254";
-        $request->request->add(['descripcion' => 'mini manicho']);
+        $request->request->add(['descripcion' => 'gratis']);
         //return $request;
         return $this->buscarProducto($request,$pais,$menu);
     }
