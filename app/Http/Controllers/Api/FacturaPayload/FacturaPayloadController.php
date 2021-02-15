@@ -14,6 +14,8 @@ use App\Models\FacturaPayloadDetalle;
 use App\Models\FacturaPayloadFormasPago;
 use App\Models\FacturaPayloadModificador;
 
+use App\Classes\Utilites;
+
 class FacturaPayloadController extends Controller
 {
     public function get(Request $request, $pais) {
@@ -457,55 +459,25 @@ class FacturaPayloadController extends Controller
 
     private function check_if_cabecera($to_verify) {
         $toCheckBase = new FacturaPayloadCabecera();
-        return $this->check_if_instanceOf($toCheckBase, $to_verify);
+        $utilities = new Utilites();
+        return $utilities->check_if_instanceOf($toCheckBase, $to_verify);
     }
 
     private function check_if_detalle($to_verify) {
         $toCheckBase = new FacturaPayloadDetalle();
-        return $this->check_if_instanceOf($toCheckBase, $to_verify);
+        $utilities = new Utilites();
+        return $utilities->check_if_instanceOf($toCheckBase, $to_verify);
     }
 
     private function check_if_modificador($to_verify) {
         $toCheckBase = new FacturaPayloadModificador();
-        return $this->check_if_instanceOf($toCheckBase, $to_verify);
+        $utilities = new Utilites();
+        return $utilities->check_if_instanceOf($toCheckBase, $to_verify);
     }
 
     private function check_if_formas_pago($to_verify) {
         $toCheckBase = new FacturaPayloadFormasPago();
-        return $this->check_if_instanceOf($toCheckBase, $to_verify);
-    }
-
-    private function check_if_instanceOf($destinationClass, $sourceObject)
-    {
-        $destinationClassProperties = $this->get_keys($this->convert_to_array($destinationClass));
-        $sourceObjectProperties = $this->get_keys($this->convert_to_array($sourceObject));
-        $not_found = [];
-        foreach($destinationClassProperties as $destinationClassProperty) {
-            $existe = false;
-            foreach($sourceObjectProperties as $sourceObjectProperty) {
-                if ($sourceObjectProperty == $destinationClassProperty) {
-                    $existe = true;
-                }
-            }
-            if (!$existe) {
-                array_push($not_found, $destinationClassProperty);
-            }
-        }
-        $toReturn = new stdClass();
-        $toReturn->pass = $not_found == [] ? true : false;
-        $toReturn->message = $not_found == [] ? 'ok' : 'Falta: ' . join(', ', $not_found);
-        return $toReturn;
-    }
-
-    private function convert_to_array($object) {
-        return json_decode(json_encode($object), true);
-    }
-
-    private function get_keys($object_as_array) {
-        $keys = [];
-        foreach($object_as_array as $key=>$value) {
-            array_push($keys, $key);
-        }
-        return $keys;
+        $utilities = new Utilites();
+        return $utilities->check_if_instanceOf($toCheckBase, $to_verify);
     }
 }

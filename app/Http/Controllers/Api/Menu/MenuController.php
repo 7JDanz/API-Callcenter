@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
 use App\Classes\MenuUtil;
+use Illuminate\Support\Facades\Log;
+Use Exception;
 
 class MenuController extends Controller
 {
@@ -122,66 +124,44 @@ class MenuController extends Controller
         return $this->buscarProducto($request,$pais,$menu);
     }
 
-    static function build_menu_cadena_updater($pais, $id_cadena) {
-        $menus_en_cadena = Menu::where("IDCadena", $id_cadena)->get();
-        foreach($menus_en_cadena as $menu) {
-            $id_menu = $menu->IDMenu;
-            $menu_agrupacion = MenuAgrupacion::where("IDMenu", $id_menu)->get();
-            $menu_categoria = MenuCategorias::where("IDMenu", $id_menu)->get();
-            $insertado = true;
-            try{
-                $new_menu_payload = new MenuPayload();
-                $new_menu_payload->IDMenu = $id_menu;
-                $new_menu_payload->IDCadena = $id_cadena;
-                $new_menu_payload->MenuAgrupacion = $menu_agrupacion;
-                $new_menu_payload->MenuCategorias = $menu_categoria;
-                $new_menu_payload->status = 1;
-                $new_menu_payload->save();
-            } catch (Exception $e) {
-                $insertado = false;
-            }
-            if ($insertado) {
-                try{
-                    $preview_menu_payload = MenuPayload::where("IDMenu", $id_menu)->update([
-                        'status'=>2,
-                    ]);
-                } catch (Exception $e) {
-                    //ignored
+    static function build_menu_cadena($connection) {
+        $cadenas = DB::connection($connection)->select('SELECT DISTINCT IDCadena FROM trade.menu;');
+        foreach($cadenas as $cadena) {
+            try {
+                $id_cadena = $cadena->IDCadena;
+                $menus_en_cadena = DB::connection($connection)->table('trade.menu')->where("IDCadena", $id_cadena)->get();
+                foreach($menus_en_cadena as $menu) {
+                    $id_menu = $menu->IDMenu;
+                    $menu_agrupacion = DB::connection($connection)->table('callcenter.menu_productos_categoria')->where("IDMenu", $id_menu)->get();
+                    $menu_categoria = DB::connection($connection)->table('callcenter.menu_productos_subcategoria')->where("IDMenu", $id_menu)->get();
+                    $insertado = true;
+                    try{
+                        $new_menu_payload = new MenuPayload();
+                        $new_menu_payload->IDMenu = $id_menu;
+                        $new_menu_payload->IDCadena = $id_cadena;
+                        $new_menu_payload->MenuAgrupacion = $menu_agrupacion;
+                        $new_menu_payload->MenuCategorias = $menu_categoria;
+                        $new_menu_payload->status = 1;
+                        $new_menu_payload->save();
+                    } catch (Exception $e) {
+                        $insertado = false;
+                    }
+                    if ($insertado) {
+                        try{
+                            $preview_menu_payload = DB::connection($connection)->table('dbo.Menu_Payload')->where("IDMenu", $id_menu)->update([
+                                'status'=>2,
+                            ]);
+                        } catch (Exception $e) {
+                            //ignored
+                        }
+                    }
                 }
+                Log::info("Construido Menu de IDCadena " . $cadena->IDCadena);
+            } catch (Exception $e) {
+                Log::error("Fallo construcción del Menu de IDCadena " . $cadena->IDCadena);
             }
         }
-        return response()->json(["message"=>"builded"],200);
-    }
-
-    function build_menu_cadena(Request $request, $pais, $id_cadena) {
-        $menus_en_cadena = Menu::where("IDCadena", $id_cadena)->get();
-        foreach($menus_en_cadena as $menu) {
-            $id_menu = $menu->IDMenu;
-            $menu_agrupacion = MenuAgrupacion::where("IDMenu", $id_menu)->get();
-            $menu_categoria = MenuCategorias::where("IDMenu", $id_menu)->get();
-            $insertado = true;
-            try{
-                $new_menu_payload = new MenuPayload();
-                $new_menu_payload->IDMenu = $id_menu;
-                $new_menu_payload->IDCadena = $id_cadena;
-                $new_menu_payload->MenuAgrupacion = $menu_agrupacion;
-                $new_menu_payload->MenuCategorias = $menu_categoria;
-                $new_menu_payload->status = 1;
-                $new_menu_payload->save();
-            } catch (Exception $e) {
-                $insertado = false;
-            }
-            if ($insertado) {
-                try{
-                    $preview_menu_payload = MenuPayload::where("IDMenu", $id_menu)->update([
-                        'status'=>2,
-                    ]);
-                } catch (Exception $e) {
-                    //ignored
-                }
-            }
-        }
-        return response()->json(["message"=>"builded"],200);
+        return "Construidos los Menu de la conexión ". $connection;
     }
 
     protected function getConnectionName()

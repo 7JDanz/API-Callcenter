@@ -4,6 +4,9 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Util\Helpers;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Api\Menu\MenuController;
+use Illuminate\Support\Facades\Log;
 
 class updateDailyData extends Command
 {
@@ -38,7 +41,12 @@ class updateDailyData extends Command
      */
     public function handle()
     {
-        echo "Ejecutado Actualización Diaria";
-        return 0;
+        $conexiones = DB::table("conexiones")->select("nombre")->get();
+        foreach($conexiones as $connection) {
+            $response = MenuController::build_menu_cadena($connection->nombre);
+            Log::info($response);
+        }
+        Log::info("Tarea Diaria Completa");
+        return "Tarea Diaria Completa";
     }
 }
