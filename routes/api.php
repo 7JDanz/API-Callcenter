@@ -52,6 +52,7 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
 ->where(['pais' => 'ecu|chi|col|arg'])
 ->group(function(){
     Route::get('/pruebamenu' , [MenuController::class,'prueba_menu']);
+    Route::get('/build_menu_cadena_request' , [MenuController::class,'build_menu_cadena_request']);
 
     //FACTURA
 
