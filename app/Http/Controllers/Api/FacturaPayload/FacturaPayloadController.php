@@ -64,7 +64,7 @@ class FacturaPayloadController extends Controller
             foreach($new_detalle as $item_to_insert) {
                 $item_to_insert['codigoApp'] = $new_id_factura;
                 $validation = $this->check_if_detalle($item_to_insert);
-                if (!$validation->pass) {
+                if ($validation->pass == false) {
                     return response()->json($validation,400);
                 }
                 array_push($detalle_to_insert, $item_to_insert);
@@ -73,7 +73,7 @@ class FacturaPayloadController extends Controller
         if ($new_modificadores !== []) {
             foreach($new_modificadores as $item_to_insert) {
                 $validation = $this->check_if_modificador($item_to_insert);
-                if (!$validation->pass) {
+                if ($validation->pass == false) {
                     return response()->json($validation,400);
                 }
             }
@@ -81,7 +81,7 @@ class FacturaPayloadController extends Controller
         if ($new_cabecera !== []) {
             $new_cabecera['codigoApp'] = $new_id_factura;
             $validation = $this->check_if_cabecera($new_cabecera);
-            if (!$validation->pass) {
+            if ($validation->pass == false) {
                 return response()->json($validation,400);
             }
         }
@@ -89,7 +89,7 @@ class FacturaPayloadController extends Controller
             foreach($new_formasPago as $new_formaPago) {
                 $new_formaPago['codigoApp'] = $new_id_factura;
                 $validation = $this->check_if_formas_pago($new_formaPago);
-                if (!$validation->pass) {
+                if ($validation->pass == false) {
                     return response()->json($validation,400);
                 }
                 array_push($formas_pago_to_insert, $new_formaPago);
@@ -122,7 +122,7 @@ class FacturaPayloadController extends Controller
                 foreach($new_detalle as $item_to_insert) {
                     $item_to_insert['codigoApp'] = $data['IDFactura'];
                     $validation = $this->check_if_detalle($item_to_insert);
-                    if (!$validation->pass) {
+                    if ($validation->pass == false) {
                         return response()->json($validation,400);
                     }
                     array_push($detalle_to_insert, $item_to_insert);
@@ -131,7 +131,7 @@ class FacturaPayloadController extends Controller
             if ($new_modificadores !== []) {
                 foreach($new_modificadores as $item_to_insert) {
                     $validation = $this->check_if_modificador($item_to_insert);
-                    if (!$validation->pass) {
+                    if ($validation->pass == false) {
                         return response()->json($validation,400);
                     }
                 }
@@ -139,7 +139,7 @@ class FacturaPayloadController extends Controller
             if ($new_cabecera !== []) {
                 $new_cabecera['codigoApp'] = $data['IDFactura'];
                 $validation = $this->check_if_cabecera($new_cabecera);
-                if (!$validation->pass) {
+                if ($validation->pass == false) {
                     return response()->json($validation,400);
                 }
             }
@@ -147,7 +147,7 @@ class FacturaPayloadController extends Controller
                 foreach($new_formasPago as $new_formaPago) {
                     $new_formaPago['codigoApp'] = $data['IDFactura'];
                     $validation = $this->check_if_formas_pago($new_formaPago);
-                    if (!$validation->pass) {
+                    if ($validation->pass == false) {
                         return response()->json($validation,400);
                     }
                     array_push($formas_pago_to_insert, $new_formaPago);
@@ -175,7 +175,7 @@ class FacturaPayloadController extends Controller
             if ($new_cabecera !== []) {
                 $new_cabecera['codigoApp'] = $data['IDFactura'];
                 $validation = $this->check_if_cabecera($new_cabecera);
-                if (!$validation->pass) {
+                if ($validation->pass == false) {
                     return response()->json($validation,400);
                 }
             }
@@ -199,7 +199,7 @@ class FacturaPayloadController extends Controller
                 foreach($new_formasPago as $new_formaPago) {
                     $new_formaPago['codigoApp'] = $data['IDFactura'];
                     $validation = $this->check_if_formas_pago($new_formaPago);
-                    if (!$validation->pass) {
+                    if ($validation->pass == false) {
                         return response()->json($validation,400);
                     }
                     array_push($formas_pago_to_insert, $new_formaPago);
@@ -226,7 +226,7 @@ class FacturaPayloadController extends Controller
                 foreach($new_detalle as $item_to_insert) {
                     $item_to_insert['codigoApp'] = $data['IDFactura'];
                     $validation = $this->check_if_detalle($item_to_insert);
-                    if (!$validation->pass) {
+                    if ($validation->pass == false) {
                         return response()->json($validation,400);
                     }
                     array_push($detalle_to_insert, $item_to_insert);
@@ -235,7 +235,7 @@ class FacturaPayloadController extends Controller
             if ($new_modificadores !== []) {
                 foreach($new_modificadores as $item_to_insert) {
                     $validation = $this->check_if_modificador($item_to_insert);
-                    if (!$validation->pass) {
+                    if ($validation->pass == false) {
                         return response()->json($validation,400);
                     }
                 }
@@ -274,7 +274,7 @@ class FacturaPayloadController extends Controller
             if ($new_detalle !== []) {
                 foreach($new_detalle as $item_to_insert) {
                     $validation = $this->check_if_detalle($item_to_insert);
-                    if (!$validation->pass) {
+                    if ($validation->pass == false) {
                         return $validation;
                     }
                 }
@@ -282,20 +282,20 @@ class FacturaPayloadController extends Controller
             if ($new_modificadores !== []) {
                 foreach($new_modificadores as $item_to_insert) {
                     $validation = $this->check_if_modificador($item_to_insert);
-                    if (!$validation->pass) {
+                    if ($validation->pass == false) {
                         return $validation;
                     }
                 }
             }
             if ($new_cabecera !== []) {
                 $validation = $this->check_if_cabecera($new_cabecera);
-                if (!$validation->pass) {
+                if ($validation->pass == false) {
                     return $validation;
                 }
             }
             if ($new_formasPago !== []) {
                 $validation = $this->check_if_formas_pago($new_formasPago);
-                if (!$validation->pass) {
+                if ($validation->pass == false) {
                     return $validation;
                 }
             }
