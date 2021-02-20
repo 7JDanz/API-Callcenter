@@ -60,6 +60,7 @@ class FacturaPayloadController extends Controller
         $new_formasPago = $data['formasPago'];
         if ($new_detalle !== []) {
             foreach($new_detalle as $item_to_insert) {
+                $item_to_insert->codigoApp = $new_id_factura;
                 $validation = $this->check_if_detalle($item_to_insert);
                 if (!$validation->pass) {
                     return response()->json($validation,400);
@@ -75,12 +76,14 @@ class FacturaPayloadController extends Controller
             }
         }
         if ($new_cabecera !== []) {
+            $new_cabecera->codigoApp = $new_id_factura;
             $validation = $this->check_if_cabecera($new_cabecera);
             if (!$validation->pass) {
                 return response()->json($validation,400);
             }
         }
         if ($new_formasPago !== []) {
+            $new_formasPago->codigoApp = $new_id_factura;
             $validation = $this->check_if_formas_pago($new_formasPago);
             if (!$validation->pass) {
                 return response()->json($validation,400);
@@ -109,6 +112,7 @@ class FacturaPayloadController extends Controller
             $new_formasPago = $data['formasPago'];
             if ($new_detalle !== []) {
                 foreach($new_detalle as $item_to_insert) {
+                    $item_to_insert->codigoApp = $data['IDFactura'];
                     $validation = $this->check_if_detalle($item_to_insert);
                     if (!$validation->pass) {
                         return response()->json($validation,400);
@@ -124,12 +128,14 @@ class FacturaPayloadController extends Controller
                 }
             }
             if ($new_cabecera !== []) {
+                $new_cabecera->codigoApp = $data['IDFactura'];
                 $validation = $this->check_if_cabecera($new_cabecera);
                 if (!$validation->pass) {
                     return response()->json($validation,400);
                 }
             }
             if ($new_formasPago !== []) {
+                $new_formasPago->codigoApp = $data['IDFactura'];
                 $validation = $this->check_if_formas_pago($new_formasPago);
                 if (!$validation->pass) {
                     return response()->json($validation,400);
@@ -155,6 +161,7 @@ class FacturaPayloadController extends Controller
             $data = $request->json()->all();
             $new_cabecera = $data['cabecera'];
             if ($new_cabecera !== []) {
+                $new_cabecera->codigoApp = $data['IDFactura'];
                 $validation = $this->check_if_cabecera($new_cabecera);
                 if (!$validation->pass) {
                     return response()->json($validation,400);
@@ -296,8 +303,7 @@ class FacturaPayloadController extends Controller
         $detalleApp =  uniqid();
         $item = new stdClass();
         $item->detalleApp = $detalleApp;
-        $codigoAplicacion = config("app.bi.codigo_aplicacion");
-        $item->codigoApp = $codigoAplicacion;
+        $item->codigoApp = $data['IDFactura'];
         $item->codPlu = $new_producto['codPlu'];
         $item->precioBruto = $new_producto['precioBruto'];
         $item->cantidad = $cantidad;
@@ -334,9 +340,8 @@ class FacturaPayloadController extends Controller
             $cantidad = $item['cantidad'];
             $detalleApp =  uniqid();
             $new_item_detalle = new stdClass();
-            $codigoAplicacion = config("app.bi.codigo_aplicacion");
             $new_item_detalle->detalleApp = $detalleApp;
-            $new_item_detalle->codigoApp = $codigoAplicacion;
+            $new_item_detalle->codigoApp = $data['IDFactura'];
             $new_item_detalle->codPlu = $new_producto['codPlu'];
             $new_item_detalle->precioBruto = $new_producto['precioBruto'];
             $new_item_detalle->cantidad = $cantidad;
