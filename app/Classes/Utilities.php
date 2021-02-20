@@ -3,7 +3,7 @@ namespace App\Classes;
 
 use stdClass;
 
-class Utilites
+class Utilities
 {
     public function check_if_instanceOf($destinationClass, $sourceObject)
     {
