@@ -35,16 +35,17 @@ class FacturaPayloadController extends Controller
            return response()->json($toReturn,200);
         } else {
            $factura_payload = FacturaPayload::where('IDCadena', $id_cadena)->where('IDRestaurante', $id_restaurante)->where('IDFactura', $id)->first();
+
            if ($factura_payload) {
-            $factura_payload->detalle = json_decode($factura_payload->detalle);
-            $factura_payload->modificadores = json_decode($factura_payload->modificadores);
-            $factura_payload->cabecera = json_decode($factura_payload->cabecera);
-            $factura_payload->formasPago = json_decode($factura_payload->formasPago);
+               $factura_payload->detalle = json_decode($factura_payload->detalle);
+               $factura_payload->modificadores = json_decode($factura_payload->modificadores);
+               $factura_payload->cabecera = json_decode($factura_payload->cabecera);
+               $factura_payload->formasPago = json_decode($factura_payload->formasPago);
            }
            if ($factura_payload) {
-            return response()->json($factura_payload,200);
+               return response()->json($factura_payload,200);
            } else {
-            return response()->json("factura no encontrada",400);
+               return response()->json("factura no encontrada",400);
            }
         }
     }
