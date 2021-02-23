@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Config;
 use App\Classes\MenuUtil;
 use Illuminate\Support\Facades\Log;
 Use Exception;
+use stdClass;
 
 class MenuController extends Controller
 {
@@ -33,6 +34,52 @@ class MenuController extends Controller
 
     }
 
+    protected function process_menu_agrupacion($menuAgrupacionList) {
+        $toReturn = [];
+        foreach($menuAgrupacionList as $menuAgrupacion) {
+            $to_insert_menu_agrupacion = new stdClass();
+            $to_insert_menu_agrupacion->IDMenu = $menuAgrupacion['IDMenu'];
+            $to_insert_menu_agrupacion->IDCategoria = $menuAgrupacion['IDCategoria'];
+            $to_insert_menu_agrupacion->categoria = $menuAgrupacion['categoria'];
+            $to_insert_menu_agrupacion->productos = json_decode($menuAgrupacion['productos']);
+            array_push($toReturn, $to_insert_menu_agrupacion);
+        }
+        return $toReturn;
+    }
+
+    protected function process_menu_categorias($menuCategoriasList) {
+        $toReturn = [];
+        foreach($menuCategoriasList as $menuCategorias) {
+            $to_insert_menu_categorias = new stdClass();
+            $to_insert_menu_categorias->IDMenu = $menuCategorias['IDMenu'];
+            $to_insert_menu_categorias->IDCategoria = $menuCategorias['IDCategoria'];
+            $to_insert_menu_categorias->IDSubcategoria = $menuCategorias['IDSubcategoria'];
+            $to_insert_menu_categorias->categoria = $menuCategorias['categoria'];
+            $to_insert_menu_categorias->productos = json_decode($menuCategorias['productos']);
+            array_push($toReturn, $to_insert_menu_categorias);
+        }
+        return $toReturn;
+    }
+
+    protected function get_menu_payload($menu) {
+        $toReturn = [];
+        $menuPayloads = MenuPayload::where("IDMenu", $menu)
+                                    ->where('status', '=', '1')
+                                    ->get();
+        foreach($menuPayloads as $menuPayload) {
+            $to_insert = new stdClass();
+            $to_insert->IDMenu = $menuPayload->IDMenu;
+            $to_insert->IDCadena = $menuPayload->IDCadena;
+            $to_insert->MenuAgrupacion = $this->process_menu_agrupacion($menuPayload->MenuAgrupacion);
+            $to_insert->MenuCategorias = $this->process_menu_categorias($menuPayload->MenuCategorias);
+            $to_insert->status = $menuPayload->status;
+            $to_insert->created_at = $menuPayload->created_at;
+            $to_insert->updated_at = $menuPayload->updated_at;
+            array_push($toReturn, $to_insert);
+        }
+        return $toReturn;
+    }
+
     public function menuPayload($pais,$menu,Request $request)
     {
         $menu_util = new MenuUtil();
@@ -43,9 +90,7 @@ class MenuController extends Controller
         $toReturn = [];
         if(!\Cache::has($menu))
         {
-            $menuPayload = MenuPayload::where("IDMenu", $menu)
-                                    ->where('status', '=', '1')
-                                    ->get();
+            $menuPayload = $this->get_menu_payload($menu);
             \Cache::put($menu, $menuPayload, 3600);
 
             $plus_filter = $menu_util->get_productos_menu($menuPayload);
@@ -78,7 +123,7 @@ class MenuController extends Controller
 
     public function buscarProducto(Request $request,$pais,$menu)
     {
-        $menuPayload = json_decode(\Cache::get($menu),true);
+        $menuPayload = \Cache::get($menu);
         if($menuPayload)
         {
             return $this->busqueda($request,$menu);
@@ -93,7 +138,7 @@ class MenuController extends Controller
 
         $menu_util = new MenuUtil();
         $restaurante = $request->IDRestaurante;//DEL request
-        $menuPayload = json_decode(\Cache::get($menu),true);
+        $menuPayload = \Cache::get($menu);
         $menus = $menuPayload;
         $buscado = $request->descripcion;
 

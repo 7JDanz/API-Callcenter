@@ -15,8 +15,8 @@ class MenuUtil
             foreach ($item as $key=>$value) {
                 if ($key == self::PRODUCTOS) {
                     $new_productos = null;
-                    if (is_array(json_decode($value))) {
-                        $new_productos = $this->process_productos(json_decode($value,true), $precios);
+                    if (is_array($value)) {
+                        $new_productos = $this->process_productos($value, $precios);
                     }
                     $new_item[$key] = $new_productos;
                 } else {
@@ -35,8 +35,8 @@ class MenuUtil
             foreach ($item as $key=>$value) {
                 if ($key == self::PRODUCTOS) {
                     $new_productos = null;
-                    if (is_array(json_decode($value))) {
-                        $new_productos = $this->process_productos(json_decode($value,true), $precios);
+                    if (is_array($value)) {
+                        $new_productos = $this->process_productos($value, $precios);
                     }
                     $new_item[$key] = $new_productos;
                 } else {
@@ -50,7 +50,8 @@ class MenuUtil
 
     public function process_productos($productos, $precios) {
         $toReturn = [];
-        foreach ($productos as $producto) {
+        $productos_to_process = json_decode(json_encode($productos), true);
+        foreach ($productos_to_process as $producto) {
             $producto_to_insert = null;
             foreach ($producto as $key => $value) {
                 if ($key == self::PREGUNTAS) {
@@ -73,7 +74,8 @@ class MenuUtil
 
     public function process_Preguntas($preguntas, $precios) {
         $new_preguntas = [];
-        foreach($preguntas as $pregunta) {
+        $preguntas_to_process = json_decode(json_encode($preguntas), true);
+        foreach($preguntas_to_process as $pregunta) {
             $new_pregunta = null;
             foreach($pregunta as $key_pregunta=>$value_pregunta) {
                 if ($key_pregunta == self::RESPUESTAS) {
@@ -117,14 +119,14 @@ class MenuUtil
 
         foreach ($menuPayload as $payload) {
             foreach($payload->MenuAgrupacion as $menu_agrupacion) {
-                if (is_array(json_decode($menu_agrupacion[self::PRODUCTOS]))) {
-                    foreach(json_decode($menu_agrupacion[self::PRODUCTOS],true) as $producto) {
-                        array_push($plus, $producto[self::IDPRODUCTO]);
-                        if (is_array($producto[self::PREGUNTAS])) {
-                            foreach($producto[self::PREGUNTAS] as $pregunta) {
-                                if (is_array($pregunta[self::RESPUESTAS])) {
-                                    foreach($pregunta[self::RESPUESTAS] as $respuesta) {
-                                        array_push($plus, $respuesta[self::IDPRODUCTO]);
+                if (is_array($menu_agrupacion->productos)) {
+                    foreach($menu_agrupacion->productos as $producto) {
+                        array_push($plus, $producto->IDProducto);
+                        if (is_array($producto->Preguntas)) {
+                            foreach($producto->Preguntas as $pregunta) {
+                                if (is_array($pregunta->Respuestas)) {
+                                    foreach($pregunta->Respuestas as $respuesta) {
+                                        array_push($plus, $respuesta->IDProducto);
                                     }
                                 }
                             }
@@ -161,12 +163,12 @@ class MenuUtil
         //Busqueda de Respuestas
         $plus = [];
         foreach ($productos_encontrados as $producto) {
-            array_push($plus, $producto[self::IDPRODUCTO]);
-            if (is_array($producto[self::PREGUNTAS])) {
-                foreach($producto[self::PREGUNTAS] as $pregunta) {
-                    if (is_array($pregunta[self::RESPUESTAS])) {
-                        foreach($pregunta[self::RESPUESTAS] as $respuesta) {
-                            array_push($plus, $respuesta[self::IDPRODUCTO]);
+            array_push($plus, $producto->IDProducto);
+            if (is_array($producto->Preguntas)) {
+                foreach($producto->Preguntas as $pregunta) {
+                    if (is_array($pregunta->Respuestas)) {
+                        foreach($pregunta->Respuestas as $respuesta) {
+                            array_push($plus, $respuesta->IDProducto);
                         }
                     }
                 }
@@ -182,13 +184,13 @@ class MenuUtil
         $productos_encontrados = [];
         foreach ($menus as $item_menu) {
 
-            foreach ($item_menu['MenuAgrupacion'] as $item_menu_agrupacion) {
+            foreach ($item_menu->MenuAgrupacion as $item_menu_agrupacion) {
 
-                if(is_array(json_decode($item_menu_agrupacion[self::PRODUCTOS])) /*|| is_object($item_menu_agrupacion[self::PRODUCTOS])*/)
+                if(is_array($item_menu_agrupacion->productos) /*|| is_object($item_menu_agrupacion[self::PRODUCTOS])*/)
                 {
-                    foreach (json_decode($item_menu_agrupacion[self::PRODUCTOS], true) as $producto) {
-                        $buscar_impresion = strpos( strtolower($producto['impresion']), strtolower($buscado));
-                        $buscar_descripcion = strpos( strtolower($producto['DescripcionProducto']), strtolower($buscado));
+                    foreach ($item_menu_agrupacion->productos as $producto) {
+                        $buscar_impresion = strpos( strtolower($producto->impresion), strtolower($buscado));
+                        $buscar_descripcion = strpos( strtolower($producto->DescripcionProducto), strtolower($buscado));
 
                         if ($buscar_impresion !== false || $buscar_descripcion !== false) {
                             array_push($productos_encontrados, $producto);
