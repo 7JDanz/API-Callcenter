@@ -86,7 +86,7 @@ class MenuUtil
                             foreach($respuesta as $key_respuesta=>$value_respuesta) {
                                 $new_respuesta[$key_respuesta] = $value_respuesta;
                                 if ($key_respuesta == self::IDPRODUCTO) {
-                                    $new_respuesta['precio'] = $this->get_precio_producto(json_decode($value_respuesta,true), $precios);
+                                    $new_respuesta['precio'] = $this->get_precio_producto($value_respuesta, $precios);
                                 }
                             }
                             array_push($new_respuestas, $new_respuesta);
@@ -184,9 +184,9 @@ class MenuUtil
 
             foreach ($item_menu['MenuAgrupacion'] as $item_menu_agrupacion) {
 
-                if(is_array($item_menu_agrupacion[self::PRODUCTOS]) /*|| is_object($item_menu_agrupacion[self::PRODUCTOS])*/)
+                if(is_array(json_decode($item_menu_agrupacion[self::PRODUCTOS])) /*|| is_object($item_menu_agrupacion[self::PRODUCTOS])*/)
                 {
-                    foreach ($item_menu_agrupacion[self::PRODUCTOS] as $producto) {
+                    foreach (json_decode($item_menu_agrupacion[self::PRODUCTOS], true) as $producto) {
                         $buscar_impresion = strpos( strtolower($producto['impresion']), strtolower($buscado));
                         $buscar_descripcion = strpos( strtolower($producto['DescripcionProducto']), strtolower($buscado));
 
