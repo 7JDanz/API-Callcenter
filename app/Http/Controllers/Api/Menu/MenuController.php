@@ -136,13 +136,21 @@ class MenuController extends Controller
                     $menu_categoria = DB::connection($connection)->table('callcenter.menu_productos_subcategoria')->where("IDMenu", $id_menu)->get();
                     $insertado = true;
                     try{
-                        $new_menu_payload = new MenuPayload();
-                        $new_menu_payload->IDMenu = $id_menu;
-                        $new_menu_payload->IDCadena = $id_cadena;
-                        $new_menu_payload->MenuAgrupacion = $menu_agrupacion;
-                        $new_menu_payload->MenuCategorias = $menu_categoria;
-                        $new_menu_payload->status = 1;
-                        $new_menu_payload->save();
+                        $sql_insert = "INSERT INTO Menu_Payload ([IDMenu]
+                        ,[IDCadena]
+                        ,[MenuAgrupacion]
+                        ,[MenuCategorias]
+                        ,[status]
+                        ,[created_at]
+                        ,[updated_at]) VALUES (
+                           :id_menu, :id_cadena, :menu_agrupacion, :menu_categoria, 1, GETDATE(), GETDATE()
+                        );";
+                        DB::connection($connection)->select($sql_insert,  [
+                            'id_menu'=>$id_menu,
+                            'id_cadena'=>$id_cadena,
+                            'menu_agrupacion'=>$menu_agrupacion,
+                            'menu_categoria'=>$menu_categoria,
+                        ]);
                     } catch (Exception $e) {
                         $insertado = false;
                     }
