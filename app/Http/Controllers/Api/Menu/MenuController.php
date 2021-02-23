@@ -55,7 +55,6 @@ class MenuController extends Controller
             $menuPayload = \Cache::get($menu);
             $plus_filter = \Cache::get('plus_'.$menu);
         }
-
         $sql_query = "select * from config.fn_buscaPreciosxPlu ($restaurante,'$plus_filter')";
         $precios = DB::connection($this->getConnectionName())->select($sql_query);
         $toReturn = $menu_util->get_productos($menuPayload,$precios);
@@ -148,8 +147,8 @@ class MenuController extends Controller
                         DB::connection($connection)->select($sql_insert,  [
                             'id_menu'=>$id_menu,
                             'id_cadena'=>$id_cadena,
-                            'menu_agrupacion'=>$menu_agrupacion,
-                            'menu_categoria'=>$menu_categoria,
+                            'menu_agrupacion'=>json_encode($menu_agrupacion),
+                            'menu_categoria'=>json_encode($menu_categoria),
                         ]);
                     } catch (Exception $e) {
                         $insertado = false;
@@ -182,8 +181,8 @@ class MenuController extends Controller
             $new_menu_payload = new MenuPayload();
             $new_menu_payload->IDMenu = $id_menu;
             $new_menu_payload->IDCadena = $id_cadena;
-            $new_menu_payload->MenuAgrupacion = $menu_agrupacion;
-            $new_menu_payload->MenuCategorias = $menu_categoria;
+            $new_menu_payload->MenuAgrupacion = json_encode($menu_agrupacion);
+            $new_menu_payload->MenuCategorias = json_encode($menu_categoria);
             $new_menu_payload->status = 1;
             $new_menu_payload->save();
         } catch (Exception $e) {

@@ -15,8 +15,8 @@ class MenuUtil
             foreach ($item as $key=>$value) {
                 if ($key == self::PRODUCTOS) {
                     $new_productos = null;
-                    if (is_array($value)) {
-                        $new_productos = $this->process_productos($value, $precios);
+                    if (is_array(json_decode($value))) {
+                        $new_productos = $this->process_productos(json_decode($value,true), $precios);
                     }
                     $new_item[$key] = $new_productos;
                 } else {
@@ -35,8 +35,8 @@ class MenuUtil
             foreach ($item as $key=>$value) {
                 if ($key == self::PRODUCTOS) {
                     $new_productos = null;
-                    if (is_array($value)) {
-                        $new_productos = $this->process_productos($value, $precios);
+                    if (is_array(json_decode($value))) {
+                        $new_productos = $this->process_productos(json_decode($value,true), $precios);
                     }
                     $new_item[$key] = $new_productos;
                 } else {
@@ -86,7 +86,7 @@ class MenuUtil
                             foreach($respuesta as $key_respuesta=>$value_respuesta) {
                                 $new_respuesta[$key_respuesta] = $value_respuesta;
                                 if ($key_respuesta == self::IDPRODUCTO) {
-                                    $new_respuesta['precio'] = $this->get_precio_producto($value_respuesta, $precios);
+                                    $new_respuesta['precio'] = $this->get_precio_producto(json_decode($value_respuesta,true), $precios);
                                 }
                             }
                             array_push($new_respuestas, $new_respuesta);
@@ -117,8 +117,8 @@ class MenuUtil
 
         foreach ($menuPayload as $payload) {
             foreach($payload->MenuAgrupacion as $menu_agrupacion) {
-                if (is_array($menu_agrupacion[self::PRODUCTOS])) {
-                    foreach($menu_agrupacion[self::PRODUCTOS] as $producto) {
+                if (is_array(json_decode($menu_agrupacion[self::PRODUCTOS]))) {
+                    foreach(json_decode($menu_agrupacion[self::PRODUCTOS],true) as $producto) {
                         array_push($plus, $producto[self::IDPRODUCTO]);
                         if (is_array($producto[self::PREGUNTAS])) {
                             foreach($producto[self::PREGUNTAS] as $pregunta) {
@@ -134,7 +134,7 @@ class MenuUtil
             }
         }
 
-        return implode(',',$plus);
+        return join(',',$plus);
     }
 
     public function get_productos($menuPayload,$precios){
