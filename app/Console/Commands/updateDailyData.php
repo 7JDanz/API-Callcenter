@@ -41,10 +41,6 @@ class updateDailyData extends Command
      */
     public function handle()
     {
-
-        $response = MenuController::build_menu_cadena('sqlsrv_mxp_ecu');
-        echo $response;
-        return;
         $conexiones = DB::table("conexiones")->select("nombre")->get();
         foreach($conexiones as $connection) {
             $response = MenuController::build_menu_cadena($connection->nombre);
