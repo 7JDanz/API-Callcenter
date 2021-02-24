@@ -13,7 +13,7 @@ class ClienteTelefono extends Model
 
     protected $connection = 'sqlsrv_clientes';
     protected $table = 'mdm_ecu.ClienteTelefono';
-    protected $hidden = ['FechaLimpieza','CodigoCliente','CodigoTelefono','Ruc_Cedula','Nombre','Sistema'];
+    protected $hidden = ['FechaLimpieza','CodigoCliente','CodigoTelefono','Ruc_Cedula','Nombre','Sistema','FechaCarga'];
 
     public function cliente()
     {

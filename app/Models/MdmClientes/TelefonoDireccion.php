@@ -12,7 +12,7 @@ class TelefonoDireccion extends Model
     use \Awobaz\Compoships\Compoships;
     protected $connection = 'sqlsrv_clientes';
     protected $table = 'mdm_ecu.TelefonoDireccion';
-    protected $hidden = ['FechaLimpieza','CodigoCliente','CodigoTelefono','Ruc_Cedula','CodigoDireccion','Sistema'];
+    protected $hidden = ['FechaLimpieza','CodigoCliente','CodigoTelefono','Ruc_Cedula','CodigoDireccion','Sistema','FechaCarga'];
 
     public function cliente()
     {
