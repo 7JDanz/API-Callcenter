@@ -150,10 +150,7 @@ class MenuController extends Controller
                 $menus_en_cadena = DB::connection($connection)->table('trade.menu')->where("IDCadena", $id_cadena)->get();
                 foreach($menus_en_cadena as $menu) {
                     $id_menu = $menu->IDMenu;
-                    $sql_update = "UPDATE Menu_Payload SET status = 2 where IDMenu = :id_menu";
-                    DB::connection($connection)->select($sql_update,  [
-                        'id_menu'=>$id_menu
-                    ]);
+                    DB::connection($connection)->table('dbo.Menu_Payload')->where("IDMenu", $id_menu)->update(['status'=>0]);
                     $menu_agrupacion = DB::connection($connection)->table('callcenter.menu_productos_categoria')->where("IDMenu", $id_menu)->get();
                     $menu_categoria = DB::connection($connection)->table('callcenter.menu_productos_subcategoria')->where("IDMenu", $id_menu)->get();
                     $sql_insert = "INSERT INTO Menu_Payload ([IDMenu]
@@ -174,6 +171,7 @@ class MenuController extends Controller
                 }
                 Log::info("Construido Menu de IDCadena " . $cadena->IDCadena);
             } catch (Exception $e) {
+                return $e->getMessage();
                 Log::error("Fallo construcción del Menu de IDCadena " . $cadena->IDCadena);
             }
         }
@@ -184,10 +182,7 @@ class MenuController extends Controller
         $id_cadena = $request['IDCadena'];
         $id_menu = $request['IDMenu'];
         $connection = $this->getConnectionName();
-        $sql_update = "UPDATE Menu_Payload SET status = 2 where IDMenu = :id_menu";
-        DB::connection($connection)->select($sql_update,  [
-            'id_menu'=>$id_menu
-        ]);
+        DB::connection($connection)->table('dbo.Menu_Payload')->where("IDMenu", $id_menu)->update(['status'=>0]);
         $menu_agrupacion = DB::connection($connection)->table('callcenter.menu_productos_categoria')->where("IDMenu", $id_menu)->get();
         $menu_categoria = DB::connection($connection)->table('callcenter.menu_productos_subcategoria')->where("IDMenu", $id_menu)->get();
         $sql_insert = "INSERT INTO Menu_Payload ([IDMenu]
