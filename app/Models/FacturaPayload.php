@@ -30,6 +30,7 @@ class FacturaPayload extends Model
         'IDCadena',
         'IDRestaurante',
         'status',
+        'datos_inyeccion',
     ];
 
     /**
@@ -38,7 +39,7 @@ class FacturaPayload extends Model
      * @var array
      */
     protected $hidden = [
-
+        'datos_inyeccion'
     ];
 
     public function getDateFormat()
