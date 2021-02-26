@@ -45,9 +45,9 @@ class Restaurante extends Model
         'ServiciosRestaurante' => 'json',
     ];
 
-    public function geolocalizacion()
+    public function localesMongo()
     {
-		return $this->hasOne('App\Models\Geolocalizacion', 'id_restaurante' ,'IDRestaurante');
+		return $this->hasOne(Locales::class, 'IDRestaurante' ,'IDRestaurante');
     }
 
     public function horariosAtencion()

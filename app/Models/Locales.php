@@ -9,12 +9,12 @@ class Locales extends MongoModel
 {
        use HasFactory;
        protected $connection = "mongodb";
-       protected $table = 'Locales';
+       protected $table = 'RestaurantePoligonos';
+       protected $fillable = ['IDRestaurante','codZipCode','invertir','poligonoCobertura'];
 
        public function restaurante()
        {
-           return $this->belongsTo(Restaurante::class, "rst_id", "IDRestaurante");
+           return $this->belongsTo(Restaurante::class, "IDRestaurante", "IDRestaurante");
        }
-
 
 }

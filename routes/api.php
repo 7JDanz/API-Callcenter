@@ -44,6 +44,10 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
     Route::get('/pruebamenu' , [MenuController::class,'prueba_menu']);
     Route::get('/build_menu_cadena_request' , [MenuController::class,'build_menu_cadena_request']);
 
+
+    Route::get('/test' , [GeolocalizacionController::class,'getRestaurantesCercanos']);
+
+
     //FACTURA
 
     Route::get('/facturapayload' , [FacturaPayloadController::class, 'get']);
@@ -67,15 +71,15 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
     Route::get('/geolocalizacion' ,  [GeolocalizacionController::class,'index']);
     Route::post('/geolocalizacion' , [GeolocalizacionController::class,'store'] );
     Route::get( '/geolocalizacion/{id}' , [GeolocalizacionController::class,'show']);
-    Route::put('/geolocalizacion/{id}' , [GeolocalizacionController::class,'update'] );
-    Route::delete('/geolocalizacion/{id}' , [GeolocalizacionController::class,'destroy'] );
+    // Route::put('/geolocalizacion/{id}' , [GeolocalizacionController::class,'update'] );
+    // Route::delete('/geolocalizacion/{id}' , [GeolocalizacionController::class,'destroy'] );
 
 
     //RESTAURANTE
     Route::get('/restaurante/IDRestaurante/{id}' , [RestauranteController::class,'restaurantePorId'])->name('id');
     Route::get('/restaurante/IDCadena/{id}' , [RestauranteController::class,'restaurantePorCadena'])->name('restaurante');
-    Route::get('/restaurante/poligono-cobertura' , [RestauranteController::class,'poligonoCobertura'])->name('poligonoCobertura');
-   // Route::get('/buscar-restaurante-cercano' , [GeolocalizacionController::class,'getCercania']);
+    // Route::get('/restaurante/poligono-cobertura' , [RestauranteController::class,'poligonoCobertura'])->name('poligonoCobertura');
+    Route::get('/buscar-restaurante-cercano' , [GeolocalizacionController::class,'getRestaurantesCercanos']);
     Route::get( '/restaurantes-cercanos' , [GeolocalizacionController::class,'getRestaurantesCercanos']);
     Route::get( '/obtener-puntos-geo' ,    [GeolocalizacionController::class,'obtenerPuntos']);
     Route::get('/datos-restaurante' ,      [GeolocalizacionController::class,'getDatosRestaurante']);
@@ -101,5 +105,5 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
 
 
 
-   Route::get( '/v1/ecu/prueba' , [GeolocalizacionController::class,'prueba']);
+Route::get( '/v1/ecu/prueba' , [GeolocalizacionController::class,'prueba']);
  //Route::get('/datos-restaurante' , [GeolocalizacionController::class,'getDatosRestaurante']);
