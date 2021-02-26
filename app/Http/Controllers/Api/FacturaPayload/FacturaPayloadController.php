@@ -9,11 +9,6 @@ Use Exception;
 use Illuminate\Support\Facades\DB;
 use stdClass;
 
-use App\Models\FacturaPayloadCabecera;
-use App\Models\FacturaPayloadDetalle;
-use App\Models\FacturaPayloadFormasPago;
-use App\Models\FacturaPayloadModificador;
-
 use App\Classes\Utilities;
 
 class FacturaPayloadController extends Controller
@@ -60,10 +55,11 @@ class FacturaPayloadController extends Controller
         $new_formasPago = $data['formasPago'];
         $detalle_to_insert = [];
         $formas_pago_to_insert = [];
+        $utilities = new Utilities();
         if ($new_detalle !== []) {
             foreach($new_detalle as $item_to_insert) {
                 $item_to_insert['codigoApp'] = $new_id_factura;
-                $validation = $this->check_if_detalle($item_to_insert);
+                $validation = $utilities->check_if_detalle($item_to_insert);
                 if ($validation->pass == false) {
                     return response()->json($validation,400);
                 }
@@ -72,7 +68,7 @@ class FacturaPayloadController extends Controller
         }
         if ($new_modificadores !== []) {
             foreach($new_modificadores as $item_to_insert) {
-                $validation = $this->check_if_modificador($item_to_insert);
+                $validation = $utilities->check_if_modificador($item_to_insert);
                 if ($validation->pass == false) {
                     return response()->json($validation,400);
                 }
@@ -80,7 +76,7 @@ class FacturaPayloadController extends Controller
         }
         if ($new_cabecera !== []) {
             $new_cabecera['codigoApp'] = $new_id_factura;
-            $validation = $this->check_if_cabecera($new_cabecera);
+            $validation = $utilities->check_if_cabecera($new_cabecera);
             if ($validation->pass == false) {
                 return response()->json($validation,400);
             }
@@ -88,7 +84,7 @@ class FacturaPayloadController extends Controller
         if ($new_formasPago !== []) {
             foreach($new_formasPago as $new_formaPago) {
                 $new_formaPago['codigoApp'] = $new_id_factura;
-                $validation = $this->check_if_formas_pago($new_formaPago);
+                $validation = $utilities->check_if_formas_pago($new_formaPago);
                 if ($validation->pass == false) {
                     return response()->json($validation,400);
                 }
@@ -118,10 +114,11 @@ class FacturaPayloadController extends Controller
             $new_formasPago = $data['formasPago'];
             $detalle_to_insert = [];
             $formas_pago_to_insert = [];
+            $utilities = new Utilities();
             if ($new_detalle !== []) {
                 foreach($new_detalle as $item_to_insert) {
                     $item_to_insert['codigoApp'] = $data['IDFactura'];
-                    $validation = $this->check_if_detalle($item_to_insert);
+                    $validation = $utilities->check_if_detalle($item_to_insert);
                     if ($validation->pass == false) {
                         return response()->json($validation,400);
                     }
@@ -130,7 +127,7 @@ class FacturaPayloadController extends Controller
             }
             if ($new_modificadores !== []) {
                 foreach($new_modificadores as $item_to_insert) {
-                    $validation = $this->check_if_modificador($item_to_insert);
+                    $validation = $utilities->check_if_modificador($item_to_insert);
                     if ($validation->pass == false) {
                         return response()->json($validation,400);
                     }
@@ -138,7 +135,7 @@ class FacturaPayloadController extends Controller
             }
             if ($new_cabecera !== []) {
                 $new_cabecera['codigoApp'] = $data['IDFactura'];
-                $validation = $this->check_if_cabecera($new_cabecera);
+                $validation = $utilities->check_if_cabecera($new_cabecera);
                 if ($validation->pass == false) {
                     return response()->json($validation,400);
                 }
@@ -146,7 +143,7 @@ class FacturaPayloadController extends Controller
             if ($new_formasPago !== []) {
                 foreach($new_formasPago as $new_formaPago) {
                     $new_formaPago['codigoApp'] = $data['IDFactura'];
-                    $validation = $this->check_if_formas_pago($new_formaPago);
+                    $validation = $utilities->check_if_formas_pago($new_formaPago);
                     if ($validation->pass == false) {
                         return response()->json($validation,400);
                     }
@@ -172,9 +169,10 @@ class FacturaPayloadController extends Controller
             DB::beginTransaction();
             $data = $request->json()->all();
             $new_cabecera = $data['cabecera'];
+            $utilities = new Utilities();
             if ($new_cabecera !== []) {
                 $new_cabecera['codigoApp'] = $data['IDFactura'];
-                $validation = $this->check_if_cabecera($new_cabecera);
+                $validation = $utilities->check_if_cabecera($new_cabecera);
                 if ($validation->pass == false) {
                     return response()->json($validation,400);
                 }
@@ -195,10 +193,11 @@ class FacturaPayloadController extends Controller
             $data = $request->json()->all();
             $new_formasPago = $data['formasPago'];
             $formas_pago_to_insert = [];
+            $utilities = new Utilities();
             if ($new_formasPago !== []) {
                 foreach($new_formasPago as $new_formaPago) {
                     $new_formaPago['codigoApp'] = $data['IDFactura'];
-                    $validation = $this->check_if_formas_pago($new_formaPago);
+                    $validation = $utilities->check_if_formas_pago($new_formaPago);
                     if ($validation->pass == false) {
                         return response()->json($validation,400);
                     }
@@ -222,10 +221,11 @@ class FacturaPayloadController extends Controller
             $new_detalle = $data['detalle'];
             $new_modificadores = $data['modificadores'];
             $detalle_to_insert = [];
+            $utilities = new Utilities();
             if ($new_detalle !== []) {
                 foreach($new_detalle as $item_to_insert) {
                     $item_to_insert['codigoApp'] = $data['IDFactura'];
-                    $validation = $this->check_if_detalle($item_to_insert);
+                    $validation = $utilities->check_if_detalle($item_to_insert);
                     if ($validation->pass == false) {
                         return response()->json($validation,400);
                     }
@@ -234,7 +234,7 @@ class FacturaPayloadController extends Controller
             }
             if ($new_modificadores !== []) {
                 foreach($new_modificadores as $item_to_insert) {
-                    $validation = $this->check_if_modificador($item_to_insert);
+                    $validation = $utilities->check_if_modificador($item_to_insert);
                     if ($validation->pass == false) {
                         return response()->json($validation,400);
                     }
@@ -285,6 +285,7 @@ class FacturaPayloadController extends Controller
     }
 
     protected function validate_factura_payload($factura_payload) {
+        $utilities = new Utilities();
         try{
             $new_detalle = json_decode($factura_payload->detalle);
             $new_modificadores = json_decode($factura_payload->modificadores);
@@ -292,7 +293,7 @@ class FacturaPayloadController extends Controller
             $new_formasPago = json_decode($factura_payload->formasPago);
             if ($new_detalle !== []) {
                 foreach($new_detalle as $item_to_insert) {
-                    $validation = $this->check_if_detalle($item_to_insert);
+                    $validation = $utilities->check_if_detalle($item_to_insert);
                     if ($validation->pass == false) {
                         return $validation;
                     }
@@ -300,20 +301,20 @@ class FacturaPayloadController extends Controller
             }
             if ($new_modificadores !== []) {
                 foreach($new_modificadores as $item_to_insert) {
-                    $validation = $this->check_if_modificador($item_to_insert);
+                    $validation = $utilities->check_if_modificador($item_to_insert);
                     if ($validation->pass == false) {
                         return $validation;
                     }
                 }
             }
             if ($new_cabecera !== []) {
-                $validation = $this->check_if_cabecera($new_cabecera);
+                $validation = $utilities->check_if_cabecera($new_cabecera);
                 if ($validation->pass == false) {
                     return $validation;
                 }
             }
             if ($new_formasPago !== []) {
-                $validation = $this->check_if_formas_pago($new_formasPago);
+                $validation = $utilities->check_if_formas_pago($new_formasPago);
                 if ($validation->pass == false) {
                     return $validation;
                 }
@@ -500,29 +501,5 @@ class FacturaPayloadController extends Controller
                 return response()->json($e,400);
             }
         }
-    }
-
-    private function check_if_cabecera($to_verify) {
-        $toCheckBase = new FacturaPayloadCabecera();
-        $utilities = new Utilities();
-        return $utilities->check_if_instanceOf($toCheckBase, $to_verify);
-    }
-
-    private function check_if_detalle($to_verify) {
-        $toCheckBase = new FacturaPayloadDetalle();
-        $utilities = new Utilities();
-        return $utilities->check_if_instanceOf($toCheckBase, $to_verify);
-    }
-
-    private function check_if_modificador($to_verify) {
-        $toCheckBase = new FacturaPayloadModificador();
-        $utilities = new Utilities();
-        return $utilities->check_if_instanceOf($toCheckBase, $to_verify);
-    }
-
-    private function check_if_formas_pago($to_verify) {
-        $toCheckBase = new FacturaPayloadFormasPago();
-        $utilities = new Utilities();
-        return $utilities->check_if_instanceOf($toCheckBase, $to_verify);
     }
 }

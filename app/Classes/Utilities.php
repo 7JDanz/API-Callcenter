@@ -2,9 +2,33 @@
 namespace App\Classes;
 
 use stdClass;
+use App\Models\FacturaPayloadCabecera;
+use App\Models\FacturaPayloadDetalle;
+use App\Models\FacturaPayloadFormasPago;
+use App\Models\FacturaPayloadModificador;
 
 class Utilities
 {
+    public function check_if_cabecera($to_verify) {
+        $toCheckBase = new FacturaPayloadCabecera();
+        return $this->check_if_instanceOf($toCheckBase, $to_verify);
+    }
+
+    public function check_if_detalle($to_verify) {
+        $toCheckBase = new FacturaPayloadDetalle();
+        return $this->check_if_instanceOf($toCheckBase, $to_verify);
+    }
+
+    public function check_if_modificador($to_verify) {
+        $toCheckBase = new FacturaPayloadModificador();
+        return $this->check_if_instanceOf($toCheckBase, $to_verify);
+    }
+
+    public function check_if_formas_pago($to_verify) {
+        $toCheckBase = new FacturaPayloadFormasPago();
+        return $this->check_if_instanceOf($toCheckBase, $to_verify);
+    }
+
     public function check_if_instanceOf($destinationClass, $sourceObject)
     {
         $destinationClassProperties = $this->get_keys($this->convert_to_array($destinationClass));
