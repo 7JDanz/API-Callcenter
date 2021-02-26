@@ -35,7 +35,6 @@ class FacturaPayloadController extends Controller
            return response()->json($toReturn,200);
         } else {
            $factura_payload = FacturaPayload::where('IDCadena', $id_cadena)->where('IDRestaurante', $id_restaurante)->where('IDFactura', $id)->first();
-
            if ($factura_payload) {
                $factura_payload->detalle = json_decode($factura_payload->detalle);
                $factura_payload->modificadores = json_decode($factura_payload->modificadores);
@@ -265,8 +264,27 @@ class FacturaPayloadController extends Controller
         }
     }
 
-    private function validate_factura_payload($id_cadena, $id_restaurante, $id_factura) {
+    public function inject_payload(Request $request, $pais) {
+        $id_cadena = $request['IDCadena'];
+        $id_restaurante = $request['IDRestaurante'];
+        $id_factura = $request['IDFactura'];
+        $utilities = new Utilities();
         $factura_payload = FacturaPayload::where('IDCadena', $id_cadena)->where('IDRestaurante', $id_restaurante)->where('IDFactura', $id_factura)->first();
+        $validation = $this->validate_factura_payload($factura_payload);
+        if ($validation->pass) {
+            $factura_payload->detalle = json_decode($factura_payload->detalle);
+            $factura_payload->modificadores = json_decode($factura_payload->modificadores);
+            $factura_payload->cabecera = json_decode($factura_payload->cabecera);
+            $factura_payload->formasPago = json_decode($factura_payload->formasPago);
+            $data_to_send = json_encode($factura_payload);
+            $url = 'http://192.168.101.30:9090/api-kfc/public/api/restApp/pedidoApp';
+            $response = json_decode($utilities->httpPost($url, $data_to_send));
+            return response()->json(["respuesta"=>$response, "payload"=>$factura_payload],200);
+        }
+        return response()->json($validation,400);
+    }
+
+    protected function validate_factura_payload($factura_payload) {
         try{
             $new_detalle = json_decode($factura_payload->detalle);
             $new_modificadores = json_decode($factura_payload->modificadores);

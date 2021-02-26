@@ -49,7 +49,7 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
 
 
     //FACTURA
-
+    Route::get('/facturapayload/inject_payload' , [FacturaPayloadController::class, 'inject_payload']);
     Route::get('/facturapayload' , [FacturaPayloadController::class, 'get']);
     Route::post('/facturapayload' , [FacturaPayloadController::class, 'post']);
     Route::put('/facturapayload' , [FacturaPayloadController::class, 'put']);
