@@ -83,4 +83,33 @@ class FacturaPayloadCabecera extends Model
     {
         return env("FORMATO_FECHAS","Y-d-m H:i:s.v");
     }
+
+    public function get_rules() {
+        return [
+            'codigoApp'=>'required',
+            'medio'=>'required',
+            'dispositivo'=>'required',
+            'codRestaurante'=>'required',
+            'identificacionCliente'=>'required',
+            'consumidorFinal'=>'required',
+            'es_nueva_direccion'=>'required',
+            'nombresCliente'=>'required',
+            'direccionCliente'=>'required',
+            'emailCliente'=>'required',
+            'fechaPedido'=>'required',
+            'telefonoCliente'=>'required',
+            'calle1Domicilio'=>'required',
+            'calle2Domicilio'=>'required',
+            'numDirecciondomicilio'=>'required',
+            'observacionesDomicilio'=>'required',
+            'codZipCode'=>'required',
+            'tipoInmueble'=>'required',
+            'totalFactura'=>'required',
+            'observacionesPedido'=>'required',
+            'operador'=>'required',
+            'perfilOperador'=>'required',
+            'latitud'=>'required',
+            'longitud'=>'required'
+        ];
+    }
 }

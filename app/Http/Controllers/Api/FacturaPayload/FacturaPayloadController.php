@@ -314,9 +314,11 @@ class FacturaPayloadController extends Controller
                 }
             }
             if ($new_formasPago !== []) {
-                $validation = $utilities->check_if_formas_pago($new_formasPago);
-                if ($validation->pass == false) {
-                    return $validation;
+                foreach($new_formasPago as $forma_pago) {
+                    $validation = $utilities->check_if_formas_pago($forma_pago);
+                    if ($validation->pass == false) {
+                        return $validation;
+                    }
                 }
             }
             $toReturn = new stdClass();

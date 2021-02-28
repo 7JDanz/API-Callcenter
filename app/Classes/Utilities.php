@@ -6,61 +6,41 @@ use App\Models\FacturaPayloadCabecera;
 use App\Models\FacturaPayloadDetalle;
 use App\Models\FacturaPayloadFormasPago;
 use App\Models\FacturaPayloadModificador;
+use Validator;
 
 class Utilities
 {
+    protected function validate_data($to_validate, $rules) {
+        $validator = Validator::make(json_decode(json_encode($to_validate),true), $rules);
+        $toReturn = new stdClass();
+        $toReturn->pass = true;
+        $toReturn->message = 'Validado';
+        $toReturn->data = $to_validate;
+        if ($validator->fails()) {
+            $toReturn->pass = false;
+            $toReturn->message = 'Error al validar';
+        }
+        return $toReturn;
+    }
+
     public function check_if_cabecera($to_verify) {
         $toCheckBase = new FacturaPayloadCabecera();
-        return $this->check_if_instanceOf($toCheckBase, $to_verify);
+        return $this->validate_data($to_verify, $toCheckBase->get_rules());
     }
 
     public function check_if_detalle($to_verify) {
         $toCheckBase = new FacturaPayloadDetalle();
-        return $this->check_if_instanceOf($toCheckBase, $to_verify);
+        return $this->validate_data($to_verify, $toCheckBase->get_rules());
     }
 
     public function check_if_modificador($to_verify) {
         $toCheckBase = new FacturaPayloadModificador();
-        return $this->check_if_instanceOf($toCheckBase, $to_verify);
+        return $this->validate_data($to_verify, $toCheckBase->get_rules());
     }
 
     public function check_if_formas_pago($to_verify) {
         $toCheckBase = new FacturaPayloadFormasPago();
-        return $this->check_if_instanceOf($toCheckBase, $to_verify);
-    }
-
-    public function check_if_instanceOf($destinationClass, $sourceObject)
-    {
-        $destinationClassProperties = $this->get_keys($this->convert_to_array($destinationClass));
-        $sourceObjectProperties = $this->get_keys($this->convert_to_array($sourceObject));
-        $not_found = [];
-        foreach($destinationClassProperties as $destinationClassProperty) {
-            $existe = false;
-            foreach($sourceObjectProperties as $sourceObjectProperty) {
-                if ($sourceObjectProperty == $destinationClassProperty) {
-                    $existe = true;
-                }
-            }
-            if (!$existe) {
-                array_push($not_found, $destinationClassProperty);
-            }
-        }
-        $toReturn = new stdClass();
-        $toReturn->pass = $not_found == [] ? true : false;
-        $toReturn->message = $not_found == [] ? 'ok' : 'Falta: ' . join(', ', $not_found);
-        return $toReturn;
-    }
-
-    private function convert_to_array($object) {
-        return json_decode(json_encode($object), true);
-    }
-
-    private function get_keys($object_as_array) {
-        $keys = [];
-        foreach($object_as_array as $key=>$value) {
-            array_push($keys, $key);
-        }
-        return $keys;
+        return $this->validate_data($to_verify, $toCheckBase->get_rules());
     }
 
     public function httpGet($url, $data=NULL) {

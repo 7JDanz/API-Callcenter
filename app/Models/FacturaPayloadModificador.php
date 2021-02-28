@@ -39,4 +39,11 @@ class FacturaPayloadModificador extends Model
     {
         return env("FORMATO_FECHAS","Y-d-m H:i:s.v");
     }
+
+    public function get_rules() {
+        return [
+            'detalleApp'=>'required',
+            'codModificador'=>'required'
+        ];
+    }
 }
