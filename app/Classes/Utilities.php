@@ -18,7 +18,7 @@ class Utilities
         $toReturn->data = $to_validate;
         if ($validator->fails()) {
             $toReturn->pass = false;
-            $toReturn->message = 'Error al validar';
+            $toReturn->message = $validator->errors();
         }
         return $toReturn;
     }
