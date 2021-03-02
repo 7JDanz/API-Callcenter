@@ -60,6 +60,7 @@ class FacturaPayloadCabecera extends Model
         $this->identificacionCliente = 'identificacionCliente';
         $this->consumidorFinal = false;
         $this->es_nueva_direccion = true;
+        $this->es_nuevo_cliente = false;
         $this->nombresCliente = 'nombresCliente';
         $this->direccionCliente = 'direccionCliente';
         $this->emailCliente = 'emailCliente';
@@ -93,6 +94,7 @@ class FacturaPayloadCabecera extends Model
             'identificacionCliente'=>'required',
             'consumidorFinal'=>'required',
             'es_nueva_direccion'=>'required',
+            'es_nuevo_cliente'=>'required',
             'nombresCliente'=>'required',
             'direccionCliente'=>'required',
             'emailCliente'=>'required',
