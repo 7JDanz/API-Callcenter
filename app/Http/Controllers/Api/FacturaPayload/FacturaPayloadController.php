@@ -268,6 +268,7 @@ class FacturaPayloadController extends Controller
         $id_cadena = $request['IDCadena'];
         $id_restaurante = $request['IDRestaurante'];
         $id_factura = $request['IDFactura'];
+        $endpoint = DB::select('SELECT endpoint FROM conexiones WHERE prefijo_pais = :prefijo_pais', ['prefijo_pais'=>$pais])[0]->endpoint;
         $utilities = new Utilities();
         $factura_payload = FacturaPayload::where('IDCadena', $id_cadena)->where('IDRestaurante', $id_restaurante)->where('IDFactura', $id_factura)->first();
         $validation = $this->validate_factura_payload($factura_payload);
@@ -277,7 +278,7 @@ class FacturaPayloadController extends Controller
             $factura_payload->cabecera = json_decode($factura_payload->cabecera);
             $factura_payload->formasPago = json_decode($factura_payload->formasPago);
             $data_to_send = json_encode($factura_payload);
-            $url = 'http://192.168.101.30:9090/api-kfc/public/api/restApp/pedidoApp';
+            $url = $endpoint;
             $response = json_decode($utilities->httpPost($url, $data_to_send));
             return response()->json(["respuesta"=>$response, "payload"=>$factura_payload],200);
         }
