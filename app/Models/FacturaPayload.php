@@ -42,6 +42,14 @@ class FacturaPayload extends Model
         'datos_inyeccion'
     ];
 
+    protected $casts = [
+        'cabecera' => 'json',
+        'detalle' => 'json',
+        'modificadores' => 'json',
+        'formasPago' => 'json',
+
+    ];
+
     public function getDateFormat()
     {
         return env("FORMATO_FECHAS","Y-d-m H:i:s.v");

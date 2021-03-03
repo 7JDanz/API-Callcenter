@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Menu\MenuController;
 use App\Http\Controllers\Api\Menu\SubcategoriaController;
 use App\Http\Controllers\Api\Usuarios\UsuariosPosController;
 use App\Http\Controllers\Api\FacturaPayload\FacturaPayloadController;
+use App\Http\Controllers\Api\FormaPago\FormaPagoController;
 use Illuminate\Support\Facades\Log;
 /*
 |--------------------------------------------------------------------------
@@ -61,6 +62,7 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
     Route::post('/facturapayload/inserta_varios_productos' , [FacturaPayloadController::class, 'inserta_varios_producto']);
     Route::post('/facturapayload/borra_producto' , [FacturaPayloadController::class, 'borra_producto']);
     Route::post('/facturapayload/borra_varios_productos' , [FacturaPayloadController::class, 'borra_varios_producto']);
+    Route::get('/facturapayload/ultimo-pedido' , [FacturaPayloadController::class, 'busqueda_ultimo_pedido']);
 
     //CLIENTES
     Route::get('/cliente/{documento}' , [ClienteController::class, 'cliente'] )->name('clientepordocumento');
@@ -99,6 +101,10 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
 
     //Producto Upselling
     Route::get('/menu/upselling',[MenuController::class,'upselling'])->name('Upselling');
+
+    //Formas de Pagos
+    Route::get('/forma-pago/IDCadena/{id}',[FormaPagoController::class,'index'])->name('id');
+
 
     Route::get('/menu/build_menu_cadena/IDCadena/{id}',[MenuController::class,'build_menu_cadena']);
 });

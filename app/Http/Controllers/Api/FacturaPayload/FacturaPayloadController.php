@@ -505,4 +505,14 @@ class FacturaPayloadController extends Controller
             }
         }
     }
+
+    public function busqueda_ultimo_pedido(Request $request, $pais){
+
+        $identificacionCliente = $request['identificacionCliente'];
+        $factura_payload = FacturaPayload::where('cabecera->identificacionCliente', $identificacionCliente)->first();
+        
+
+        return response()->json($factura_payload,200);
+
+    }
 }
