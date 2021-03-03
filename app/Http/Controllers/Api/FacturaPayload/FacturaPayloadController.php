@@ -18,24 +18,10 @@ class FacturaPayloadController extends Controller
         $id_restaurante = $request['IDRestaurante'];
         $id_cadena = $request['IDCadena'];
         if ($id == null) {
-           $factura_payloads = FacturaPayload::get();
-           $toReturn = [];
-           foreach($factura_payloads as $factura_payload) {
-               $factura_payload->detalle = json_decode($factura_payload->detalle);
-               $factura_payload->modificadores = json_decode($factura_payload->modificadores);
-               $factura_payload->cabecera = json_decode($factura_payload->cabecera);
-               $factura_payload->formasPago = json_decode($factura_payload->formasPago);
-               array_push($toReturn, $factura_payload);
-           }
-           return response()->json($toReturn,200);
+           $factura_payloads = FacturaPayload::where('IDCadena', $id_cadena)->where('IDRestaurante', $id_restaurante)->get();
+           return response()->json($factura_payloads,200);
         } else {
            $factura_payload = FacturaPayload::where('IDCadena', $id_cadena)->where('IDRestaurante', $id_restaurante)->where('IDFactura', $id)->first();
-           if ($factura_payload) {
-               $factura_payload->detalle = json_decode($factura_payload->detalle);
-               $factura_payload->modificadores = json_decode($factura_payload->modificadores);
-               $factura_payload->cabecera = json_decode($factura_payload->cabecera);
-               $factura_payload->formasPago = json_decode($factura_payload->formasPago);
-           }
            if ($factura_payload) {
                return response()->json($factura_payload,200);
            } else {
@@ -55,6 +41,7 @@ class FacturaPayloadController extends Controller
         $new_formasPago = $data['formasPago'];
         $detalle_to_insert = [];
         $formas_pago_to_insert = [];
+        $modificadores_to_insert = [];
         $utilities = new Utilities();
         if ($new_detalle !== []) {
             foreach($new_detalle as $item_to_insert) {
@@ -72,6 +59,7 @@ class FacturaPayloadController extends Controller
                 if ($validation->pass == false) {
                     return response()->json($validation,400);
                 }
+                array_push($modificadores_to_insert, $item_to_insert);
             }
         }
         if ($new_cabecera !== []) {
@@ -92,10 +80,22 @@ class FacturaPayloadController extends Controller
             }
         }
         $new_factura_payload = new FacturaPayload();
-        $new_factura_payload->detalle = json_encode($detalle_to_insert);
-        $new_factura_payload->modificadores = json_encode($new_modificadores);
-        $new_factura_payload->cabecera = json_encode($new_cabecera);
-        $new_factura_payload->formasPago = json_encode($formas_pago_to_insert);
+        if ($new_cabecera != []) {
+            $new_cabecera = json_encode($new_cabecera);
+        }
+        if ($detalle_to_insert != []) {
+            $detalle_to_insert = json_encode($detalle_to_insert);
+        }
+        if ($modificadores_to_insert != []) {
+            $modificadores_to_insert = json_encode($modificadores_to_insert);
+        }
+        if ($formas_pago_to_insert != []) {
+            $formas_pago_to_insert = json_encode($formas_pago_to_insert);
+        }
+        $new_factura_payload->cabecera = $new_cabecera;
+        $new_factura_payload->detalle = $detalle_to_insert;
+        $new_factura_payload->modificadores = $modificadores_to_insert;
+        $new_factura_payload->formasPago = $formas_pago_to_insert;
         $new_factura_payload->status = 'activo';
         $new_factura_payload->IDFactura = $new_id_factura;
         $new_factura_payload->IDRestaurante = $id_restaurante;
@@ -114,6 +114,7 @@ class FacturaPayloadController extends Controller
             $new_formasPago = $data['formasPago'];
             $detalle_to_insert = [];
             $formas_pago_to_insert = [];
+            $modificadores_to_insert = [];
             $utilities = new Utilities();
             if ($new_detalle !== []) {
                 foreach($new_detalle as $item_to_insert) {
@@ -131,6 +132,7 @@ class FacturaPayloadController extends Controller
                     if ($validation->pass == false) {
                         return response()->json($validation,400);
                     }
+                    array_push($modificadores_to_insert, $item_to_insert);
                 }
             }
             if ($new_cabecera !== []) {
@@ -151,16 +153,16 @@ class FacturaPayloadController extends Controller
                 }
             }
             $factura_payload = FacturaPayload::where('IDCadena', $data['IDCadena'])->where('IDRestaurante', $data['IDRestaurante'])->where('IDFactura', $data['IDFactura'])->update([
-               'detalle'=>json_encode($detalle_to_insert),
-               'modificadores'=>json_encode($new_modificadores),
-               'cabecera'=>json_encode($new_cabecera),
-               'formasPago'=>json_encode($formas_pago_to_insert),
-               'status'=>$data['status'],
+                'cabecera'=>json_encode($new_cabecera),
+                'detalle'=>json_encode($detalle_to_insert),
+                'modificadores'=>json_encode($modificadores_to_insert),
+                'formasPago'=>json_encode($formas_pago_to_insert),
+                'status'=>$data['status'],
             ]);
             DB::commit();
             return response()->json(true,200);
          } catch (Exception $e) {
-            return response()->json($e,400);
+            return response()->json($e->getMessage(),400);
          }
     }
 
@@ -183,7 +185,7 @@ class FacturaPayloadController extends Controller
             DB::commit();
             return response()->json(true,200);
         } catch (Exception $e) {
-            return response()->json($e,400);
+            return response()->json($e->getMessage(),400);
         }
     }
 
@@ -210,7 +212,7 @@ class FacturaPayloadController extends Controller
             DB::commit();
             return response()->json(true,200);
         } catch (Exception $e) {
-            return response()->json($e,400);
+            return response()->json($e->getMessage(),400);
         }
     }
 
@@ -221,6 +223,7 @@ class FacturaPayloadController extends Controller
             $new_detalle = $data['detalle'];
             $new_modificadores = $data['modificadores'];
             $detalle_to_insert = [];
+            $modificadores_to_insert = [];
             $utilities = new Utilities();
             if ($new_detalle !== []) {
                 foreach($new_detalle as $item_to_insert) {
@@ -238,16 +241,17 @@ class FacturaPayloadController extends Controller
                     if ($validation->pass == false) {
                         return response()->json($validation,400);
                     }
+                    array_push($modificadores_to_insert, $item_to_insert);
                 }
             }
             $factura_payload = FacturaPayload::where('IDCadena', $data['IDCadena'])->where('IDRestaurante', $data['IDRestaurante'])->where('IDFactura', $data['IDFactura'])->update([
                 'detalle'=>json_encode($detalle_to_insert),
-                'modificadores'=>json_encode($new_modificadores),
+                'modificadores'=>json_encode($modificadores_to_insert),
             ]);
             DB::commit();
             return response()->json(true,200);
         } catch (Exception $e) {
-            return response()->json($e,400);
+            return response()->json($e->getMessage(),400);
         }
     }
 
@@ -260,7 +264,7 @@ class FacturaPayloadController extends Controller
             DB::commit();
             return response()->json(true,200);
         } catch (Exception $e) {
-            return response()->json($e,400);
+            return response()->json($e->getMessage(),400);
         }
     }
 
@@ -273,10 +277,6 @@ class FacturaPayloadController extends Controller
         $factura_payload = FacturaPayload::where('IDCadena', $id_cadena)->where('IDRestaurante', $id_restaurante)->where('IDFactura', $id_factura)->first();
         $validation = $this->validate_factura_payload($factura_payload);
         if ($validation->pass) {
-            $factura_payload->detalle = json_decode($factura_payload->detalle);
-            $factura_payload->modificadores = json_decode($factura_payload->modificadores);
-            $factura_payload->cabecera = json_decode($factura_payload->cabecera);
-            $factura_payload->formasPago = json_decode($factura_payload->formasPago);
             $data_to_send = json_encode($factura_payload);
             $url = $endpoint;
             $response = json_decode($utilities->httpPost($url, $data_to_send));
@@ -288,10 +288,10 @@ class FacturaPayloadController extends Controller
     protected function validate_factura_payload($factura_payload) {
         $utilities = new Utilities();
         try{
-            $new_detalle = json_decode($factura_payload->detalle);
-            $new_modificadores = json_decode($factura_payload->modificadores);
-            $new_cabecera = json_decode($factura_payload->cabecera);
-            $new_formasPago = json_decode($factura_payload->formasPago);
+            $new_detalle = $factura_payload->detalle;
+            $new_modificadores = $factura_payload->modificadores;
+            $new_cabecera = $factura_payload->cabecera;
+            $new_formasPago = $factura_payload->formasPago;
             if ($new_detalle !== []) {
                 foreach($new_detalle as $item_to_insert) {
                     $validation = $utilities->check_if_detalle($item_to_insert);
@@ -338,8 +338,8 @@ class FacturaPayloadController extends Controller
     public function inserta_producto(Request $request, $pais) {
         $data = $request->json()->all();
         $factura_payload = FacturaPayload::where('IDCadena', $data['IDCadena'])->where('IDRestaurante', $data['IDRestaurante'])->where('IDFactura', $data['IDFactura'])->first();
-        $detalle = json_decode($factura_payload->detalle);
-        $modificadores = json_decode($factura_payload->modificadores);
+        $detalle = $factura_payload->detalle;
+        $modificadores = $factura_payload->modificadores;
         $new_producto = $data['producto'];
         $codModificadores = $data['codModificador'];
         $cantidad = $data['cantidad'];
@@ -360,13 +360,13 @@ class FacturaPayloadController extends Controller
         try{
             DB::beginTransaction();
             $factura_payload->update([
-                'detalle'=>json_encode($detalle),
-                'modificadores'=>json_encode($modificadores),
+                'detalle'=>$detalle,
+                'modificadores'=>$modificadores,
             ]);
             DB::commit();
             return response()->json(["detalle"=>$detalle,"modificadores"=>$modificadores],200);
         } catch (Exception $e) {
-            return response()->json($e,400);
+            return response()->json($e->getMessage(),400);
         }
     }
 
@@ -374,8 +374,8 @@ class FacturaPayloadController extends Controller
     public function inserta_varios_producto(Request $request, $pais) {
         $data = $request->json()->all();
         $factura_payload = FacturaPayload::where('IDCadena', $data['IDCadena'])->where('IDRestaurante', $data['IDRestaurante'])->where('IDFactura', $data['IDFactura'])->first();
-        $detalle = json_decode($factura_payload->detalle);
-        $modificadores = json_decode($factura_payload->modificadores);
+        $detalle = $factura_payload->detalle;
+        $modificadores = $factura_payload->modificadores;
         $items = $data['items'];
         foreach($items as $item) {
             $new_producto = $item['producto'];
@@ -399,21 +399,21 @@ class FacturaPayloadController extends Controller
         try{
             DB::beginTransaction();
             $factura_payload->update([
-                'detalle'=>json_encode($detalle),
-                'modificadores'=>json_encode($modificadores),
+                'detalle'=>$detalle,
+                'modificadores'=>$modificadores,
             ]);
             DB::commit();
             return response()->json(["detalle"=>$detalle,"modificadores"=>$modificadores],200);
         } catch (Exception $e) {
-            return response()->json($e,400);
+            return response()->json($e->getMessage(),400);
         }
     }
 
     public function borra_producto(Request $request, $pais) {
         $data = $request->json()->all();
         $factura_payload = FacturaPayload::where('IDCadena', $data['IDCadena'])->where('IDRestaurante', $data['IDRestaurante'])->where('IDFactura', $data['IDFactura'])->first();
-        $detalle = json_decode($factura_payload->detalle);
-        $modificadores = json_decode($factura_payload->modificadores);
+        $detalle = $factura_payload->detalle;
+        $modificadores = $factura_payload->modificadores;
         $detalleApp = $data['detalleApp'];
         $new_detalle = [];
         $new_modificadores = [];
@@ -438,13 +438,13 @@ class FacturaPayloadController extends Controller
             try{
                 DB::beginTransaction();
                 $factura_payload->update([
-                    'detalle'=>json_encode($new_detalle),
-                    'modificadores'=>json_encode($new_modificadores),
+                    'detalle'=>$new_detalle,
+                    'modificadores'=>$new_modificadores,
                 ]);
                 DB::commit();
                 return response()->json(["detalle"=>$new_detalle,"modificadores"=>$new_modificadores],200);
             } catch (Exception $e) {
-                return response()->json($e,400);
+                return response()->json($e->getMessage(),400);
             }
         } else {
             return response()->json("producto no encontrado", 400);
@@ -454,8 +454,8 @@ class FacturaPayloadController extends Controller
     public function borra_varios_producto(Request $request, $pais) {
         $data = $request->json()->all();
         $factura_payload = FacturaPayload::where('IDCadena', $data['IDCadena'])->where('IDRestaurante', $data['IDRestaurante'])->where('IDFactura', $data['IDFactura'])->first();
-        $detalle = json_decode($factura_payload->detalle);
-        $modificadores = json_decode($factura_payload->modificadores);
+        $detalle = $factura_payload->detalle;
+        $modificadores = $factura_payload->modificadores;
         $items = $data['items'];
         $new_modificadores = [];
         $new_detalle = [];
@@ -495,13 +495,13 @@ class FacturaPayloadController extends Controller
             try{
                 DB::beginTransaction();
                 $factura_payload->update([
-                    'detalle'=>json_encode($new_detalle),
-                    'modificadores'=>json_encode($new_modificadores),
+                    'detalle'=>$new_detalle,
+                    'modificadores'=>$new_modificadores,
                 ]);
                 DB::commit();
                 return response()->json(["detalle"=>$new_detalle,"modificadores"=>$new_modificadores],200);
             } catch (Exception $e) {
-                return response()->json($e,400);
+                return response()->json($e->getMessage(),400);
             }
         }
     }
@@ -510,7 +510,7 @@ class FacturaPayloadController extends Controller
 
         $identificacionCliente = $request['identificacionCliente'];
         $factura_payload = FacturaPayload::where('cabecera->identificacionCliente', $identificacionCliente)->first();
-        
+
 
         return response()->json($factura_payload,200);
 
