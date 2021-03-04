@@ -174,6 +174,7 @@ class FacturaPayloadController extends Controller
             $utilities = new Utilities();
             if ($new_cabecera !== []) {
                 $new_cabecera['codigoApp'] = $data['IDFactura'];
+                $new_cabecera['codRestaurante'] = $data['IDRestaurante'];
                 $validation = $utilities->check_if_cabecera($new_cabecera);
                 if ($validation->pass == false) {
                     return response()->json($validation,400);
