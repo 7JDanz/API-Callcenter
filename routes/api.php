@@ -104,7 +104,7 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
     Route::get('/menu/upselling',[MenuController::class,'upselling'])->name('Upselling');
 
     //Formas de Pagos
-    Route::get('/forma-pago/IDCadena/{id}',[FormaPagoController::class,'index'])->name('id');
+    Route::get('/forma-pago/IDCadena/{id}',[FormaPagoController::class,'index']);
 
 
     Route::get('/menu/build_menu_cadena/IDCadena/{id}',[MenuController::class,'build_menu_cadena']);

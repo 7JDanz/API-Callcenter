@@ -38,6 +38,10 @@ class FacturaPayloadController extends Controller
         $new_factura_payload->IDFactura = $new_id_factura;
         $new_factura_payload->IDRestaurante = $id_restaurante;
         $new_factura_payload->IDCadena = $id_cadena;
+        $new_factura_payload->detalle = [];
+        $new_factura_payload->modificadores = [];
+        $new_factura_payload->cabecera = [];
+        $new_factura_payload->formasPago = [];
         $new_factura_payload->save();
         return response()->json($new_id_factura,200);
     }
@@ -96,6 +100,7 @@ class FacturaPayloadController extends Controller
                 'modificadores'=>json_encode($modificadores_to_insert),
                 'formasPago'=>json_encode($formas_pago_to_insert),
                 'status'=>$data['status'],
+                'IDMenu'=>$data['IDMenu'],
             ]);
             DB::commit();
             return response()->json(true,200);
