@@ -231,23 +231,24 @@ class MenuController extends Controller
 
     }
 
-    public function busqueda_producto_id(Request $request, $menu,$pais){
+    public function busqueda_producto_id(Request $request, $pais ){
 
         $restaurante = $request['IDRestaurante'];
-
-        $idproductos =explode(',', $request['IDProductos']);
-
+        $menu = $request['IDMenu'];
+        $idproductos = array_unique(explode(',', $request['IDProductos']));
+        $idproductos = array_map('intval',$idproductos);
         $menu_util = new MenuUtil();
         $menuPayload = \Cache::get($menu);
+
         if($menuPayload)
         {
-            $menus = $menuPayload;
-            $productobyid = $menu_util->get_busqueda_producto_id($menus,$idproductos);
+            $productobyid = $menu_util->get_busqueda_producto_id($menuPayload,$idproductos);
+
             $toReturn = $menu_util->get_busqueda_x_precio($productobyid,$restaurante,$this->getConnectionName());
 
         }else{
-            $this->menuPayload($pais,$menu,$request);
-            return $this->busqueda_producto_id($request,$menu,$pais);
+
+            return $this->busqueda_producto_id($request,$pais);
         }
         return response()->json($toReturn,200);
 

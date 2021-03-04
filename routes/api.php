@@ -98,7 +98,7 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
     //Buscar producto por nombre
     Route::get('/menu/menu-buscar/IDMenu/{id}',[MenuController::class,'buscarProducto'])->name('MenuBuscar');
     //Busqueda de producto por IDProducto
-    Route::get('/menu/menu-buscar-id/IDMenu/{id}',[MenuController::class,'busqueda_producto_id']);
+    Route::get('/menu/menu-buscar-id',[MenuController::class,'busqueda_producto_id'])->name('MenuBuscarIDProducto');
     //Buscar Subcategoria
     Route::get('/menu/subcategoria/IDMenu/{id}',[SubcategoriaController::class,'index'])->name('MenuSubcategoria');
     //ultimo producto
