@@ -227,4 +227,22 @@ class MenuUtil
         return $productos_encontrados;
     }
 
+    public function get_busqueda_producto_id($menus,$buscado){
+        $productos_encontrados = [];
+        foreach($buscado as $idproducto){
+            foreach ($menus as $menu) {
+                foreach ($menu->MenuAgrupacion as $item_menu_agrupacion) {
+                    if(is_array($item_menu_agrupacion->productos)){
+                        foreach ($item_menu_agrupacion->productos as $producto) {
+                            if ($producto->IDProducto === $idproducto) {
+                                array_push($productos_encontrados, $producto);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $productos_encontrados;
+    }
+    
 }

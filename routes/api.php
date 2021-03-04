@@ -62,7 +62,7 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
     Route::post('/facturapayload/inserta_varios_productos' , [FacturaPayloadController::class, 'inserta_varios_producto']);
     Route::post('/facturapayload/borra_producto' , [FacturaPayloadController::class, 'borra_producto']);
     Route::post('/facturapayload/borra_varios_productos' , [FacturaPayloadController::class, 'borra_varios_producto']);
-    Route::get('/facturapayload/ultimo-pedido' , [FacturaPayloadController::class, 'busqueda_ultimo_pedido']);
+
 
     //CLIENTES
     Route::get('/cliente/{documento}' , [ClienteController::class, 'cliente'] )->name('clientepordocumento');
@@ -98,7 +98,8 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
     Route::get('/menu/menu-buscar/IDMenu/{id}',[MenuController::class,'buscarProducto'])->name('MenuBuscar');
     //Buscar Subcategoria
     Route::get('/menu/subcategoria/IDMenu/{id}',[SubcategoriaController::class,'index'])->name('MenuSubcategoria');
-
+    //ultimo producto
+    Route::get('/facturapayload/ultimo-pedido' , [MenuController::class, 'busqueda_ultimo_pedido']);
     //Producto Upselling
     Route::get('/menu/upselling',[MenuController::class,'upselling'])->name('Upselling');
 

@@ -7,6 +7,7 @@ use App\Models\Menu;
 use App\Models\MenuAgrupacion;
 use App\Models\MenuCategorias;
 use App\Models\MenuPayload;
+use App\Models\FacturaPayload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
@@ -202,6 +203,44 @@ class MenuController extends Controller
         ]);
         return response()->json("Construido Menu " .  $id_menu . "de IDCadena " . $id_cadena,200);
     }
+
+    public function busqueda_ultimo_pedido(Request $request, $pais){
+
+        $identificacionCliente = $request['identificacionCliente'];
+        $factura_payload = FacturaPayload::where('cabecera->identificacionCliente', $identificacionCliente)->first();
+        $productos = $factura_payload->detalle;
+        $idproductos = [];
+
+        foreach($productos as $id) {
+            array_push($idproductos, $id['codPlu']);
+        }
+        $idproductos = array_unique($idproductos);
+
+        $menu_util = new MenuUtil();
+        $menu = 'F4936929-4107-EB11-80F1-000D3A019254';
+        $request->request->add(['IDRestaurante'=>$factura_payload->IDRestaurante]);
+
+
+        $menuPayload = \Cache::get($menu);
+        $menus = $menuPayload;
+        $productobyid = $menu_util->get_busqueda_producto_id($menus,$idproductos);
+
+        $plus_filter = $menu_util->get_productos_encontrados($productobyid);
+
+        $sql_query = "select * from config.fn_buscaPreciosxPlu ($factura_payload->IDRestaurante,'$plus_filter')";
+        $precios = DB::connection($this->getConnectionName())->select($sql_query);
+        $toReturn = $menu_util->process_productos($productobyid, $precios);
+
+
+        //return $menuutil->get_busqueda_producto_id($menus,$idproductos);
+
+
+        return response()->json($toReturn,200);
+
+    }
+
+    
+
 
     protected function getConnectionName()
     {
