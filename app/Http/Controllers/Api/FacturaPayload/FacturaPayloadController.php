@@ -473,5 +473,5 @@ class FacturaPayloadController extends Controller
         $identificacionCliente = $request['identificacionCliente'];
         $factura_payload = FacturaPayload::where('cabecera->identificacionCliente', $identificacionCliente)->first();
 
-
+    }
 }
