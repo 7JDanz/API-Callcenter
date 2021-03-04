@@ -50,6 +50,7 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
 
 
     //FACTURA
+    Route::put('/facturapayload/set_status' , [FacturaPayloadController::class, 'set_status']);
     Route::get('/facturapayload/inject_payload' , [FacturaPayloadController::class, 'inject_payload']);
     Route::get('/facturapayload' , [FacturaPayloadController::class, 'get']);
     Route::post('/facturapayload' , [FacturaPayloadController::class, 'post']);
@@ -104,7 +105,7 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
     Route::get('/menu/upselling',[MenuController::class,'upselling'])->name('Upselling');
 
     //Formas de Pagos
-    Route::get('/forma-pago/IDCadena/{id}',[FormaPagoController::class,'index'])->name('id');
+    Route::get('/forma-pago/IDCadena/{id}',[FormaPagoController::class,'index']);
 
 
     Route::get('/menu/build_menu_cadena/IDCadena/{id}',[MenuController::class,'build_menu_cadena']);
