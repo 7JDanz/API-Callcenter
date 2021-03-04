@@ -1,6 +1,7 @@
 <?php
 namespace App\Classes;
 use stdClass;
+use Illuminate\Support\Facades\DB;
 
 class MenuUtil
 {
@@ -244,5 +245,14 @@ class MenuUtil
         }
         return $productos_encontrados;
     }
-    
+
+    public function get_busqueda_x_precio($productobyid,$IDRestaurante,$con){
+        $plus_filter = $this->get_productos_encontrados($productobyid);
+
+        $sql_query = "select * from config.fn_buscaPreciosxPlu ($IDRestaurante,'$plus_filter')";
+        $precios = DB::connection($con)->select($sql_query);
+        $toReturn = $this->process_productos($productobyid, $precios);
+
+        return $toReturn;
+    }
 }
