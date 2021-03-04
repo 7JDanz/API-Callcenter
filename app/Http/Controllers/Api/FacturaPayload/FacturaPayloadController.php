@@ -509,6 +509,19 @@ class FacturaPayloadController extends Controller
         }
     }
 
+    public function set_status(Request $request, $pais){
+        try{
+            DB::beginTransaction();
+            $factura_payload = FacturaPayload::where('IDCadena', $request['IDCadena'])->where('IDRestaurante', $request['IDRestaurante'])->where('IDFactura', $request['IDFactura'])->update([
+                'status'=>$request['status'],
+            ]);
+            DB::commit();
+            return response()->json(true,200);
+        } catch (Exception $e) {
+            return response()->json($e->getMessage(),400);
+        }
+    }
+
     public function busqueda_ultimo_pedido(Request $request, $pais){
 
         $identificacionCliente = $request['identificacionCliente'];
