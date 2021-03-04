@@ -35,6 +35,7 @@ class FacturaPayloadController extends Controller
         $new_id_factura = uniqid();
         $id_restaurante = $data['IDRestaurante'];
         $id_cadena = $data['IDCadena'];
+        $id_menu = $data['IDMenu'];
         $new_detalle = $data['detalle'];
         $new_modificadores = $data['modificadores'];
         $new_cabecera = $data['cabecera'];
@@ -98,6 +99,7 @@ class FacturaPayloadController extends Controller
         $new_factura_payload->formasPago = $formas_pago_to_insert;
         $new_factura_payload->status = 'activo';
         $new_factura_payload->IDFactura = $new_id_factura;
+        $new_factura_payload->IDMenu = $id_menu;
         $new_factura_payload->IDRestaurante = $id_restaurante;
         $new_factura_payload->IDCadena = $id_cadena;
         $new_factura_payload->save();
@@ -157,6 +159,7 @@ class FacturaPayloadController extends Controller
                 'detalle'=>json_encode($detalle_to_insert),
                 'modificadores'=>json_encode($modificadores_to_insert),
                 'formasPago'=>json_encode($formas_pago_to_insert),
+                'IDMenu'=>$data['IDMenu'],
                 'status'=>$data['status'],
             ]);
             DB::commit();

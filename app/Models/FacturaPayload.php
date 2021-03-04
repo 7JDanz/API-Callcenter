@@ -29,6 +29,7 @@ class FacturaPayload extends Model
         'IDFactura',
         'IDCadena',
         'IDRestaurante',
+        'IDMenu',
         'status',
         'datos_inyeccion',
     ];
