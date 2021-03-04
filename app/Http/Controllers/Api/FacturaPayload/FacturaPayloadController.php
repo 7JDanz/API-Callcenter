@@ -285,7 +285,8 @@ class FacturaPayloadController extends Controller
         $item = new stdClass();
         $item->detalleApp = $detalleApp;
         $item->codigoApp = $data['IDFactura'];
-        $item->codPlu = $new_producto['codPlu'];
+        $item->codPlu = $new_producto['IDProducto'];
+        $item->IDProducto = $new_producto['IDProducto'];
         $item->precioBruto = $new_producto['precioBruto'];
         $item->cantidad = $cantidad;
         array_push($detalle, $item);
@@ -324,7 +325,8 @@ class FacturaPayloadController extends Controller
             $new_item_detalle = new stdClass();
             $new_item_detalle->detalleApp = $detalleApp;
             $new_item_detalle->codigoApp = $data['IDFactura'];
-            $new_item_detalle->codPlu = $new_producto['codPlu'];
+            $new_item_detalle->codPlu = $new_producto['IDProducto'];
+            $new_item_detalle->IDProducto = $new_producto['IDProducto'];
             $new_item_detalle->precioBruto = $new_producto['precioBruto'];
             $new_item_detalle->cantidad = $cantidad;
             array_push($detalle, $new_item_detalle);
