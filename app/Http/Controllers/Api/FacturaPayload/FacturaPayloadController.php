@@ -455,8 +455,6 @@ class FacturaPayloadController extends Controller
         }
     }
 
-<<<<<<< HEAD
-=======
     public function set_status(Request $request, $pais){
         try{
             DB::beginTransaction();
@@ -475,6 +473,5 @@ class FacturaPayloadController extends Controller
         $identificacionCliente = $request['identificacionCliente'];
         $factura_payload = FacturaPayload::where('cabecera->identificacionCliente', $identificacionCliente)->first();
 
->>>>>>> b4e6633e7b2dea78d3470531a169717dc32914bd
 
 }
