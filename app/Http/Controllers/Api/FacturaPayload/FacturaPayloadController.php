@@ -218,6 +218,9 @@ class FacturaPayloadController extends Controller
         $endpoint = DB::select('SELECT endpoint FROM conexiones WHERE prefijo_pais = :prefijo_pais', ['prefijo_pais'=>$pais])[0]->endpoint;
         $utilities = new Utilities();
         $factura_payload = FacturaPayload::where('IDFactura', $id_factura)->first();
+        if ($factura_payload->status !== 'activo') {
+            return response()->json('La factura no se encuentra activa',400);
+        }
         $validation = $this->validate_factura_payload($factura_payload);
         if ($validation->pass) {
             $data_to_send = json_encode($factura_payload);
