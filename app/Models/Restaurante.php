@@ -39,7 +39,21 @@ class Restaurante extends Model
         'TieneKiosko',
         'TienePickup',
     ];
-
+    protected $hidden = [
+        'BrutoServicioDomicilio',
+        'IvaServicioDomicilio',
+        'NetoServicioDomicilio',
+        'IDRecargoDomicilio',
+        'IDCategoria',
+        'UrlRestaurante',
+        'UrlRestauranteBackup',
+        'Impuesto1',
+        'Impuesto2',
+        'Impuesto3',
+        'Impuesto4',
+        'Impuesto5',
+        'PedidoMinimo',
+    ];
     protected $casts = [
         'MenusRestaurante' => 'json',
         'ServiciosRestaurante' => 'json',

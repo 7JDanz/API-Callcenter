@@ -254,6 +254,19 @@ class MenuController extends Controller
 
     }
 
+    public function costo_envio(Request $request, $pais){
+        
+        $IDMenu=$request['IDMenu'];
+        $IDRestaurante=$request['IDRestaurante'];
+        $sql_query = "select * from config.fn_CostoEnvioRestaurante ($IDRestaurante,'$IDMenu')";
+        $costos = DB::connection($this->getConnectionName())->select($sql_query);
+        //dd($costos);
+
+        return response()->json( $costos
+        , 200
+        , ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8']
+        ,JSON_PRETTY_PRINT);
+    }
 
     protected function getConnectionName()
     {

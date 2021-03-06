@@ -106,6 +106,9 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
     //Producto Upselling
     Route::get('/menu/upselling',[MenuController::class,'upselling'])->name('Upselling');
 
+    //Costo Envio Envio
+    Route::get('/costo-envio',[MenuController::class,'costo_envio'])->name('CostoEnvio');
+
     //Formas de Pagos
     Route::get('/forma-pago/IDCadena/{id}',[FormaPagoController::class,'index']);
 
