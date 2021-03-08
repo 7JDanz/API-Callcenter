@@ -134,7 +134,7 @@ class GeolocalizacionController extends Controller
         //  Locales::findOrFail($id)->delete();
     }
 
-    public function pruebasError($pais, Request $request)
+    public function pruebasError(  Request $request)
     {
         return Locales::all();
     }
