@@ -131,9 +131,13 @@ class GeolocalizacionController extends Controller
     public function destroy($id)
     {
         return  ["error" => "No se permite eliminar."];
-      //  Locales::findOrFail($id)->delete();
+        //  Locales::findOrFail($id)->delete();
     }
 
+    public function pruebasError($pais, Request $request)
+    {
+        return Locales::all();
+    }
     public function getRestaurantesCercanos($pais, Request $request)
     {
         $rules = [
@@ -184,7 +188,7 @@ class GeolocalizacionController extends Controller
                 ]
             ])->firstOrFail();
         } catch (\Exception $e) {
-            return ["estado" => 400, "mensaje" => "Ningún resultado para las coordenadas [latitud: $request->latitud, longitud:$request->longitud ]" , "error" => $e];
+            return ["estado" => 400, "mensaje" => "Ningún resultado para las coordenadas [latitud: $request->latitud, longitud:$request->longitud ]", "error" => $e];
         }
 
 
@@ -203,7 +207,7 @@ class GeolocalizacionController extends Controller
                 ]);
             });
         } catch (\Exception $e) {
-            return ["estado" => 400, "mensaje" => "Ningún resultado para las coordenadas [latitud: $request->latitud, longitud:$request->longitud ]" , "error" => $e];
+            return ["estado" => 400, "mensaje" => "Ningún resultado para las coordenadas [latitud: $request->latitud, longitud:$request->longitud ]", "error" => $e];
         }
 
         $respuesta = $results->restaurante;
@@ -282,7 +286,4 @@ class GeolocalizacionController extends Controller
         //                             ->first();
         return $restaurante;
     }
-
-
-
 }
