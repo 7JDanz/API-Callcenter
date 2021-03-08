@@ -115,22 +115,21 @@ return [
             'prefix_indexes' => true,
         ],
 
-        'mongodb' => [
-            'driver' => 'mongodb',
-            'dsn' => 'mongodb+srv://dbuserPulpo:o19T04Yabq7g1GB9@cluster0.uae34.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
-            'database' => 'GEOLOCALIZACIONKFC'
-
-     // 'mongodb' => [
-            // 'dsn' => 'mongodb+srv://pulpokfc:p2uiuNqypjbYrbss@cluster0.srwxy.mongodb.net/geolocalizacion?retryWrites=true&w=majority',
-
+        // 'mongodb' => [
         //     'driver' => 'mongodb',
-        //     'host' =>  'cluster0.srwxy.mongodb.net',
-        //     'port' =>  null,
-        //     'database' => 'geolocalizacion',
-        //     'username' => 'pulpokfc',
-        //     'password' => 'p2uiuNqypjbYrbss',
-        //     'options' => [
-        //     ],
+        //     'dsn' => 'mongodb+srv://pulpokfc:p2uiuNqypjbYrbss@cluster0.srwxy.mongodb.net/geolocalizacion?retryWrites=true&w=majority',
+        //     'database' => 'GEOLOCALIZACIONKFC'
+
+     'mongodb' => [
+
+            'driver' => 'mongodb',
+            'host' =>  '192.168.101.21',
+            'port' =>  27017,
+            'database' => 'GeolocalizacionKFC',
+            'username' => '',
+            'password' => '',
+            'options' => [
+            ],
 
         ],
 
