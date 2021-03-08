@@ -134,7 +134,7 @@ class GeolocalizacionController extends Controller
       //  Locales::findOrFail($id)->delete();
     }
 
-    public function getRestaurantesCercanos(Request $request)
+    public function getRestaurantesCercanos($pais, Request $request)
     {
         $rules = [
             'latitud' => 'required',
@@ -184,7 +184,7 @@ class GeolocalizacionController extends Controller
                 ]
             ])->firstOrFail();
         } catch (\Exception $e) {
-            return ["estado" => 400, "mensaje" => "Ningún resultado para las coordenadas [latitud: $request->latitud, longitud:$request->longitud ]"];
+            return ["estado" => 400, "mensaje" => "Ningún resultado para las coordenadas [latitud: $request->latitud, longitud:$request->longitud ]" , "error" => $e];
         }
 
 
@@ -203,7 +203,7 @@ class GeolocalizacionController extends Controller
                 ]);
             });
         } catch (\Exception $e) {
-            return ["estado" => 400, "mensaje" => "Ningún resultado para las coordenadas [latitud: $request->latitud, longitud:$request->longitud ]"];
+            return ["estado" => 400, "mensaje" => "Ningún resultado para las coordenadas [latitud: $request->latitud, longitud:$request->longitud ]" , "error" => $e];
         }
 
         $respuesta = $results->restaurante;
@@ -282,4 +282,7 @@ class GeolocalizacionController extends Controller
         //                             ->first();
         return $restaurante;
     }
+
+
+
 }
