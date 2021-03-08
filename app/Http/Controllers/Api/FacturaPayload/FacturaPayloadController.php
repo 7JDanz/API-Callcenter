@@ -115,6 +115,9 @@ class FacturaPayloadController extends Controller
             $new_cabecera = $data['cabecera'];
             $utilities = new Utilities();
             $factura_payload = FacturaPayload::where('IDFactura', $data['IDFactura'])->first();
+            if (!$factura_payload) {
+                return response()->json("Factura No Encontrada",400);
+            }
             if ($new_cabecera !== []) {
                 $new_cabecera['codigoApp'] = $data['IDFactura'];
                 $new_cabecera['codRestaurante'] = $factura_payload->IDRestaurante;
