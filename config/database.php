@@ -117,15 +117,18 @@ return [
 
         'mongodb' => [
             'driver' => 'mongodb',
-            'dsn' => 'mongodb+srv://pulpokfc:p2uiuNqypjbYrbss@cluster0.srwxy.mongodb.net/geolocalizacion?retryWrites=true&w=majority',
-            'database' => 'geolocalizacion'
+            'dsn' => 'mongodb+srv://dbuserPulpo:o19T04Yabq7g1GB9@cluster0.uae34.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+            'database' => 'GEOLOCALIZACIONKFC'
+
      // 'mongodb' => [
+            // 'dsn' => 'mongodb+srv://pulpokfc:p2uiuNqypjbYrbss@cluster0.srwxy.mongodb.net/geolocalizacion?retryWrites=true&w=majority',
+
         //     'driver' => 'mongodb',
-        //     'host' => env('MONGO_DB_HOST', '127.0.0.1'),
-        //     'port' => env('MONGO_DB_PORT', 27017),
-        //     'database' => env('MONGO_DB_DATABASE', ''),
-        //     'username' => env('MONGO_DB_USERNAME', ''),
-        //     'password' => env('MONGO_DB_PASSWORD', ''),
+        //     'host' =>  'cluster0.srwxy.mongodb.net',
+        //     'port' =>  null,
+        //     'database' => 'geolocalizacion',
+        //     'username' => 'pulpokfc',
+        //     'password' => 'p2uiuNqypjbYrbss',
         //     'options' => [
         //     ],
 

@@ -9,7 +9,7 @@ class Locales extends MongoModel
 {
        use HasFactory;
        protected $connection = "mongodb";
-       protected $table = 'RestaurantePoligonos';
+       protected $table = 'RestaurantesGeo';
        protected $fillable = ['IDRestaurante','codZipCode','invertir','poligonoCobertura'];
 
        public function restaurante()

@@ -136,6 +136,7 @@ class GeolocalizacionController extends Controller
 
     public function pruebasError(  Request $request)
     {
+
         return Locales::all();
     }
     public function getRestaurantesCercanos($pais, Request $request)
