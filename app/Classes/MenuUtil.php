@@ -1,6 +1,7 @@
 <?php
 namespace App\Classes;
 use stdClass;
+use Illuminate\Support\Facades\DB;
 
 class MenuUtil
 {
@@ -227,4 +228,31 @@ class MenuUtil
         return $productos_encontrados;
     }
 
+    public function get_busqueda_producto_id($menus,$buscado){
+        $productos_encontrados = [];
+        foreach($buscado as $idproducto){
+            foreach ($menus as $menu) {
+                foreach ($menu->MenuAgrupacion as $item_menu_agrupacion) {
+                    if(is_array($item_menu_agrupacion->productos)){
+                        foreach ($item_menu_agrupacion->productos as $producto) {
+                            if ($producto->IDProducto === $idproducto) {
+                                array_push($productos_encontrados, $producto);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $productos_encontrados;
+    }
+
+    public function get_busqueda_x_precio($productobyid,$IDRestaurante,$con){
+        $plus_filter = $this->get_productos_encontrados($productobyid);
+
+        $sql_query = "select * from config.fn_buscaPreciosxPlu ($IDRestaurante,'$plus_filter')";
+        $precios = DB::connection($con)->select($sql_query);
+        $toReturn = $this->process_productos($productobyid, $precios);
+
+        return $toReturn;
+    }
 }

@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Menu\MenuController;
 use App\Http\Controllers\Api\Menu\SubcategoriaController;
 use App\Http\Controllers\Api\Usuarios\UsuariosPosController;
 use App\Http\Controllers\Api\FacturaPayload\FacturaPayloadController;
+use App\Http\Controllers\Api\FormaPago\FormaPagoController;
 use Illuminate\Support\Facades\Log;
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +50,7 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
 
 
     //FACTURA
+    Route::put('/facturapayload/set_status' , [FacturaPayloadController::class, 'set_status']);
     Route::get('/facturapayload/inject_payload' , [FacturaPayloadController::class, 'inject_payload']);
     Route::get('/facturapayload' , [FacturaPayloadController::class, 'get']);
     Route::post('/facturapayload' , [FacturaPayloadController::class, 'post']);
@@ -61,6 +63,7 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
     Route::post('/facturapayload/inserta_varios_productos' , [FacturaPayloadController::class, 'inserta_varios_producto']);
     Route::post('/facturapayload/borra_producto' , [FacturaPayloadController::class, 'borra_producto']);
     Route::post('/facturapayload/borra_varios_productos' , [FacturaPayloadController::class, 'borra_varios_producto']);
+
 
     //CLIENTES
     Route::get('/cliente/{documento}' , [ClienteController::class, 'cliente'] )->name('clientepordocumento');
@@ -92,13 +95,23 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
     Route::get('/menu/menu-categoria/IDMenu/{id}',[MenuController::class,'menuCategorias'])->name('MenuPorCategoria');;
     //Menu agrupacion
     Route::get('/menu/menu-agrupacion/IDMenu/{id}',[MenuController::class,'menuPayload'])->name('MenuAgrupacionPorId');
-    //Buscar producto
+    //Buscar producto por nombre
     Route::get('/menu/menu-buscar/IDMenu/{id}',[MenuController::class,'buscarProducto'])->name('MenuBuscar');
+    //Busqueda de producto por IDProducto
+    Route::get('/menu/menu-buscar-id',[MenuController::class,'busqueda_producto_id'])->name('MenuBuscarIDProducto');
     //Buscar Subcategoria
     Route::get('/menu/subcategoria/IDMenu/{id}',[SubcategoriaController::class,'index'])->name('MenuSubcategoria');
-
+    //ultimo producto
+    Route::get('/facturapayload/ultimo-pedido' , [MenuController::class, 'busqueda_ultimo_pedido']);
     //Producto Upselling
     Route::get('/menu/upselling',[MenuController::class,'upselling'])->name('Upselling');
+
+    //Costo Envio Envio
+    Route::get('/costo-envio',[MenuController::class,'costo_envio'])->name('CostoEnvio');
+
+    //Formas de Pagos
+    Route::get('/forma-pago/IDCadena/{id}',[FormaPagoController::class,'index']);
+
 
     Route::get('/menu/build_menu_cadena/IDCadena/{id}',[MenuController::class,'build_menu_cadena']);
 });

@@ -7,6 +7,7 @@ use App\Models\Menu;
 use App\Models\MenuAgrupacion;
 use App\Models\MenuCategorias;
 use App\Models\MenuPayload;
+use App\Models\FacturaPayload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
@@ -115,14 +116,8 @@ class MenuController extends Controller
         $menuPayload = \Cache::get($menu);
         $menus = $menuPayload;
         $buscado = $request->descripcion;
-
         $productos_encontrados = $menu_util->get_busqueda_productos($menus,$buscado);
-
-        $plus_filter = $menu_util->get_productos_encontrados($productos_encontrados);
-
-        $sql_query = "select * from config.fn_buscaPreciosxPlu ($restaurante,'$plus_filter')";
-        $precios = DB::connection($this->getConnectionName())->select($sql_query);
-        $toReturn = $menu_util->process_productos($productos_encontrados, $precios);
+        $toReturn = $menu_util->get_busqueda_x_precio($productos_encontrados,$restaurante,$this->getConnectionName());
 
         return response()->json(
             $toReturn
@@ -201,6 +196,76 @@ class MenuController extends Controller
             'menu_categoria'=>json_encode($menu_categoria),
         ]);
         return response()->json("Construido Menu " .  $id_menu . "de IDCadena " . $id_cadena,200);
+    }
+
+    public function busqueda_ultimo_pedido(Request $request, $pais){
+        //busqueda de ultimo pedido
+        $identificacionCliente = $request['identificacionCliente'];
+        $factura_payload = FacturaPayload::where('cabecera->identificacionCliente', $identificacionCliente)->first();
+        $productos = $factura_payload->detalle;
+        $menu = $factura_payload->IDMenu;
+        if(!$request['IDRestaurante']){
+            $request->request->add(['IDRestaurante'=>$factura_payload->IDRestaurante]);
+        }
+
+        //Array de productos
+        $idproductos = [];
+        foreach($productos as $id) {
+            array_push($idproductos, $id['IDProducto']);
+        }
+        $idproductos = array_unique($idproductos);
+
+        $menu_util = new MenuUtil();
+        $menuPayload = \Cache::get($menu);
+        if($menuPayload)
+        {
+            $menus = $menuPayload;
+            $productobyid = $menu_util->get_busqueda_producto_id($menus,$idproductos);
+            $toReturn = $menu_util->get_busqueda_x_precio($productobyid,$factura_payload->IDRestaurante,$this->getConnectionName());
+
+        }else{
+            $this->menuPayload($pais,$menu,$request);
+            return $this->busqueda_ultimo_pedido($request,$pais);
+        }
+        return response()->json($toReturn,200);
+
+    }
+
+    public function busqueda_producto_id(Request $request, $pais ){
+
+        $restaurante = $request['IDRestaurante'];
+        $menu = $request['IDMenu'];
+        $idproductos = array_unique(explode(',', $request['IDProductos']));
+        $idproductos = array_map('intval',$idproductos);
+        $menu_util = new MenuUtil();
+        $menuPayload = \Cache::get($menu);
+
+        if($menuPayload)
+        {
+            $productobyid = $menu_util->get_busqueda_producto_id($menuPayload,$idproductos);
+
+            $toReturn = $menu_util->get_busqueda_x_precio($productobyid,$restaurante,$this->getConnectionName());
+
+        }else{
+
+            return $this->busqueda_producto_id($request,$pais);
+        }
+        return response()->json($toReturn,200);
+
+    }
+
+    public function costo_envio(Request $request, $pais){
+        
+        $IDMenu=$request['IDMenu'];
+        $IDRestaurante=$request['IDRestaurante'];
+        $sql_query = "select * from config.fn_CostoEnvioRestaurante ($IDRestaurante,'$IDMenu')";
+        $costos = DB::connection($this->getConnectionName())->select($sql_query);
+        //dd($costos);
+
+        return response()->json( $costos
+        , 200
+        , ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8']
+        ,JSON_PRETTY_PRINT);
     }
 
     protected function getConnectionName()
