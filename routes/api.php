@@ -118,5 +118,5 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
 
 
 
-Route::get( '/v1/ecu/prueba' , [GeolocalizacionController::class,'prueba']);
+Route::post( '/v1/ecu/prueba' , [GeolocalizacionController::class,'pruebasError']);
  //Route::get('/datos-restaurante' , [GeolocalizacionController::class,'getDatosRestaurante']);

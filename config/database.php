@@ -115,19 +115,21 @@ return [
             'prefix_indexes' => true,
         ],
 
-        'mongodb' => [
-            'driver' => 'mongodb',
-            'dsn' => 'mongodb+srv://pulpokfc:p2uiuNqypjbYrbss@cluster0.srwxy.mongodb.net/geolocalizacion?retryWrites=true&w=majority',
-            'database' => 'geolocalizacion'
-     // 'mongodb' => [
+        // 'mongodb' => [
         //     'driver' => 'mongodb',
-        //     'host' => env('MONGO_DB_HOST', '127.0.0.1'),
-        //     'port' => env('MONGO_DB_PORT', 27017),
-        //     'database' => env('MONGO_DB_DATABASE', ''),
-        //     'username' => env('MONGO_DB_USERNAME', ''),
-        //     'password' => env('MONGO_DB_PASSWORD', ''),
-        //     'options' => [
-        //     ],
+        //     'dsn' => 'mongodb+srv://pulpokfc:p2uiuNqypjbYrbss@cluster0.srwxy.mongodb.net/geolocalizacion?retryWrites=true&w=majority',
+        //     'database' => 'GEOLOCALIZACIONKFC'
+
+     'mongodb' => [
+
+            'driver' => 'mongodb',
+            'host' =>  '192.168.101.21',
+            'port' =>  27017,
+            'database' => 'GeolocalizacionKFC',
+            'username' => '',
+            'password' => '',
+            'options' => [
+            ],
 
         ],
 
