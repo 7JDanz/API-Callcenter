@@ -228,6 +228,9 @@ class FacturaPayloadController extends Controller
             $data_to_send = json_encode($factura_payload);
             $url = $endpoint;
             $response = json_decode($utilities->httpPost($url, $data_to_send));
+            $factura_payload->update([
+                'datos_inyeccion'=>json_encode($response),
+            ]);
             return response()->json(["respuesta"=>$response, "payload"=>$factura_payload],200);
         }
         return response()->json($validation,400);
