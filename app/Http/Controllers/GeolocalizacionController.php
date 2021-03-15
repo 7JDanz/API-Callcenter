@@ -212,8 +212,8 @@ $dt = Carbon::now()->startOfDay();
                     '$geometry' => [
                         'type' => 'Point',
                         'coordinates' => [
-                            $request->longitud,
-                            $request->latitud,
+                            floatval($request->longitud)    ,
+                            floatval($request->latitud)    ,
                         ],
                     ]
                 ]
