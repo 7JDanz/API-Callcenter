@@ -7,6 +7,7 @@ use App\Models\Geolocalizacion;
 use App\Models\HorarioAtencionRestaurante;
 use App\Models\Locales;
 use App\Models\Restaurante;
+use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Location\Coordinate;
 use Location\Polygon;
@@ -134,9 +135,37 @@ class GeolocalizacionController extends Controller
         //  Locales::findOrFail($id)->delete();
     }
 
-    public function pruebasError(  Request $request)
+    public function pruebasError(Request $request)
     {
 
+
+
+//         $date = new Carbon('yesterday');
+// return  $date;
+
+
+$dt = Carbon::now()->startOfDay();
+
+
+
+        return Locales::where("created_at",  '>=', $dt  )->get();
+
+
+
+
+
+
+        return    Locales::where('poligonoCobertura',  [
+            '$geoIntersects' => [
+                '$geometry' => [
+                    'type' => 'Point',
+                    'coordinates' => [
+                        -78.483440,
+                        -0.132726,
+                    ],
+                ]
+            ]
+        ])->get();
 
         return Locales::all();
     }
@@ -183,8 +212,8 @@ class GeolocalizacionController extends Controller
                     '$geometry' => [
                         'type' => 'Point',
                         'coordinates' => [
-                            $request->longitud,
-                            $request->latitud,
+                            floatval($request->longitud)    ,
+                            floatval($request->latitud)    ,
                         ],
                     ]
                 ]
