@@ -254,6 +254,7 @@ class FacturaPayloadController extends Controller
                     }
                 }
             } else {
+                $toReturn->message = 'Error en la información remitida, detalle requerido';
                 return $toReturn;
             }
             if ($new_modificadores !== []) {
@@ -264,6 +265,7 @@ class FacturaPayloadController extends Controller
                     }
                 }
             } else {
+                $toReturn->message = 'Error en la información remitida, modificadores requerido';
                 return $toReturn;
             }
             if ($new_cabecera !== []) {
@@ -272,6 +274,7 @@ class FacturaPayloadController extends Controller
                     return $validation;
                 }
             } else {
+                $toReturn->message = 'Error en la información remitida, cabecera requerido';
                 return $toReturn;
             }
             if ($new_formasPago !== []) {
@@ -282,6 +285,7 @@ class FacturaPayloadController extends Controller
                     }
                 }
             } else {
+                $toReturn->message = 'Error en la información remitida, formas pago requerido';
                 return $toReturn;
             }
             $toReturn->pass = true;
