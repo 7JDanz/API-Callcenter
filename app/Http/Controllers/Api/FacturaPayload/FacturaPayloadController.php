@@ -238,6 +238,9 @@ class FacturaPayloadController extends Controller
 
     protected function validate_factura_payload($factura_payload) {
         $utilities = new Utilities();
+        $toReturn = new stdClass();
+        $toReturn->pass = false;
+        $toReturn->message = 'Error en la información remitida';
         try{
             $new_detalle = $factura_payload->detalle;
             $new_modificadores = $factura_payload->modificadores;
@@ -250,6 +253,8 @@ class FacturaPayloadController extends Controller
                         return $validation;
                     }
                 }
+            } else {
+                return $toReturn;
             }
             if ($new_modificadores !== []) {
                 foreach($new_modificadores as $item_to_insert) {
@@ -258,12 +263,16 @@ class FacturaPayloadController extends Controller
                         return $validation;
                     }
                 }
+            } else {
+                return $toReturn;
             }
             if ($new_cabecera !== []) {
                 $validation = $utilities->check_if_cabecera($new_cabecera);
                 if ($validation->pass == false) {
                     return $validation;
                 }
+            } else {
+                return $toReturn;
             }
             if ($new_formasPago !== []) {
                 foreach($new_formasPago as $forma_pago) {
@@ -272,16 +281,14 @@ class FacturaPayloadController extends Controller
                         return $validation;
                     }
                 }
+            } else {
+                return $toReturn;
             }
-            $toReturn = new stdClass();
             $toReturn->pass = true;
             $toReturn->message = 'ok';
             return $toReturn;
         }
         catch(Exception $e) {
-            $toReturn = new stdClass();
-            $toReturn->pass = false;
-            $toReturn->message = 'Error en la información remitida';
             return $toReturn;
         }
     }
