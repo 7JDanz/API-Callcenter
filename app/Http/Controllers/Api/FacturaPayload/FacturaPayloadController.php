@@ -225,6 +225,8 @@ class FacturaPayloadController extends Controller
         }
         $validation = $this->validate_factura_payload($factura_payload);
         if ($validation->pass) {
+            $new_cabecera = [$factura_payload->cabecera];
+            $factura_payload->cabecera = $new_cabecera;
             $data_to_send = json_encode($factura_payload);
             $url = $endpoint;
             $response = json_decode($utilities->httpPost($url, $data_to_send));
