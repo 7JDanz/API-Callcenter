@@ -64,25 +64,28 @@ class UsersPosService
                 $email = "";
                 $sql_query = "SELECT * FROM [config].[fn_buscaCadenasyTipo]('".$user_to_add->IDUsersPos."')";
                 $user_data_atencion = DB::connection($conexion)->select($sql_query);
-                $cadenas = $user_data_atencion[0]->cadenas;
-                $tipo_atencion = $user_data_atencion[0]->tipo_atencion;
-                $new_user_added = $this->insert_user($user_to_add->name, $email, $clave, $status, $user_to_add->profile, $pais_id, $usuario, $user_to_add->IDUsersPos, $cadenas, $tipo_atencion);
-                if ($new_user_added) {
-                    $token = $new_user_added->createToken('token')->accessToken;
-                    return [
-                        "user_name"=>$new_user_added->name,
-                        "cadenas"=>$new_user_added->cadenas,
-                        "tipo_atencion"=>$new_user_added->tipo_atencion,
-                        "prf_descripcion"=>$new_user_added->prf_descripcion,
-                        "user_id"=>$new_user_added->id,
-                        "IDUsersPos"=>$new_user_added->IDUsersPos,
-                        "token"=>$token,
-                        "grant"=>true
-                    ];
-                } else {
+                if (!$user_data_atencion || $user_data_atencion == []) {
                     return ["user_name"=>"", "cadenas"=>"", "tipo_atencion"=>"", "prf_descripcion"=>"", "user_id"=>"", "IDUsersPos"=>"", "token"=>"", "grant"=>false];
+                } else {
+                    $cadenas = $user_data_atencion[0]->cadenas;
+                    $tipo_atencion = $user_data_atencion[0]->tipo_atencion;
+                    $new_user_added = $this->insert_user($user_to_add->name, $email, $clave, $status, $user_to_add->profile, $pais_id, $usuario, $user_to_add->IDUsersPos, $cadenas, $tipo_atencion);
+                    if ($new_user_added) {
+                        $token = $new_user_added->createToken('token')->accessToken;
+                        return [
+                            "user_name"=>$new_user_added->name,
+                            "cadenas"=>$new_user_added->cadenas,
+                            "tipo_atencion"=>$new_user_added->tipo_atencion,
+                            "prf_descripcion"=>$new_user_added->prf_descripcion,
+                            "user_id"=>$new_user_added->id,
+                            "IDUsersPos"=>$new_user_added->IDUsersPos,
+                            "token"=>$token,
+                            "grant"=>true
+                        ];
+                    } else {
+                        return ["user_name"=>"", "cadenas"=>"", "tipo_atencion"=>"", "prf_descripcion"=>"", "user_id"=>"", "IDUsersPos"=>"", "token"=>"", "grant"=>false];
+                    }
                 }
-
             }
         }
 
