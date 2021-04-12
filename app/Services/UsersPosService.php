@@ -21,7 +21,7 @@ class UsersPosService
         $pais_id = $pais->id;
         $status = "Activo";
         $user = User::select([
-            "id", "IDUsersPos", "name", "prf_descripcion", "pais_id", "password"
+            "id", "IDUsersPos", "name", "prf_descripcion", "pais_id", "password", "cadenas", "tipo_atencion"
         ])
         ->where("usuario", $usuario)
         ->where("std_descripcion",$status)
