@@ -28,11 +28,13 @@ class UsersPosService
         ->first();
         if ($user) {
             if ($user->pais_id !== $pais_id || Crypt::decryptString($user->password) !== $clave) {
-                return ["user_name"=>"", "prf_descripcion"=>"", "user_id"=>"", "IDUsersPos"=>"", "token"=>"", "grant"=>false];
+                return ["user_name"=>"", "cadenas"=>"", "tipo_atencion"=>"", "prf_descripcion"=>"", "user_id"=>"", "IDUsersPos"=>"", "token"=>"", "grant"=>false];
             }
             $token = $user->createToken('token')->accessToken;
             return [
                 "user_name"=>$user->name,
+                "cadenas"=>$user->cadenas,
+                "tipo_atencion"=>$user->tipo_atencion,
                 "prf_descripcion"=>$user->prf_descripcion,
                 "user_id"=>$user->id,
                 "IDUsersPos"=>$user->IDUsersPos,
@@ -42,9 +44,8 @@ class UsersPosService
         } else {
             $conexion = $this->get_connection_name($pais_id);
             if ($conexion == "") {
-                return ["user_name"=>"", "prf_descripcion"=>"", "user_id"=>"", "IDUsersPos"=>"", "token"=>"", "grant"=>false];
+                return ["user_name"=>"", "cadenas"=>"", "tipo_atencion"=>"", "prf_descripcion"=>"", "user_id"=>"", "IDUsersPos"=>"", "token"=>"", "grant"=>false];
             }
-
             $user_to_add = DB::connection($conexion)->table("Users_Pos")
             ->select([
                 "Users_Pos.usr_descripcion as name",
@@ -57,16 +58,21 @@ class UsersPosService
             ->where("Status.std_descripcion",$status)
             ->whereRaw("PWDCOMPARE(?,Users_Pos.usr_clave)=1",[$clave])
             ->first();
-
             if (!$user_to_add) {
-                return ["user_name"=>"", "prf_descripcion"=>"", "user_id"=>"", "IDUsersPos"=>"", "token"=>"", "grant"=>false];
+                return ["user_name"=>"", "cadenas"=>"", "tipo_atencion"=>"", "prf_descripcion"=>"", "user_id"=>"", "IDUsersPos"=>"", "token"=>"", "grant"=>false];
             } else {
                 $email = "";
-                $new_user_added = $this->insert_user($user_to_add->name, $email, $clave, $status, $user_to_add->profile, $pais_id, $usuario, $user_to_add->IDUsersPos);
+                $sql_query = "SELECT * FROM [config].[fn_buscaCadenasyTipo]('".$user_to_add->IDUsersPos."')";
+                $user_data_atencion = DB::connection($conexion)->select($sql_query);
+                $cadenas = $user_data_atencion[0]->cadenas;
+                $tipo_atencion = $user_data_atencion[0]->tipo_atencion;
+                $new_user_added = $this->insert_user($user_to_add->name, $email, $clave, $status, $user_to_add->profile, $pais_id, $usuario, $user_to_add->IDUsersPos, $cadenas, $tipo_atencion);
                 if ($new_user_added) {
                     $token = $new_user_added->createToken('token')->accessToken;
                     return [
                         "user_name"=>$new_user_added->name,
+                        "cadenas"=>$new_user_added->cadenas,
+                        "tipo_atencion"=>$new_user_added->tipo_atencion,
                         "prf_descripcion"=>$new_user_added->prf_descripcion,
                         "user_id"=>$new_user_added->id,
                         "IDUsersPos"=>$new_user_added->IDUsersPos,
@@ -74,7 +80,7 @@ class UsersPosService
                         "grant"=>true
                     ];
                 } else {
-                    return ["user_name"=>"", "prf_descripcion"=>"", "user_id"=>"", "IDUsersPos"=>"", "token"=>"", "grant"=>false];
+                    return ["user_name"=>"", "cadenas"=>"", "tipo_atencion"=>"", "prf_descripcion"=>"", "user_id"=>"", "IDUsersPos"=>"", "token"=>"", "grant"=>false];
                 }
 
             }
@@ -83,10 +89,12 @@ class UsersPosService
         return ["user_name"=>"", "prf_descripcion"=>"", "user_id"=>"", "IDUsersPos"=>"", "token"=>"", "grant"=>false];
     }
 
-    protected function insert_user($name, $email, $password, $std_descripcion, $prf_descripcion, $pais_id, $usuario, $IDUsersPos) {
+    protected function insert_user($name, $email, $password, $std_descripcion, $prf_descripcion, $pais_id, $usuario, $IDUsersPos, $cadenas, $tipo_atencion) {
         $new_user_to_add = new User();
         $new_user_to_add->password = Crypt::encryptString($password);
         $new_user_to_add->name = $name;
+        $new_user_to_add->cadenas = $cadenas;
+        $new_user_to_add->tipo_atencion = $tipo_atencion;
         $new_user_to_add->email = $email;
         $new_user_to_add->std_descripcion = $std_descripcion;
         $new_user_to_add->prf_descripcion = $prf_descripcion;
