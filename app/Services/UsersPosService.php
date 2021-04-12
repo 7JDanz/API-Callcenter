@@ -33,7 +33,7 @@ class UsersPosService
             $token = $user->createToken('token')->accessToken;
             return [
                 "user_name"=>$user->name,
-                "cadenas"=>$user->cadenas,
+                "cadenas"=>explode(',',$user->cadenas),
                 "tipo_atencion"=>$user->tipo_atencion,
                 "prf_descripcion"=>$user->prf_descripcion,
                 "user_id"=>$user->id,
@@ -74,7 +74,7 @@ class UsersPosService
                         $token = $new_user_added->createToken('token')->accessToken;
                         return [
                             "user_name"=>$new_user_added->name,
-                            "cadenas"=>$new_user_added->cadenas,
+                            "cadenas"=>explode(',',$new_user_added->cadenas),
                             "tipo_atencion"=>$new_user_added->tipo_atencion,
                             "prf_descripcion"=>$new_user_added->prf_descripcion,
                             "user_id"=>$new_user_added->id,
