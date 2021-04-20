@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\Menu\SubcategoriaController;
 use App\Http\Controllers\Api\Usuarios\UsuariosPosController;
 use App\Http\Controllers\Api\FacturaPayload\FacturaPayloadController;
 use App\Http\Controllers\Api\FormaPago\FormaPagoController;
+use App\Http\Controllers\Api\Cadena\CadenaController;
 use Illuminate\Support\Facades\Log;
 /*
 |--------------------------------------------------------------------------
@@ -112,6 +113,8 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
     //Formas de Pagos
     Route::get('/forma-pago/IDCadena/{id}',[FormaPagoController::class,'index']);
 
+    //Lista todas las cadena
+    Route::get('/cadenas',[CadenaController::class,'index']);
 
     Route::get('/menu/build_menu_cadena/IDCadena/{id}',[MenuController::class,'build_menu_cadena']);
 });
