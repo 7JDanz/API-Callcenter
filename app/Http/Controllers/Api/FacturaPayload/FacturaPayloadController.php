@@ -266,9 +266,6 @@ class FacturaPayloadController extends Controller
                         return $validation;
                     }
                 }
-            } else {
-                $toReturn->message = 'Error en la información remitida, modificadores requerido';
-                return $toReturn;
             }
             if ($new_cabecera !== []) {
                 $validation = $utilities->check_if_cabecera($new_cabecera);
