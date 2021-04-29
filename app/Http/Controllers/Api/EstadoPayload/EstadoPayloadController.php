@@ -50,6 +50,7 @@ class EstadoPayloadController extends Controller
             'status'=>$estado,
         ]);
         DB::commit();
-        return response()->json($new_estado_payload,200);
+        $factura_payload = FacturaPayload::where('IDFactura', $request['IDFactura'])->first();
+        return response()->json($factura_payload,200);
     }
 }
