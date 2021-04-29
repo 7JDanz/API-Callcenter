@@ -43,6 +43,13 @@ Route::middleware([])->group(function() {
 
 });
 
+Route::middleware(['multipais'])->prefix("/{pais}")
+    ->where(['pais' => 'ecu|chi|col|arg'])->group(function() {
+    Route::get('/estado_payloads' , [EstadoPayloadController::class,'get']);
+    Route::post('/estado_payloads' , [EstadoPayloadController::class,'post']);
+
+});
+
 //Route::name("v1.")->middleware(['multipais', 'auth:api'])->prefix("/{pais}")
 Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
 ->where(['pais' => 'ecu|chi|col|arg'])

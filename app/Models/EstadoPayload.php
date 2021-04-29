@@ -16,6 +16,11 @@ class EstadoPayload extends Model
      * @var array
      */
 
+    public function getConnectionName()
+    {
+        return Config::get("NOMBRE_CONEXION_AZURE");
+    }
+
     protected $fillable = [
         'IDFactura',
         'cfac_id',
