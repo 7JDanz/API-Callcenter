@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Menu\MenuController;
 use App\Http\Controllers\Api\Menu\SubcategoriaController;
 use App\Http\Controllers\Api\Usuarios\UsuariosPosController;
 use App\Http\Controllers\Api\FacturaPayload\FacturaPayloadController;
+use App\Http\Controllers\Api\EstadoPayload\EstadoPayloadController;
 use App\Http\Controllers\Api\FormaPago\FormaPagoController;
 use App\Http\Controllers\Api\Cadena\CadenaController;
 use Illuminate\Support\Facades\Log;
