@@ -33,24 +33,26 @@ class EstadoPayloadController extends Controller
         $IDFactura = $data['IDFactura'];
         $cfac_id = $data['cfac_id'];
         $estado = $data['estado'];
+        $toReturn = false;
         $prev_estado_payload = EstadoPayload::where('IDFactura', $request['IDFactura'])->first();
         if ($prev_estado_payload) {
             $prev_estado_payload->update([
                 'estado'=>$estado,
             ]);
+            $toReturn = true;
         } else {
             $new_estado_payload = new EstadoPayload();
             $new_estado_payload->IDFactura = $IDFactura;
             $new_estado_payload->cfac_id = $cfac_id;
             $new_estado_payload->estado = $estado;
             $new_estado_payload->save();
+            $toReturn = true;
         }
         DB::beginTransaction();
         $factura_payload = FacturaPayload::where('IDFactura', $request['IDFactura'])->update([
             'status'=>$estado,
         ]);
         DB::commit();
-        $factura_payload = FacturaPayload::where('IDFactura', $request['IDFactura'])->first();
-        return response()->json($factura_payload,200);
+        return response()->json($toReturn,200);
     }
 }
