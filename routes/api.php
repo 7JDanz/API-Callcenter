@@ -37,6 +37,9 @@ Route::middleware([])->group(function() {
     Route::post('/actualizar_usuarios' , [UsuariosPosController::class,'actualizar_usuarios'] );
     Route::post('/update_users_batch' , [UsuariosPosController::class,'update_users_batch'] );
     Route::get('/pais',[PaisController::class,'index']);
+    Route::get('/estado_payloads' , [EstadoPayloadController::class,'get']);
+    Route::post('/estado_payloads' , [EstadoPayloadController::class,'post']);
+
 });
 
 //Route::name("v1.")->middleware(['multipais', 'auth:api'])->prefix("/{pais}")

@@ -255,7 +255,7 @@ class MenuController extends Controller
     }
 
     public function costo_envio(Request $request, $pais){
-        
+
         $IDMenu=$request['IDMenu'];
         $IDRestaurante=$request['IDRestaurante'];
         $sql_query = "select * from config.fn_CostoEnvioRestaurante ($IDRestaurante,'$IDMenu')";
