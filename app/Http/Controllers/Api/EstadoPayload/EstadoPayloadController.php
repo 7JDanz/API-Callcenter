@@ -33,11 +33,18 @@ class EstadoPayloadController extends Controller
         $IDFactura = $data['IDFactura'];
         $cfac_id = $data['cfac_id'];
         $estado = $data['estado'];
-        $new_estado_payload = new EstadoPayload();
-        $new_estado_payload->IDFactura = $IDFactura;
-        $new_estado_payload->cfac_id = $cfac_id;
-        $new_estado_payload->estado = $estado;
-        $new_estado_payload->save();
+        $prev_estado_payload = EstadoPayload::where('IDFactura', $request['IDFactura'])->first();
+        if ($prev_estado_payload) {
+            $prev_estado_payload->update([
+                'estado'=>$estado,
+            ]);
+        } else {
+            $new_estado_payload = new EstadoPayload();
+            $new_estado_payload->IDFactura = $IDFactura;
+            $new_estado_payload->cfac_id = $cfac_id;
+            $new_estado_payload->estado = $estado;
+            $new_estado_payload->save();
+        }
         DB::beginTransaction();
         $factura_payload = FacturaPayload::where('IDFactura', $request['IDFactura'])->update([
             'status'=>$estado,
