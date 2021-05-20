@@ -76,6 +76,7 @@ class MenuController extends Controller
             $plus_filter = \Cache::get('plus_'.$menu);
         }
         $sql_query = "select * from config.fn_buscaPreciosxPlu ($restaurante,'$plus_filter')";
+        return $sql_query;
         $precios = DB::connection($this->getConnectionName())->select($sql_query);
         $toReturn = $menu_util->get_productos($menuPayload,$precios);
 
