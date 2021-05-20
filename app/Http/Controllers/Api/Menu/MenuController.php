@@ -72,8 +72,8 @@ class MenuController extends Controller
 
             \Cache::put('plus_'.$menu, $plus_filter, 3600);
         } else {
-            return json_encode($menu);
             $menuPayload = \Cache::get($menu);
+            return json_encode($menuPayload);
             $plus_filter = \Cache::get('plus_'.$menu);
         }
         $sql_query = "select * from config.fn_buscaPreciosxPlu ($restaurante,'$plus_filter')";
