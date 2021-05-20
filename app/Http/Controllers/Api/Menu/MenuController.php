@@ -65,6 +65,7 @@ class MenuController extends Controller
         $toReturn = [];
         if(!\Cache::has($menu))
         {
+            return 1;
             $menuPayload = $this->get_menu_payload($menu);
             \Cache::put($menu, $menuPayload, 3600);
 
@@ -72,11 +73,11 @@ class MenuController extends Controller
 
             \Cache::put('plus_'.$menu, $plus_filter, 3600);
         } else {
+            return 2;
             $menuPayload = \Cache::get($menu);
             $plus_filter = \Cache::get('plus_'.$menu);
         }
         $sql_query = "select * from config.fn_buscaPreciosxPlu ($restaurante,'$plus_filter')";
-        return $sql_query;
         $precios = DB::connection($this->getConnectionName())->select($sql_query);
         $toReturn = $menu_util->get_productos($menuPayload,$precios);
 
