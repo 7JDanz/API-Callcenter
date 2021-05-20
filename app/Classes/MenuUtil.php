@@ -148,11 +148,15 @@ class MenuUtil
                 if (is_array($menu_agrupacion->productos)) {
                     foreach($menu_agrupacion->productos as $producto) {
                         array_push($plus, $producto->IDProducto);
-                        if (is_array($producto->Preguntas)) {
-                            foreach($producto->Preguntas as $pregunta) {
-                                if (is_array($pregunta->Respuestas)) {
-                                    foreach($pregunta->Respuestas as $respuesta) {
-                                        array_push($plus, $respuesta->IDProducto);
+                        if (isset($producto->Preguntas)) {
+                            if (is_array($producto->Preguntas)) {
+                                foreach($producto->Preguntas as $pregunta) {
+                                    if (isset($pregunta->Respuestas)) {
+                                        if (is_array($pregunta->Respuestas)) {
+                                            foreach($pregunta->Respuestas as $respuesta) {
+                                                array_push($plus, $respuesta->IDProducto);
+                                            }
+                                        }
                                     }
                                 }
                             }
