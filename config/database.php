@@ -102,7 +102,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
         ],
-        'sqlsrv_clientes' => [
+        'sqlsrv_clientes_ecu' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_CLIENTES_URL'),
             'host' => env('DB_CLIENTES_HOST', 'localhost'),
