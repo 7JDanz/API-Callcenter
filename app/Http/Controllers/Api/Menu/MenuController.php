@@ -65,7 +65,6 @@ class MenuController extends Controller
         $toReturn = [];
         if(!\Cache::has($menu))
         {
-            return 1;
             $menuPayload = $this->get_menu_payload($menu);
             \Cache::put($menu, $menuPayload, 3600);
 
@@ -73,7 +72,7 @@ class MenuController extends Controller
 
             \Cache::put('plus_'.$menu, $plus_filter, 3600);
         } else {
-            return 2;
+            return json_encode($menu);
             $menuPayload = \Cache::get($menu);
             $plus_filter = \Cache::get('plus_'.$menu);
         }
