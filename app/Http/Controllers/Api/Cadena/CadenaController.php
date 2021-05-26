@@ -15,9 +15,9 @@ class CadenaController extends Controller
     public function index($pais)
     {
         //
-        $Cadena = Cadena::all();
+        $cadena = Cadena::all();
         return response()->json([
-            'Cadenas' => $Cadena
+            'Cadenas' => $cadena
         ]);
     }
 

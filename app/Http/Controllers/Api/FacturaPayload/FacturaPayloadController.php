@@ -499,8 +499,32 @@ class FacturaPayloadController extends Controller
 
     public function busqueda_ultimo_pedido(Request $request, $pais){
 
-        $identificacionCliente = $request['identificacionCliente'];
-        $factura_payload = FacturaPayload::where('cabecera->identificacionCliente', $identificacionCliente)->first();
+        try{
+            $identificacionCliente = $request['identificacionCliente'];
+            $factura_payload = FacturaPayload::where('cabecera->identificacionCliente', $identificacionCliente)->first();
+
+        } catch(Exception $e){
+            return response()->json($e->getMessage(),400);
+        }
+
+    }
+
+    public function pagination_factura(Request $request, $pais){
+        try{
+            $IDCadena = $request['IDCadena'];
+            $page = FacturaPayload::where('IDCadena', $IDCadena)
+            ->orderBy('created_at', 'desc')
+            ->paginate(25);
+            return response()->json(
+                $page
+                , 200
+                , ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8']
+                ,JSON_PRETTY_PRINT
+            );
+
+        } catch(Exception $e){
+            return response()->json($e->getMessage(),400);
+        }
 
     }
 }
