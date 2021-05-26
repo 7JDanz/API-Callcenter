@@ -32,10 +32,16 @@ class FacturaPayloadController extends Controller
         $filter = $request['filter'];
         $factura_payloads_by_IDFac = FacturaPayload::where('IDFactura', 'like', '%'.$filter.'%')->get();
         $estado_payloads = EstadoPayload::where('cfac_id', 'like', '%'.$filter.'%')->get();
+        $factura_payloads_by_Client_Name = FacturaPayload::where('cabecera', 'like', '%'.$filter.'%')->orderBy('created_at', 'desc')->limit(1)->get();
         $toReturn = [];
         foreach($factura_payloads_by_IDFac as $factura_payload_by_IDFac) {
             if ($factura_payload_by_IDFac != null) {
                 array_push($toReturn, $factura_payload_by_IDFac);
+            }
+        }
+        foreach($factura_payloads_by_Client_Name as $factura_payload_by_Client_Name) {
+            if ($factura_payload_by_Client_Name != null) {
+                array_push($toReturn, $factura_payload_by_Client_Name);
             }
         }
         foreach($estado_payloads as $estado_payload) {
