@@ -19,7 +19,7 @@ class EstadoPayloadController extends Controller
            $estado_payloads = EstadoPayload::get();
            return response()->json($estado_payloads,200);
         } else {
-           $estado_payload = EstadoPayload::where('IDFactura', $id)->orderBy('created_at', 'desc')->get();
+           $estado_payload = EstadoPayload::where('IDFactura', $id)->orderBy('created_at', 'DESC')->get();
            if ($estado_payload) {
                return response()->json($estado_payload,200);
            } else {
