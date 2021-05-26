@@ -49,8 +49,10 @@ class EstadoPayloadController extends Controller
             $toReturn = true;
         }
         DB::beginTransaction();
-        $factura_payload = FacturaPayload::where('IDFactura', $request['IDFactura'])->update([
-            'status'=>$estado,
+        $factura_payload = FacturaPayload::where('IDFactura', $request['IDFactura'])->first();
+        $now = date("Y-m-d H:i:s");
+        $factura_payload->update([
+            'status'=>array_push($factura_payload->status, ["timestamp"=>$now, "status"=>$estado]),
         ]);
         DB::commit();
         return response()->json($toReturn,200);

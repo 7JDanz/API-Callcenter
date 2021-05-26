@@ -33,7 +33,8 @@ class FacturaPayloadController extends Controller
         $id_restaurante = $data['IDRestaurante'];
         $id_cadena = $data['IDCadena'];
         $new_factura_payload = new FacturaPayload();
-        $new_factura_payload->status = 'activo';
+        $now = date("Y-m-d H:i:s");
+        $new_factura_payload->status = json_encode(["time_stamp"=>$now, "status"=>'activo']);
         $new_factura_payload->IDFactura = $new_id_factura;
         $new_factura_payload->IDRestaurante = $id_restaurante;
         $new_factura_payload->IDCadena = $id_cadena;
@@ -93,12 +94,16 @@ class FacturaPayloadController extends Controller
                     array_push($formas_pago_to_insert, $new_formaPago);
                 }
             }
-            $factura_payload = FacturaPayload::where('IDFactura', $data['IDFactura'])->update([
+            $now = date("Y-m-d H:i:s");
+            $factura_payload = FacturaPayload::where('IDFactura', $data['IDFactura'])->first();
+            $status_array = $factura_payload->status;
+            array_push($status_array, ["time_stamp"=>$now, "status"=>$data['status']]);
+            $factura_payload->update([
                 'cabecera'=>json_encode($new_cabecera),
                 'detalle'=>json_encode($detalle_to_insert),
                 'modificadores'=>json_encode($modificadores_to_insert),
                 'formasPago'=>json_encode($formas_pago_to_insert),
-                'status'=>$data['status'],
+                'status'=>json_encode($status_array),
                 'IDMenu'=>$data['IDMenu'],
             ]);
             DB::commit();
@@ -205,8 +210,12 @@ class FacturaPayloadController extends Controller
     public function delete(Request $request, $pais) {
         try{
             DB::beginTransaction();
-            $factura_payload = FacturaPayload::where('IDFactura', $request['IDFactura'])->update([
-                'status'=>'inactivo',
+            $now = date("Y-m-d H:i:s");
+            $factura_payload = FacturaPayload::where('IDFactura', $request['IDFactura'])->first();
+            $status_array = $factura_payload->status;
+            array_push($status_array, ["time_stamp"=>$now, "status"=>'inactivo']);
+            $factura_payload->update([
+                'status'=>json_encode($status_array),
             ]);
             DB::commit();
             return response()->json(true,200);
@@ -220,7 +229,7 @@ class FacturaPayloadController extends Controller
         $endpoint = DB::select('SELECT endpoint FROM conexiones WHERE prefijo_pais = :prefijo_pais', ['prefijo_pais'=>$pais])[0]->endpoint;
         $utilities = new Utilities();
         $factura_payload = FacturaPayload::where('IDFactura', $id_factura)->first();
-        if ($factura_payload->status !== 'activo') {
+        if ($factura_payload->status[sizeof($factura_payload->status) - 1] == 'inactivo') {
             return response()->json('La factura no se encuentra activa',400);
         }
         $validation = $this->validate_factura_payload($factura_payload);
@@ -474,8 +483,12 @@ class FacturaPayloadController extends Controller
     public function set_status(Request $request, $pais){
         try{
             DB::beginTransaction();
-            $factura_payload = FacturaPayload::where('IDFactura', $request['IDFactura'])->update([
-                'status'=>$request['status'],
+            $now = date("Y-m-d H:i:s");
+            $factura_payload = FacturaPayload::where('IDFactura', $request['IDFactura'])->first();
+            $status_array = $factura_payload->status;
+            array_push($status_array, ["time_stamp"=>$now, "status"=>$request['status']]);
+            $factura_payload->update([
+                'status'=>json_encode($status_array),
             ]);
             DB::commit();
             return response()->json(true,200);
