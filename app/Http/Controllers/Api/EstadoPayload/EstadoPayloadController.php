@@ -50,7 +50,7 @@ class EstadoPayloadController extends Controller
             $toReturn = true;
         }
         DB::beginTransaction();
-        $factura_payload = FacturaPayload::where('IDFactura', $request['IDFactura'])->first();
+        $factura_payload = FacturaPayload::where('IDFactura', $data['IDFactura'])->first();
         $factura_payload->update([
             'status'=>$estado
         ]);
