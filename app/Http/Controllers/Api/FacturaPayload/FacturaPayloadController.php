@@ -45,6 +45,11 @@ class FacturaPayloadController extends Controller
                     $existe = true;
                 }
             }
+            foreach($toReturn as $reported) {
+                if ($reported->IDFactura == $estado_payload->IDFactura) {
+                    $existe = true;
+                }
+            }
             if (!$existe) {
                 $factura_payload_to_add = FacturaPayload::where('IDFactura', $estado_payload->IDFactura)->first();
                 if ($factura_payload_to_add != null) {
