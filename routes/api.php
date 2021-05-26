@@ -62,6 +62,8 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
 
 
     //FACTURA
+
+    Route::get('/facturapayload/search' , [FacturaPayloadController::class, 'search']);
     Route::put('/facturapayload/set_status' , [FacturaPayloadController::class, 'set_status']);
     Route::get('/facturapayload/inject_payload' , [FacturaPayloadController::class, 'inject_payload']);
     Route::get('/facturapayload' , [FacturaPayloadController::class, 'get']);

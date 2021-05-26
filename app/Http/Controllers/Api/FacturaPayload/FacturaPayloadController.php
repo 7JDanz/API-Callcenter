@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\FacturaPayload;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\FacturaPayload;
+use App\Models\EstadoPayload;
 Use Exception;
 use Illuminate\Support\Facades\DB;
 use stdClass;
@@ -29,6 +30,25 @@ class FacturaPayloadController extends Controller
 
     public function search(Request $request, $pais) {
         $filter = $request['filter'];
+        $factura_payloads_by_IDFac = FacturaPayload::where('IDFactura', 'like', '%'.$filter.'%')->get();
+        $estado_payloads = EstadoPayload::where('cfac_id', 'like', '%'.$filter.'%')->get();
+        $toReturn = [];
+        foreach($factura_payloads_by_IDFac as $factura_payload_by_IDFac) {
+            array_push($toReturn, $factura_payload_by_IDFac);
+        }
+        foreach($estado_payloads as $estado_payload) {
+            $existe = false;
+            foreach($factura_payloads_by_IDFac as $factura_payload_by_IDFac) {
+                if ($factura_payload_by_IDFac->IDFactura == $estado_payload->IDFactura) {
+                    $existe = true;
+                }
+            }
+            if (!$existe) {
+                $factura_payload_to_add = FacturaPayload::where('IDFactura', $estado_payload->IDFactura)->first();
+                array_push($toReturn, $factura_payload_to_add);
+            }
+        }
+        return response()->json($toReturn,200);
     }
 
     public function post(Request $request, $pais) {
