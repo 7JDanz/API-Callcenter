@@ -34,7 +34,9 @@ class FacturaPayloadController extends Controller
         $estado_payloads = EstadoPayload::where('cfac_id', 'like', '%'.$filter.'%')->get();
         $toReturn = [];
         foreach($factura_payloads_by_IDFac as $factura_payload_by_IDFac) {
-            array_push($toReturn, $factura_payload_by_IDFac);
+            if ($factura_payload_by_IDFac != null) {
+                array_push($toReturn, $factura_payload_by_IDFac);
+            }
         }
         foreach($estado_payloads as $estado_payload) {
             $existe = false;
@@ -45,7 +47,9 @@ class FacturaPayloadController extends Controller
             }
             if (!$existe) {
                 $factura_payload_to_add = FacturaPayload::where('IDFactura', $estado_payload->IDFactura)->first();
-                array_push($toReturn, $factura_payload_to_add);
+                if ($factura_payload_to_add != null) {
+                    array_push($toReturn, $factura_payload_to_add);
+                }
             }
         }
         return response()->json($toReturn,200);
