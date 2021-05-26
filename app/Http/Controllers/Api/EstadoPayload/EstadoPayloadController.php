@@ -19,7 +19,7 @@ class EstadoPayloadController extends Controller
            $estado_payloads = EstadoPayload::get();
            return response()->json($estado_payloads,200);
         } else {
-           $estado_payload = EstadoPayload::where('IDFactura', $id)->first();
+           $estado_payload = EstadoPayload::where('IDFactura', $id)->get();
            if ($estado_payload) {
                return response()->json($estado_payload,200);
            } else {
@@ -51,11 +51,8 @@ class EstadoPayloadController extends Controller
         }
         DB::beginTransaction();
         $factura_payload = FacturaPayload::where('IDFactura', $request['IDFactura'])->first();
-        $now = date("Y-m-d H:i:s");
-        $status_array = $factura_payload->status;
-        array_push($status_array, ["time_stamp"=>$now, "status"=>$estado]);
         $factura_payload->update([
-            'status'=>json_encode($status_array)
+            'status'=>$estado
         ]);
         DB::commit();
         return response()->json($toReturn,200);
