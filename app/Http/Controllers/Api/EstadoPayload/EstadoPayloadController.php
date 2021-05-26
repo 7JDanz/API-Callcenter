@@ -52,8 +52,10 @@ class EstadoPayloadController extends Controller
         DB::beginTransaction();
         $factura_payload = FacturaPayload::where('IDFactura', $request['IDFactura'])->first();
         $now = date("Y-m-d H:i:s");
+        $status_array = $factura_payload->status;
+        array_push($status_array, ["time_stamp"=>$now, "status"=>$estado]);
         $factura_payload->update([
-            'status'=>array_push($factura_payload->status, ["timestamp"=>$now, "status"=>$estado]),
+            'status'=>json_encode($status_array)
         ]);
         DB::commit();
         return response()->json($toReturn,200);
