@@ -23,10 +23,11 @@ class EstadoPayloadController extends Controller
            if ($estado_payload) {
                return response()->json($estado_payload,200);
            } else {
-               return response()->json("factura no encontrada",400);
+               return response()->json(["Mensaje"=>"factura no encontrada"],400);
            }
         }
     }
+
 
     public function post(Request $request, $pais) {
         $data = $request->json()->all();
