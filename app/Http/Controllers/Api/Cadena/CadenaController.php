@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Controllers\Api\Cadena;
-
 use App\Http\Controllers\Controller;
 use App\Models\Cadena;
+use App\Models\ColeccionDeDatosCadena;
 
 class CadenaController extends Controller
 {
@@ -19,6 +19,20 @@ class CadenaController extends Controller
         return response()->json([
             'Cadenas' => $cadena
         ]);
+    }
+
+  
+    public function obtenerEstados( $pais, $cadena )
+    {
+ 
+        return ColeccionDeDatosCadena::select('ColeccionDeDatosCadena.ID_ColeccionDeDatosCadena as IDCodigo' ,'ColeccionDeDatosCadena.Descripcion as descripcion' )
+        ->join('ColeccionCadena', 'ColeccionCadena.ID_ColeccionCadena', 'ColeccionDeDatosCadena.ID_ColeccionCadena')
+        ->where('ColeccionCadena.Descripcion','ESTADOS API CALL CENTER')
+        ->where('ColeccionCadena.isActive', 1)
+        ->where('ColeccionDeDatosCadena.isActive', 1)
+        ->where('ColeccionCadena.cdn_id', $cadena)
+        ->get()
+        ;
     }
 
 }

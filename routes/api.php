@@ -130,6 +130,11 @@ Route::middleware(['multipais', 'auth:api'])->prefix("/{pais}")
     Route::get('/cadenas',[CadenaController::class,'index']);
 
     Route::get('/menu/build_menu_cadena/IDCadena/{id}',[MenuController::class,'build_menu_cadena']);
+
+
+    Route::get('/estados/obtener-estados/IDCadena/{id}',[CadenaController::class,'obtenerEstados']);
+
+ 
 });
 
 
