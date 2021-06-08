@@ -247,7 +247,7 @@ class MenuController extends Controller
             $toReturn = $menu_util->get_busqueda_x_precio($productobyid,$restaurante,$this->getConnectionName());
 
         }else{
-
+            $this->menuPayload($pais,$menu,$request);
             return $this->busqueda_producto_id($request,$pais);
         }
         return response()->json($toReturn,200);
